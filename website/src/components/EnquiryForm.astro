@@ -1,0 +1,84 @@
+---
+import type { Lang } from '../data/types';
+import { t } from '../data/i18n';
+import { CONTACT, DEALER_STATES } from '../data/site';
+import Icon from './Icon.astro';
+
+interface Props {
+  lang: Lang;
+  topic?: 'product' | 'dealer' | 'lab' | 'other';
+  /** Prefilled message, e.g. the product being asked about. */
+  subject?: string;
+  dealer?: boolean;
+}
+
+const { lang, topic = 'product', subject = '', dealer = false } = Astro.props;
+const d = t(lang);
+const endpoint = import.meta.env.PUBLIC_FORM_ENDPOINT ?? '';
+const uid = Math.random().toString(36).slice(2, 7);
+const topics = [
+  ['product', d.topicProduct],
+  ['dealer', d.topicDealer],
+  ['lab', d.topicLab],
+  ['other', d.topicOther],
+];
+const strings = JSON.stringify({ errName: d.formErrName, errPhone: d.formErrPhone, ok: d.formOk, name: d.formName, phone: d.formPhone, firm: d.formFirm, place: d.formPlace, state: d.formState, topic: d.formTopic, crop: d.formCrop, message: d.formMessage, subject: lang === 'mr' ? 'वेबसाइट चौकशी' : 'Website enquiry' });
+---
+
+<form class="form" data-enquiry data-endpoint={endpoint} data-wa={CONTACT.phonePrimary.wa} data-email={CONTACT.email} data-strings={strings} novalidate>
+  <div class="form-grid">
+    <div class="field">
+      <label for={`f-name-${uid}`}>{d.formName} <span class="req">*</span></label>
+      <input id={`f-name-${uid}`} name="name" required autocomplete="name" />
+    </div>
+    <div class="field">
+      <label for={`f-phone-${uid}`}>{d.formPhone} <span class="req">*</span></label>
+      <input id={`f-phone-${uid}`} name="phone" type="tel" inputmode="numeric" required autocomplete="tel" />
+    </div>
+  </div>
+  {
+    dealer && (
+      <div class="field">
+        <label for={`f-firm-${uid}`}>{d.formFirm}</label>
+        <input id={`f-firm-${uid}`} name="firm" autocomplete="organization" />
+      </div>
+    )
+  }
+  <div class="form-grid">
+    <div class="field">
+      <label for={`f-place-${uid}`}>{d.formPlace}</label>
+      <input id={`f-place-${uid}`} name="place" autocomplete="address-level2" />
+    </div>
+    <div class="field">
+      <label for={`f-state-${uid}`}>{d.formState}</label>
+      <select id={`f-state-${uid}`} name="state">
+        <option value="">—</option>
+        {DEALER_STATES.map((s) => <option value={s[lang]}>{s[lang]}</option>)}
+      </select>
+    </div>
+  </div>
+  <div class="form-grid">
+    <div class="field">
+      <label for={`f-topic-${uid}`}>{d.formTopic}</label>
+      <select id={`f-topic-${uid}`} name="topic">
+        {topics.map(([v, label]) => <option value={label} selected={v === topic}>{label}</option>)}
+      </select>
+    </div>
+    <div class="field">
+      <label for={`f-crop-${uid}`}>{d.formCrop}</label>
+      <input id={`f-crop-${uid}`} name="crop" />
+    </div>
+  </div>
+  <div class="field">
+    <label for={`f-msg-${uid}`}>{d.formMessage}</label>
+    <textarea id={`f-msg-${uid}`} name="message">{subject}</textarea>
+  </div>
+  <div class="btn-row">
+    <button class="btn btn--wa" type="submit" data-send="whatsapp"><Icon name="whatsapp" size={18} /> {d.sendWhatsapp}</button>
+    <button class="btn btn--ghost" type="submit" data-send="email"><Icon name="mail" size={18} /> {d.sendEmail}</button>
+  </div>
+  <p class="form__status" role="status" data-status></p>
+  <p class="form__note">{d.formNote}</p>
+</form>
+
+<script src="../scripts/form.ts"></script>

@@ -1,0 +1,224 @@
+---
+import { getImage } from 'astro:assets';
+import Base from '../../../../layouts/Base.astro';
+import PackImage from '../../../../components/PackImage.astro';
+import PackArt from '../../../../components/PackArt.astro';
+import ProductCard from '../../../../components/ProductCard.astro';
+import Icon from '../../../../components/Icon.astro';
+import Cta from '../../../../components/Cta.astro';
+import { href, type Lang } from '../../../../data/types';
+import { t } from '../../../../data/i18n';
+import { withLangs } from '../../../../data/routes';
+import { CONTACT } from '../../../../data/site';
+import { PRODUCTS, USES, cellValue, categoryOf, categoryUrl, inCategory, productTitle, productUrl, type Product } from '../../../../data/products';
+import { CROP_NAMES, cropPageIds, cropUrl } from '../../../../data/crops';
+import { pack } from '../../../../data/media';
+
+export function getStaticPaths() {
+  return withLangs(PRODUCTS.map((p) => ({ params: { category: p.category, slug: p.slug }, props: { product: p } })));
+}
+
+const { lang, product: p } = Astro.props as { lang: Lang; product: Product };
+const d = t(lang);
+const m = lang === 'mr';
+const cat = categoryOf(p.category);
+const title = productTitle(p, lang);
+const related = inCategory(p.category).filter((x) => x.slug !== p.slug).slice(0, 4);
+const fill = related.length < 4 ? PRODUCTS.filter((x) => x.featured && x.category !== p.category && x.img).slice(0, 4 - related.length) : [];
+const pdf = `/downloads/${lang}/${p.slug}.pdf`;
+const waText = encodeURIComponent(m ? `नमस्कार, मला ${title} या उत्पादनाबद्दल माहिती हवी आहे.` : `Hello, I would like to know more about ${title}.`);
+const jsonLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: productTitle(p, 'en'),
+    brand: { '@type': 'Brand', name: 'Lokmangal Biotech' },
+    manufacturer: { '@type': 'Organization', name: 'Lokmangal Bio-Tech Pvt. Ltd.' },
+    category: cat.name.en,
+    description: `${p.subtitle.en}. Dose: ${p.dose.en}. Packing: ${p.packing.en}.`,
+    ...(p.img ? { image: `${Astro.site!.origin}${pack(p.img).src}` } : {}),
+  },
+];
+const imageNames = [p.img, ...(p.gallery ?? [])].filter(Boolean) as string[];
+const images = await Promise.all(imageNames.map(async (name) => ({ name, full: (await getImage({ src: pack(name), format: 'webp', width: Math.min(640, pack(name).width), quality: 82 })).src })));
+const benefitsTitle = p.benefitsTitle?.[lang] ?? d.benefits;
+---
+
+<Base lang={lang} path={productUrl(p)} title={title} description={`${p.subtitle[lang]}. ${d.dose}: ${p.dose[lang]}. ${d.packing}: ${p.packing[lang]}.`} jsonLd={jsonLd}>
+  <section class={`ph tone-${cat.tone}`}>
+    <div class="container">
+      <nav aria-label="Breadcrumb">
+        <ol class="crumbs">
+          <li><a href={href(lang, '/')}>{d.home}</a></li>
+          <li><a href={href(lang, '/products/')}>{d.products}</a></li>
+          <li><a href={href(lang, categoryUrl(p.category))}>{cat.short[lang]}</a></li>
+          <li><span aria-current="page">{title}</span></li>
+        </ol>
+      </nav>
+      <div class="ph__grid">
+        <div class:list={['stage', p.partial && 'stage--partial']} data-stage>
+          {
+            p.img ? (
+              <PackImage name={p.img} alt={title} class="stage__img" widths={[320, 480, 640]} sizes="(width < 900px) 80vw, 460px" eager style={`view-transition-name:pack-${p.slug}`} />
+            ) : (
+              <PackArt product={p} lang={lang} />
+            )
+          }
+          {
+            images.length > 1 && (
+              <div class="stage__thumbs">
+                {images.map((im, i) => (
+                  <button class="stage__thumb" type="button" data-thumb data-full={im.full} aria-pressed={i === 0 ? 'true' : 'false'} aria-label={`${title} ${i + 1}`}>
+                    <PackImage name={im.name} alt="" widths={[120]} sizes="58px" />
+                  </button>
+                ))}
+              </div>
+            )
+          }
+        </div>
+        <div class="ph__copy">
+          <a class="ph__cat" href={href(lang, categoryUrl(p.category))}>{cat.name[lang]}</a>
+          <h1 class="h1">
+            {p.name[lang]}
+            {p.grade && /:/.test(p.grade) && <span class="ph__grade grade">{p.grade}</span>}
+          </h1>
+          <p class="lead">{p.subtitle[lang]}</p>
+          <dl class="ph__facts">
+            <div class="fact">
+              <dt><Icon name="scale" size={18} />{d.dose}</dt>
+              <dd>{p.dose[lang]}</dd>
+            </div>
+            <div class="fact">
+              <dt><Icon name="sack" size={18} />{d.packing}</dt>
+              <dd>{p.packing[lang]}</dd>
+            </div>
+            <div class="fact">
+              <dt><Icon name="sprout" size={18} />{d.use}</dt>
+              <dd>{p.uses.map((u) => USES[u][lang]).join(', ')}</dd>
+            </div>
+          </dl>
+          <div class="btn-row" style="margin-top:22px">
+            <a class="btn btn--wa" href={`https://wa.me/${CONTACT.phonePrimary.wa}?text=${waText}`} target="_blank" rel="noopener"><Icon name="whatsapp" size={18} /> {d.askAbout}</a>
+            <a class="btn btn--ghost" href={pdf} download><Icon name="download" size={18} /> {d.downloadPdf}</a>
+            {p.calc && <a class="btn btn--ghost" href={`${href(lang, '/knowledge/')}?p=${p.slug}#calculator`}><Icon name="scale" size={18} /> {d.calcThis}</a>}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tight">
+    <div class="container pd-grid">
+      <div class="stack" style="--stack:clamp(26px,3vw,38px)">
+        {
+          p.grades && (
+            <div data-reveal>
+              <h2 class="h3" style="margin-bottom:12px">{d.grades}</h2>
+              <div class="npk-legend">
+                <span><i style="background:var(--g-500)" /> N {m ? 'नत्र' : 'Nitrogen'}</span>
+                <span><i style="background:var(--gold)" /> P {m ? 'स्फुरद' : 'Phosphorus'}</span>
+                <span><i style="background:var(--o-500)" /> K {m ? 'पालाश' : 'Potassium'}</span>
+              </div>
+              <div class="grades">
+                {p.grades.map((g) => (
+                  <article class="gradecard">
+                    {g.img ? <PackImage name={g.img} alt={`${p.name[lang]} ${g.grade}`} class="gradecard__pack" widths={[120]} sizes="56px" /> : <span class="gradecard__pack--blank">F+</span>}
+                    <div class="gradecard__grade">{g.grade}</div>
+                    <div class="gradecard__name">{g.name[lang]}</div>
+                    <div class="npk" role="img" aria-label={`N ${g.n}, P ${g.p}, K ${g.k}`}>
+                      <i class="n" style={`--v:${g.n}`} />
+                      <i class="p" style={`--v:${g.p}`} />
+                      <i class="k" style={`--v:${g.k}`} />
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </div>
+          )
+        }
+        <div data-reveal>
+          <h2 class="h3" style="margin-bottom:12px">{benefitsTitle}</h2>
+          <ul class="benefits">
+            {
+              p.benefits.map((b) => (
+                <li>
+                  <Icon name="checkc" size={19} />
+                  <span>{b[lang]}</span>
+                </li>
+              ))
+            }
+          </ul>
+          {p.note && <p class="muted" style="margin-top:12px"><Icon name="info" size={16} style="display:inline;vertical-align:-3px;margin-inline-end:6px" />{p.note[lang]}</p>}
+        </div>
+        {
+          p.contents.length > 0 && (
+            <div data-reveal>
+              <h2 class="h3" style="margin-bottom:12px">{d.contents}</h2>
+              <div class="spec-wrap">
+                <table class="spec">
+                  <tbody>
+                    {p.contents.map((row) => (
+                      <tr>
+                        <th scope="row">{row.k[lang]}</th>
+                        <td>{cellValue(row, lang)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              {p.contentsNote && <p class="muted small" style="margin-top:10px">{p.contentsNote[lang]}</p>}
+            </div>
+          )
+        }
+      </div>
+      <aside class="pd-side">
+        {
+          (p.cropsText || p.cropsNamed.length > 0) && (
+            <div class="pd-box" data-reveal>
+              <h2 class="h4" style="margin-bottom:10px">{d.cropsLabel}</h2>
+              {p.cropsText && <p class="small" style="margin-bottom:12px">{p.cropsText[lang]}</p>}
+              {p.cropsNamed.some((c) => cropPageIds.has(c)) && (
+                <ul class="chips">
+                  {p.cropsNamed
+                    .filter((c) => cropPageIds.has(c))
+                    .map((c) => (
+                      <li>
+                        <a class="chip chip--line" href={href(lang, cropUrl(c))}>
+                          {CROP_NAMES[c][lang]}
+                        </a>
+                      </li>
+                    ))}
+                </ul>
+              )}
+            </div>
+          )
+        }
+        <div class="pd-box pd-box--dark on-dark" data-reveal>
+          <h2 class="h4" style="margin-bottom:8px;color:#fff">{m ? 'या उत्पादनाविषयी विचारा' : 'Ask about this product'}</h2>
+          <p class="small" style="margin-bottom:14px">{m ? 'उपलब्धता, जवळचा डीलर किंवा वापराबद्दल आमच्या टीमशी बोला.' : 'Talk to our team about availability, your nearest dealer, or how to use it.'}</p>
+          <div class="btn-row">
+            <a class="btn btn--primary btn--sm" href={`tel:${CONTACT.phonePrimary.tel}`}><Icon name="phone" size={16} /> {CONTACT.phonePrimary.label}</a>
+          </div>
+        </div>
+        <div class="pd-box" data-reveal>
+          <p class="small muted">{m ? 'वापरण्यापूर्वी पॅकवरील सूचना वाचा. मात्रा पिकाच्या अवस्थेनुसार बदलू शकते; शंका असल्यास कृषी तज्ज्ञांचा सल्ला घ्या.' : 'Read the pack label before use. The right quantity can vary with the crop stage; ask an agronomist if in doubt.'}</p>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section section--tight section--cream">
+    <div class="container">
+      <div class="section-head" data-reveal>
+        <h2 class="h2">{d.relatedProducts}</h2>
+      </div>
+      <div class="p-grid" data-stagger>
+        {[...related, ...fill].map((x) => <ProductCard product={x} lang={lang} />)}
+      </div>
+    </div>
+  </section>
+
+  <Cta lang={lang} />
+</Base>
+
+<script src="../../../../scripts/product.ts"></script>

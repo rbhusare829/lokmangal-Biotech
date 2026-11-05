@@ -1,0 +1,43 @@
+---
+import { href, type Lang } from '../data/types';
+import { t } from '../data/i18n';
+import Icon from './Icon.astro';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const d = t(lang);
+const quick =
+  lang === 'mr'
+    ? [
+        ['मॅग्नेट', '/products/secondary/magnet/'],
+        ['फास्टर+', '/products/water-soluble/faster-plus/'],
+        ['ऊस', '/crops/sugarcane/'],
+        ['माती परीक्षण', '/research-lab/'],
+      ]
+    : [
+        ['Magnet', '/products/secondary/magnet/'],
+        ['FASTER+', '/products/water-soluble/faster-plus/'],
+        ['Sugarcane', '/crops/sugarcane/'],
+        ['Soil testing', '/research-lab/'],
+      ];
+---
+
+<dialog class="search" data-search data-index={href(lang, '/search-index.json')} aria-label={d.search}>
+  <div class="search__box">
+    <div class="search__top">
+      <Icon name="search" size={20} />
+      <input class="search__input" data-search-input type="search" placeholder={d.searchPlaceholder} aria-label={d.search} autocomplete="off" role="combobox" aria-expanded="false" aria-controls="search-results" />
+      <button class="iconbtn" type="button" data-search-close aria-label={d.searchClose}><Icon name="close" size={18} /></button>
+    </div>
+    <div class="search__quick" data-search-quick>
+      <p>{d.searchPopular}</p>
+      <div class="chips">{quick.map(([label, to]) => <a class="chip chip--line" href={href(lang, to)}>{label}</a>)}</div>
+    </div>
+    <ul class="search__results" id="search-results" role="listbox" data-search-results hidden></ul>
+    <p class="search__empty" data-search-empty hidden>{d.searchEmpty}</p>
+    <p class="sr-only" role="status" data-search-status></p>
+  </div>
+</dialog>

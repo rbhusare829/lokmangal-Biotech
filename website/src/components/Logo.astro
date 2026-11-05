@@ -1,0 +1,18 @@
+---
+import { href, type Lang } from '../data/types';
+import { COMPANY } from '../data/site';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+---
+
+<a class="logo" href={href(lang, '/')} aria-label={lang === 'mr' ? `${COMPANY.name.mr} Lokmangal Bio-Tech Pvt. Ltd.` : COMPANY.name.en}>
+  <img class="logo__mark" src="/brand/logo-mark.svg" alt="" width="417" height="504" />
+  <span class="logo__text">
+    <img class="logo__word" src="/brand/logo-word.svg" alt="" width="868" height="141" />
+    <span class="logo__sub">Lokmangal Bio-Tech Pvt. Ltd.</span>
+  </span>
+</a>

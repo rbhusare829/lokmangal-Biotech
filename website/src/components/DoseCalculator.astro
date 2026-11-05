@@ -1,0 +1,123 @@
+---
+import { num, type Lang } from '../data/types';
+import { PRODUCTS, productTitle } from '../data/products';
+import Icon from './Icon.astro';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+
+interface Item {
+  id: string;
+  label: string;
+  mode: 'acre' | 'tank';
+  min: number;
+  max: number;
+  unit: string;
+  packs?: number[];
+}
+
+const items: Item[] = PRODUCTS.flatMap((p) =>
+  (p.calc ?? []).map((c, i) => ({
+    id: `${p.slug}${i ? `-${i}` : ''}`,
+    slug: p.slug,
+    label: c.label?.[lang] ?? productTitle(p, lang),
+    mode: c.mode,
+    min: c.min,
+    max: c.max,
+    unit: c.unit,
+    packs: c.mode === 'acre' ? c.packs : undefined,
+  })),
+);
+const acre = items.filter((i) => i.mode === 'acre');
+
+const S = {
+  en: {
+    tabAcre: 'Soil application',
+    tabTank: 'Spray tank',
+    product: 'Product',
+    area: 'Your area',
+    water: 'Water in the tank',
+    doseLabel: 'Dose from product data',
+    perAcre: 'per acre',
+    perLitre: 'per litre of water',
+    need: 'You will need',
+    packs: 'Packs',
+    packOf: 'pack of',
+    pump: 'Per 15-litre pump',
+    pumps: 'Pumps of 15 litres',
+    acreUnit: 'acre',
+    litreUnit: 'litres',
+    note: 'Worked out from the dose in the company’s product data. Always follow the pack label and your agronomist’s advice.',
+    kg: 'kg',
+    ml: 'ml',
+    g: 'gm',
+    l: 'litre',
+    bigKg: 'kg',
+  },
+  mr: {
+    tabAcre: 'जमिनीतून वापर',
+    tabTank: 'फवारणी टाकी',
+    product: 'उत्पादन',
+    area: 'आपले क्षेत्र',
+    water: 'टाकीतील पाणी',
+    doseLabel: 'उत्पादन माहितीतील मात्रा',
+    perAcre: 'प्रति एकर',
+    perLitre: 'प्रति लिटर पाणी',
+    need: 'आपल्याला लागेल',
+    packs: 'पॅकिंग',
+    packOf: 'ची पॅक',
+    pump: '१५ लिटर पंपासाठी',
+    pumps: '१५ लिटरचे पंप',
+    acreUnit: 'एकर',
+    litreUnit: 'लिटर',
+    note: 'कंपनीच्या उत्पादन माहितीतील मात्रेवरून काढलेले प्रमाण. पॅकवरील सूचना आणि कृषी तज्ज्ञांचा सल्ला नेहमी पाळावा.',
+    kg: 'किलो',
+    ml: 'मिली',
+    g: 'ग्रॅम',
+    l: 'लिटर',
+    bigKg: 'किलो',
+  },
+}[lang];
+const config = JSON.stringify({ items, s: S, lang });
+---
+
+<div class="calc" data-calc data-config={config}>
+  <div class="calc__tabs" role="tablist">
+    <span class="calc__ink" data-ink aria-hidden="true"></span>
+    <button class="calc__tab" type="button" role="tab" aria-selected="true" data-tab="acre"><Icon name="sack" size={18} /> {S.tabAcre}</button>
+    <button class="calc__tab" type="button" role="tab" aria-selected="false" data-tab="tank"><Icon name="droplet" size={18} /> {S.tabTank}</button>
+  </div>
+  <div class="calc__body">
+    <div class="calc__inputs">
+      <div class="calc__field">
+        <label for="calc-product">{S.product}</label>
+        <select id="calc-product" data-product>
+          {acre.map((i) => <option value={i.id}>{i.label}</option>)}
+        </select>
+        <p class="calc__dose"><Icon name="info" size={15} /><span data-dose></span></p>
+      </div>
+      <div class="calc__field">
+        <label for="calc-range"><span data-range-label>{S.area}</span> <output data-range-out>{num(lang, 1)} {S.acreUnit}</output></label>
+        <input id="calc-range" data-range type="range" min="0.5" max="25" step="0.5" value="1" />
+        <div class="calc__scale"><span data-scale-min></span><span data-scale-max></span></div>
+      </div>
+    </div>
+    <div class="calc__result" aria-live="polite">
+      <div>
+        <div class="calc__label">{S.need}</div>
+        <div class="calc__big" data-big>—</div>
+      </div>
+      <div class="calc__rows">
+        <div class="calc__row"><span data-r1-k>{S.doseLabel}</span><b data-r1-v></b></div>
+        <div class="calc__row"><span data-r2-k></span><b data-r2-v></b></div>
+      </div>
+      <div class="calc__bags" data-bags aria-hidden="true"></div>
+      <p class="calc__note">{S.note}</p>
+    </div>
+  </div>
+</div>
+
+<script src="../scripts/calculator.ts"></script>

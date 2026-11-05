@@ -1,0 +1,1140 @@
+import { l, type L } from './types';
+
+export type CategoryId =
+  | 'npk'
+  | 'secondary'
+  | 'water-soluble'
+  | 'micronutrients'
+  | 'straight'
+  | 'organic'
+  | 'bio-fertilizers'
+  | 'growth-promoters'
+  | 'bio-stimulants'
+  | 'bio-fungicides'
+  | 'bio-pesticides'
+  | 'adjuvants';
+
+export type Use = 'soil' | 'foliar' | 'drip' | 'seed' | 'compost' | 'tank-mix';
+export type Form = 'granule' | 'powder' | 'liquid' | 'bag' | 'culture';
+export type Nutrient = 'N' | 'P' | 'K' | 'Ca' | 'Mg' | 'S' | 'Zn' | 'Fe' | 'Mn' | 'B' | 'Cu' | 'Mo' | 'Si';
+export type Shape = 'bag' | 'bottle' | 'pouch' | 'bucket';
+
+export interface Category {
+  id: CategoryId;
+  name: L;
+  short: L;
+  blurb: L;
+  tone: 'green' | 'orange' | 'gold' | 'teal' | 'earth' | 'blue';
+  hero: string[];
+}
+
+export const CATEGORIES: Category[] = [
+  {
+    id: 'npk',
+    name: l('NPK Mixture Fertilizers', 'एन.पी.के. मिश्र खते'),
+    short: l('NPK Mixtures', 'एन.पी.के. मिश्र खते'),
+    blurb: l(
+      'Krishi Vardan grades that supply nitrogen, phosphorus and potassium for all crops, vegetables, fruits, cereals and pulses.',
+      'सर्व पिके, भाजीपाला, फळे, तृणधान्ये व कडधान्यांसाठी नत्र, स्फुरद व पालाश देणारे कृषी वरदान ग्रेड.',
+    ),
+    tone: 'green',
+    hero: ['krishi-vardan-18'],
+  },
+  {
+    id: 'secondary',
+    name: l('Secondary Nutrient Mixture Fertilizers', 'दुय्यम अन्नद्रव्य मिश्र खते'),
+    short: l('Secondary Nutrients', 'दुय्यम अन्नद्रव्ये'),
+    blurb: l(
+      'Our own Magnet: calcium, magnesium and sulphur that keep soil fertile and productive alongside NPK.',
+      'आमचे स्वतःचे मॅग्नेट: एन.पी.के.सोबत जमिनीची सुपीकता व उत्पादकता टिकवणारे कॅल्शियम, मॅग्नेशियम व गंधक.',
+    ),
+    tone: 'gold',
+    hero: ['magnet'],
+  },
+  {
+    id: 'water-soluble',
+    name: l('Water Soluble Fertilizers', 'पाण्यात विरघळणारी खते'),
+    short: l('Water Soluble', 'विद्राव्य खते'),
+    blurb: l(
+      'FASTER+ grades and Cannon calcium nitrate, 100% water soluble for foliar spray and drip fertigation.',
+      'फवारणी व ठिबक सिंचनासाठी १००% पाण्यात विरघळणारे फास्टर+ ग्रेड आणि कॅनन कॅल्शियम नायट्रेट.',
+    ),
+    tone: 'blue',
+    hero: ['faster-plus'],
+  },
+  {
+    id: 'micronutrients',
+    name: l('Micronutrients', 'सूक्ष्म अन्नद्रव्ये'),
+    short: l('Micronutrients', 'सूक्ष्म अन्नद्रव्ये'),
+    blurb: l(
+      'Lancer and Spark: iron, manganese, zinc, copper, molybdenum and boron in one mixture.',
+      'लान्सर व स्पार्क: लोह, मँगनीज, जस्त, तांबे, मॉलिब्डेनम व बोरॉन एकाच मिश्रणात.',
+    ),
+    tone: 'orange',
+    hero: ['lancer-bucket'],
+  },
+  {
+    id: 'straight',
+    name: l('Straight Fertilizers', 'सरळ खते'),
+    short: l('Straight Fertilizers', 'सरळ खते'),
+    blurb: l(
+      'Single-nutrient products to recover a specific deficiency of zinc, iron, magnesium, manganese or boron.',
+      'जस्त, लोह, मॅग्नेशियम, मँगनीज किंवा बोरॉन यांची विशिष्ट कमतरता भरून काढणारी उत्पादने.',
+    ),
+    tone: 'teal',
+    hero: ['lancer-12-zinc'],
+  },
+  {
+    id: 'organic',
+    name: l('Organic Fertilizers', 'सेंद्रिय खते'),
+    short: l('Organic Fertilizers', 'सेंद्रिय खते'),
+    blurb: l(
+      'Champion, Neem and Magsil raise soil organic carbon, fertility and productivity.',
+      'चॅम्पियन, नीम व मॅगसिल जमिनीतील सेंद्रिय कर्ब, सुपीकता व उत्पादकता वाढवतात.',
+    ),
+    tone: 'earth',
+    hero: ['champion'],
+  },
+  {
+    id: 'bio-fertilizers',
+    name: l('Bio-Fertilizers', 'जैविक खते'),
+    short: l('Bio-Fertilizers', 'जैविक खते'),
+    blurb: l(
+      'Azo, Rhizo, Phospho and Composter cultures for seed treatment and quality compost.',
+      'बीजप्रक्रिया व दर्जेदार कंपोस्टसाठी अझो, ऱ्हायझो, फॉस्फो व कंपोस्टर कल्चर.',
+    ),
+    tone: 'green',
+    hero: ['azo'],
+  },
+  {
+    id: 'growth-promoters',
+    name: l('Growth Promoters', 'वाढ प्रवर्तके'),
+    short: l('Growth Promoters', 'वाढ प्रवर्तके'),
+    blurb: l(
+      'Humic Rich, Zicom, Sardar, Maxima, Tryzyme, Nitro Charge and Sulpho Plus for roots, flowering and yield.',
+      'मुळे, फुलोरा व उत्पादनासाठी ह्युमिक रिच, झायकॉम, सरदार, मॅक्झिमा, ट्रायझाइम, नायट्रो चार्ज व सल्फो प्लस.',
+    ),
+    tone: 'orange',
+    hero: ['sardar-granules'],
+  },
+  {
+    id: 'bio-stimulants',
+    name: l('Bio-Stimulants', 'जैव उत्तेजके'),
+    short: l('Bio-Stimulants', 'जैव उत्तेजके'),
+    blurb: l(
+      'Speed and Growth Power reduce flower and fruit drop and improve nutrient uptake.',
+      'स्पीड व ग्रोथ पॉवर फुले-फळगळ कमी करतात आणि अन्नद्रव्यांचे शोषण सुधारतात.',
+    ),
+    tone: 'gold',
+    hero: ['speed'],
+  },
+  {
+    id: 'bio-fungicides',
+    name: l('Bio-Fungicides', 'जैविक बुरशीनाशके'),
+    short: l('Bio-Fungicides', 'जैविक बुरशीनाशके'),
+    blurb: l(
+      'Blue Diamond, Blue Star and Bordo Max against rust, blight, downy mildew and other diseases.',
+      'तांबेरा, करपा, केवडा व इतर रोगांवर ब्लू डायमंड, ब्लू स्टार व बोर्डो मॅक्स.',
+    ),
+    tone: 'blue',
+    hero: ['blue-star'],
+  },
+  {
+    id: 'bio-pesticides',
+    name: l('Bio-Pesticides', 'जैविक कीटकनाशके'),
+    short: l('Bio-Pesticides', 'जैविक कीटकनाशके'),
+    blurb: l(
+      'Action controls Heliothis, Spodoptera and other larvae. Ben-10 controls thrips, mites and sucking pests.',
+      'ॲक्शन हेलिओथिस, स्पोडोप्टेरा व इतर अळ्यांचे आणि बेन-१० फुलकिडे, कोळी व रसशोषक किडींचे नियंत्रण करते.',
+    ),
+    tone: 'teal',
+    hero: ['action'],
+  },
+  {
+    id: 'adjuvants',
+    name: l('Wetting & Spreading Agents', 'प्रसारक व ओलावा वाढवणारी द्रव्ये'),
+    short: l('Wetting & Spreading', 'प्रसारक द्रव्ये'),
+    blurb: l(
+      'Stick Up helps sprays wet and spread evenly when mixed with crop protection and growth products.',
+      'पीक संरक्षण व वाढ उत्पादनांसोबत मिसळल्यावर स्टिक अप फवारणी समान पसरण्यास मदत करते.',
+    ),
+    tone: 'earth',
+    hero: [],
+  },
+];
+
+export const USES: Record<Use, L> = {
+  soil: l('Soil application', 'जमिनीतून वापर'),
+  foliar: l('Foliar spray', 'फवारणी'),
+  drip: l('Drip fertigation', 'ठिबक सिंचन'),
+  seed: l('Seed treatment', 'बीजप्रक्रिया'),
+  compost: l('Compost making', 'कंपोस्ट निर्मिती'),
+  'tank-mix': l('Tank mix with sprays', 'फवारणीत मिसळून'),
+};
+
+export type Calc =
+  | { mode: 'acre'; min: number; max: number; unit: 'kg'; packs: number[]; label?: L }
+  | { mode: 'tank'; min: number; max: number; unit: 'ml' | 'g'; label?: L };
+
+export interface ContentRow {
+  k: L;
+  v: string | L;
+}
+
+export const cellValue = (row: ContentRow, lang: 'en' | 'mr') => (typeof row.v === 'string' ? row.v : row.v[lang]);
+
+export interface Grade {
+  grade: string;
+  name: L;
+  img?: string;
+  n: number;
+  p: number;
+  k: number;
+}
+
+export interface Product {
+  slug: string;
+  category: CategoryId;
+  name: L;
+  subtitle: L;
+  grade?: string;
+  img?: string;
+  gallery?: string[];
+  partial?: boolean;
+  shape: Shape;
+  uses: Use[];
+  nutrients: Nutrient[];
+  contents: ContentRow[];
+  contentsNote?: L;
+  benefits: L[];
+  benefitsTitle?: L;
+  dose: L;
+  packing: L;
+  cropsAll: boolean;
+  cropsNamed: string[];
+  cropsText?: L;
+  note?: L;
+  calc?: Calc[];
+  grades?: Grade[];
+  featured?: boolean;
+}
+
+const ALL_CROPS = l('All crops, vegetables, fruits, cereals and pulses', 'सर्व पिके, भाजीपाला, फळे, तृणधान्ये व कडधान्ये');
+const ORGANIC_CROPS = l(
+  'All types of crops: sugarcane, cotton, pomegranate, banana, grapes, vegetables, fruits, cereals and pulses, polyhouse and horticulture crops',
+  'सर्व प्रकारची पिके: ऊस, कापूस, डाळिंब, केळी, द्राक्ष, भाजीपाला, फळे, तृणधान्ये व कडधान्ये, पॉलीहाऊस व उद्यानविद्या पिके',
+);
+const ORGANIC_NAMED = ['sugarcane', 'cotton', 'pomegranate', 'banana', 'grapes', 'vegetables'];
+const BIO_PEST_CROPS = l(
+  'Any field crops, horticulture crops, vegetable crops and floriculture crops',
+  'कोणतीही शेतातील पिके, उद्यानविद्या पिके, भाजीपाला व फुलपिके',
+);
+
+const NPK_BENEFITS: L[] = [
+  l('Nitrogen is the main constituent in the synthesis of chlorophyll.', 'नत्र हा हरितद्रव्य (क्लोरोफिल) निर्मितीतील मुख्य घटक आहे.'),
+  l('Increases carbohydrates and proteins in the plant body.', 'वनस्पतीत कर्बोदके व प्रथिनांचे प्रमाण वाढवते.'),
+  l('Increases the rate of photosynthesis, cell division and metabolic activity.', 'प्रकाशसंश्लेषणाचा वेग, पेशीविभाजन आणि चयापचय क्रिया वाढवते.'),
+  l('Increases the activity of calcium and boron, and develops resistance against pests and diseases.', 'कॅल्शियम व बोरॉनची कार्यक्षमता वाढवते आणि कीड-रोगांविरुद्ध प्रतिकारशक्ती निर्माण करते.'),
+  l('Improves the taste, colour, size and shape of fruit.', 'फळांची चव, रंग, आकार व आकारमान सुधारते.'),
+];
+
+const npkRows = (n: string, pt: string, pcs: string, pws: string, k: string): ContentRow[] => [
+  { k: l('Total Nitrogen, N(T)', 'एकूण नत्र, N(T)'), v: n },
+  { k: l('Total Phosphorus, P(T)', 'एकूण स्फुरद, P(T)'), v: pt },
+  { k: l('Citrate-soluble Phosphorus, P(CS)', 'सायट्रेट-विद्राव्य स्फुरद, P(CS)'), v: pcs },
+  { k: l('Water-soluble Phosphorus, P(WS)', 'पाण्यात विरघळणारा स्फुरद, P(WS)'), v: pws },
+  { k: l('Total Potassium, K(T)', 'एकूण पालाश, K(T)'), v: k },
+];
+
+const MICRO_ROWS: ContentRow[] = [
+  { k: l('Iron (Fe)', 'लोह (Fe)'), v: '2.5%' },
+  { k: l('Manganese (Mn)', 'मँगनीज (Mn)'), v: '1.0%' },
+  { k: l('Zinc (Zn)', 'जस्त (Zn)'), v: '3.0%' },
+  { k: l('Copper (Cu)', 'तांबे (Cu)'), v: '1.0%' },
+  { k: l('Molybdenum (Mo)', 'मॉलिब्डेनम (Mo)'), v: '0.1%' },
+  { k: l('Boron (B)', 'बोरॉन (B)'), v: '0.5%' },
+];
+
+export const PRODUCTS: Product[] = [
+  {
+    slug: 'krishi-vardan-18-18-10',
+    category: 'npk',
+    name: l('Krishi Vardan', 'कृषी वरदान'),
+    subtitle: l('NPK mixture fertilizer', 'एन.पी.के. मिश्र खत'),
+    grade: '18:18:10',
+    img: 'krishi-vardan-18',
+    shape: 'bag',
+    uses: ['soil'],
+    nutrients: ['N', 'P', 'K'],
+    contents: npkRows('18%', '18%', '18%', '9%', '10%'),
+    benefits: NPK_BENEFITS,
+    dose: l('100 kg per acre', 'प्रति एकर १०० किलो'),
+    packing: l('50 kg', '५० किलो'),
+    cropsAll: true,
+    cropsNamed: [],
+    cropsText: ALL_CROPS,
+    calc: [{ mode: 'acre', min: 100, max: 100, unit: 'kg', packs: [50] }],
+    featured: true,
+  },
+  {
+    slug: 'krishi-vardan-20-20-00',
+    category: 'npk',
+    name: l('Krishi Vardan', 'कृषी वरदान'),
+    subtitle: l('NPK mixture fertilizer', 'एन.पी.के. मिश्र खत'),
+    grade: '20:20:00',
+    img: 'krishi-vardan-20',
+    partial: true,
+    shape: 'bag',
+    uses: ['soil'],
+    nutrients: ['N', 'P'],
+    contents: npkRows('20%', '20%', '20%', '10%', '00'),
+    benefits: NPK_BENEFITS,
+    dose: l('100 kg per acre', 'प्रति एकर १०० किलो'),
+    packing: l('50 kg', '५० किलो'),
+    cropsAll: true,
+    cropsNamed: [],
+    cropsText: ALL_CROPS,
+    calc: [{ mode: 'acre', min: 100, max: 100, unit: 'kg', packs: [50] }],
+  },
+  {
+    slug: 'magnet',
+    category: 'secondary',
+    name: l('Magnet', 'मॅग्नेट'),
+    subtitle: l('Calcium + Magnesium + Sulphur, granule and powder', 'कॅल्शियम + मॅग्नेशियम + गंधक, दाणेदार व पावडर'),
+    grade: '10:05:10',
+    img: 'magnet',
+    shape: 'bag',
+    uses: ['soil'],
+    nutrients: ['Ca', 'Mg', 'S'],
+    contents: [
+      { k: l('Calcium (Ca)', 'कॅल्शियम (Ca)'), v: '10' },
+      { k: l('Magnesium (Mg)', 'मॅग्नेशियम (Mg)'), v: '05' },
+      { k: l('Sulphur (S)', 'गंधक (S)'), v: '10' },
+    ],
+    benefits: [
+      l('Calcium multiplies cell division and acts as a catalyst for maximum uptake of NPK.', 'कॅल्शियम पेशीविभाजन वाढवते आणि एन.पी.के.च्या जास्तीत जास्त शोषणासाठी उत्प्रेरकाचे काम करते.'),
+      l('Magnesium plays an important role in photosynthesis, and keeps plants healthy and greener for more yield.', 'मॅग्नेशियम प्रकाशसंश्लेषणात महत्त्वाची भूमिका बजावते आणि पिके निरोगी, अधिक हिरवी ठेवून उत्पादन वाढवते.'),
+      l('Magnesium induces disease resistance against fungal pathogens.', 'मॅग्नेशियम बुरशीजन्य रोगांविरुद्ध प्रतिकारशक्ती निर्माण करते.'),
+      l('Sulphur increases disease resistance power, with 20–30% growth in crop yield.', 'गंधक रोगप्रतिकारशक्ती वाढवते आणि पीक उत्पादनात २०–३०% वाढ होते.'),
+      l('Available in granule and powder form, which helps in handling and using it for different crops.', 'दाणेदार व पावडर स्वरूपात उपलब्ध, त्यामुळे वेगवेगळ्या पिकांसाठी हाताळणे व वापरणे सोपे होते.'),
+    ],
+    dose: l('100 kg per acre', 'प्रति एकर १०० किलो'),
+    packing: l('25 kg, 50 kg', '२५ किलो, ५० किलो'),
+    cropsAll: true,
+    cropsNamed: ['sugarcane', 'banana', 'soybean', 'onion', 'cotton', 'vegetables'],
+    cropsText: ALL_CROPS,
+    calc: [{ mode: 'acre', min: 100, max: 100, unit: 'kg', packs: [50, 25] }],
+    featured: true,
+  },
+  {
+    slug: 'faster-plus',
+    category: 'water-soluble',
+    name: l('FASTER+', 'फास्टर+'),
+    subtitle: l('100% water soluble NPK, for foliar spray and drip fertigation', '१००% पाण्यात विरघळणारे एन.पी.के., फवारणी व ठिबक सिंचनासाठी'),
+    grade: '7 grades',
+    img: 'faster-plus',
+    shape: 'bag',
+    uses: ['foliar', 'drip'],
+    nutrients: ['N', 'P', 'K'],
+    contents: [],
+    grades: [
+      { grade: '19:19:19', name: l('Balanced NPK', 'संतुलित एन.पी.के.'), img: 'faster-19-19-19', n: 19, p: 19, k: 19 },
+      { grade: '20:20:20', name: l('Balanced NPK', 'संतुलित एन.पी.के.'), img: 'faster-20-20-20', n: 20, p: 20, k: 20 },
+      { grade: '13:00:45', name: l('Potassium Nitrate', 'पोटॅशियम नायट्रेट'), img: 'faster-13-00-45', n: 13, p: 0, k: 45 },
+      { grade: '00:00:50', name: l('Sulphate of Potash', 'सल्फेट ऑफ पोटॅश'), img: 'faster-00-00-50', n: 0, p: 0, k: 50 },
+      { grade: '00:52:34', name: l('Mono Potassium Phosphate', 'मोनो पोटॅशियम फॉस्फेट'), img: 'faster-00-52-34', n: 0, p: 52, k: 34 },
+      { grade: '12:61:00', name: l('Mono Ammonium Phosphate', 'मोनो अमोनियम फॉस्फेट'), n: 12, p: 61, k: 0 },
+      { grade: '13:40:13', name: l('High phosphorus NPK', 'जास्त स्फुरद असलेले एन.पी.के.'), n: 13, p: 40, k: 13 },
+    ],
+    benefits: [
+      l('100% water soluble, blended with essential micronutrients in chelated form to fulfil the need for basic nutrients of each crop.', '१००% पाण्यात विरघळणारे, प्रत्येक पिकाची मूलभूत अन्नद्रव्यांची गरज भागवण्यासाठी चिलेटेड स्वरूपातील आवश्यक सूक्ष्म अन्नद्रव्यांसह.'),
+      l('Rapid and healthy growth of the crop, and recovery of deficiencies through a balanced nutrient supply.', 'पिकाची जलद व निरोगी वाढ आणि संतुलित अन्नद्रव्य पुरवठ्यामुळे कमतरता भरून निघते.'),
+      l('Increases resistance against pests and diseases, ultimately reducing the cost of pesticides and fungicides.', 'कीड-रोगांविरुद्ध प्रतिकारशक्ती वाढवते, त्यामुळे कीटकनाशके व बुरशीनाशकांवरील खर्च कमी होतो.'),
+      l('Early and uniform flowering, and prevention of flower and fruit dropping, resulting in more yield.', 'लवकर व एकसमान फुलोरा आणि फुले-फळगळ रोखल्याने अधिक उत्पादन.'),
+      l('Increases fruit quality, weight, colour, size and shelf life.', 'फळांचा दर्जा, वजन, रंग, आकार आणि टिकाऊपणा वाढवते.'),
+    ],
+    dose: l('As per the requirement of the crop', 'पिकाच्या गरजेनुसार'),
+    packing: l('1 kg, 25 kg', '१ किलो, २५ किलो'),
+    cropsAll: true,
+    cropsNamed: [],
+    featured: true,
+  },
+  {
+    slug: 'cannon',
+    category: 'water-soluble',
+    name: l('Cannon', 'कॅनन'),
+    subtitle: l('Calcium Nitrate, 100% water soluble', 'कॅल्शियम नायट्रेट, १००% पाण्यात विरघळणारे'),
+    img: 'cannon',
+    partial: true,
+    shape: 'bag',
+    uses: ['foliar', 'drip'],
+    nutrients: ['N', 'Ca'],
+    contents: [
+      { k: l('Nitrate Nitrogen, N-NO₃', 'नायट्रेट नत्र, N-NO₃'), v: '14.4%' },
+      { k: l('Ammonical Nitrogen, N-NH₄', 'अमोनिकल नत्र, N-NH₄'), v: '1.1%' },
+      { k: l('Total Nitrogen, N(T)', 'एकूण नत्र, N(T)'), v: '15.5%' },
+      { k: l('Calcium (Ca)', 'कॅल्शियम (Ca)'), v: '18.8%' },
+    ],
+    benefits: [
+      l('Gives greenness to leaves.', 'पानांना हिरवेपणा देते.'),
+      l('Increases absorption power.', 'शोषण क्षमता वाढवते.'),
+      l('Gives a regular shape and increases size.', 'नियमित आकार देते आणि आकारमान वाढवते.'),
+    ],
+    dose: l('1–10 gm per litre of water', 'प्रति लिटर पाण्यात १–१० ग्रॅम'),
+    packing: l('500 gm, 1000 gm', '५०० ग्रॅम, १००० ग्रॅम'),
+    cropsAll: true,
+    cropsNamed: [],
+    cropsText: ALL_CROPS,
+    calc: [{ mode: 'tank', min: 1, max: 10, unit: 'g' }],
+  },
+  {
+    slug: 'lancer',
+    category: 'micronutrients',
+    name: l('Lancer', 'लान्सर'),
+    subtitle: l('Micronutrient mixture, liquid and soil application', 'सूक्ष्म अन्नद्रव्य मिश्रण, द्रव व जमिनीतून वापरासाठी'),
+    img: 'lancer-bucket',
+    gallery: ['lancer-bottle'],
+    shape: 'bucket',
+    uses: ['foliar', 'soil'],
+    nutrients: ['Fe', 'Mn', 'Zn', 'Cu', 'Mo', 'B'],
+    contents: MICRO_ROWS,
+    benefits: [
+      l('This mixture of essential micronutrients improves the quality and yield of the plant.', 'आवश्यक सूक्ष्म अन्नद्रव्यांचे हे मिश्रण पिकाचा दर्जा व उत्पादन सुधारते.'),
+      l('Iron: important in photosynthesis and the uptake of other micronutrients.', 'लोह: प्रकाशसंश्लेषण व इतर सूक्ष्म अन्नद्रव्यांच्या शोषणासाठी महत्त्वाचे.'),
+      l('Zinc: important in preparing plant growth regulators and protein, and helpful in the ripening of seeds and fruits.', 'जस्त: वाढ नियंत्रके व प्रथिने तयार होण्यासाठी महत्त्वाचे; बिया व फळे पिकण्यास उपयुक्त.'),
+      l('Copper: acts as a catalyst in all development stages, and helps vitamin A production and the reproductive capacity of the plant.', 'तांबे: सर्व वाढीच्या अवस्थांत उत्प्रेरक; जीवनसत्त्व ‘अ’ची निर्मिती व प्रजनन क्षमतेस मदत.'),
+      l('Boron: helps the uptake of calcium and nitrogen, and helps in the production of protein.', 'बोरॉन: कॅल्शियम व नत्राच्या शोषणास आणि प्रथिने निर्मितीस मदत.'),
+      l('Manganese: improves photosynthetic activity and the preparation of carotene, riboflavin, ascorbic acid and protein.', 'मँगनीज: प्रकाशसंश्लेषण तसेच कॅरोटीन, रायबोफ्लेविन, ॲस्कॉर्बिक आम्ल व प्रथिने निर्मिती सुधारते.'),
+      l('Molybdenum: an important nutrient for nitrogen-fixing micro-organisms.', 'मॉलिब्डेनम: नत्र स्थिर करणाऱ्या सूक्ष्मजीवांसाठी महत्त्वाचे अन्नद्रव्य.'),
+    ],
+    dose: l('Spray: 500 ml Lancer with 200 litres of water. Soil: 10 kg Lancer powder for 1 acre.', 'फवारणी: २०० लिटर पाण्यात ५०० मिली लान्सर. जमिनीतून: १ एकरासाठी १० किलो लान्सर पावडर.'),
+    packing: l('Liquid: 250 ml, 500 ml, 1000 ml, 5 litre. Powder: 5 kg, 10 kg, 25 kg.', 'द्रव: २५० मिली, ५०० मिली, १००० मिली, ५ लिटर. पावडर: ५ किलो, १० किलो, २५ किलो.'),
+    cropsAll: true,
+    cropsNamed: [],
+    cropsText: ALL_CROPS,
+    calc: [
+      { mode: 'tank', min: 2.5, max: 2.5, unit: 'ml', label: l('Lancer liquid', 'लान्सर द्रव') },
+      { mode: 'acre', min: 10, max: 10, unit: 'kg', packs: [10, 5, 25], label: l('Lancer powder', 'लान्सर पावडर') },
+    ],
+    featured: true,
+  },
+  {
+    slug: 'spark',
+    category: 'micronutrients',
+    name: l('Spark', 'स्पार्क'),
+    subtitle: l('Chelated micronutrients with amino acid', 'अमिनो आम्लासह चिलेटेड सूक्ष्म अन्नद्रव्ये'),
+    img: 'spark-jar',
+    gallery: ['spark-pouch'],
+    shape: 'bucket',
+    uses: ['foliar'],
+    nutrients: ['Fe', 'Mn', 'Zn', 'Cu', 'Mo', 'B'],
+    contents: MICRO_ROWS,
+    contentsNote: l('With amino acid.', 'अमिनो आम्लासह.'),
+    benefits: [
+      l('Boosts photosynthesis activity and increases chlorophyll concentration.', 'प्रकाशसंश्लेषण वाढवते आणि हरितद्रव्याचे प्रमाण वाढवते.'),
+      l('Formulated to deliver required micronutrients to the crop.', 'पिकाला आवश्यक सूक्ष्म अन्नद्रव्ये पोहोचवण्यासाठी तयार केलेले.'),
+      l('Helps improve respiratory function and boost metabolic activities.', 'श्वसनक्रिया सुधारण्यास आणि चयापचय क्रिया वाढवण्यास मदत करते.'),
+      l('Helps in pollination and fruit formation.', 'परागीभवन व फळधारणेस मदत करते.'),
+      l('Provides a readymade and rich source of nutrition.', 'तयार आणि समृद्ध पोषण स्रोत देते.'),
+      l('Helps activate phytohormones and other growth substances in the crop.', 'पिकातील वनस्पती संप्रेरके व इतर वाढ घटक सक्रिय करण्यास मदत करते.'),
+    ],
+    dose: l('Spray 250 gm of Spark with 200 litres of water', '२०० लिटर पाण्यात २५० ग्रॅम स्पार्क मिसळून फवारणी'),
+    packing: l('250 gm, 500 gm', '२५० ग्रॅम, ५०० ग्रॅम'),
+    cropsAll: true,
+    cropsNamed: [],
+    cropsText: ALL_CROPS,
+    calc: [{ mode: 'tank', min: 1.25, max: 1.25, unit: 'g' }],
+  },
+  {
+    slug: 'lancer-12-zinc',
+    category: 'straight',
+    name: l('Lancer-12 Zinc', 'लान्सर-१२ झिंक'),
+    subtitle: l('Chelated Zinc, 12% water soluble', 'चिलेटेड जस्त, १२% पाण्यात विरघळणारे'),
+    img: 'lancer-12-zinc',
+    shape: 'pouch',
+    uses: ['foliar'],
+    nutrients: ['Zn'],
+    contents: [{ k: l('Water-soluble Zinc (Zn)', 'पाण्यात विरघळणारे जस्त (Zn)'), v: '12%' }],
+    benefits: [
+      l('Used to recover zinc deficiency.', 'जस्ताची कमतरता भरून काढण्यासाठी वापरतात.'),
+      l('Dissolves rapidly and completely.', 'जलद आणि पूर्णपणे विरघळते.'),
+    ],
+    dose: l('Spray 100 gm in 150–200 litres of water', '१५०–२०० लिटर पाण्यात १०० ग्रॅम मिसळून फवारणी'),
+    packing: l('250 gm, 500 gm, 1000 gm', '२५० ग्रॅम, ५०० ग्रॅम, १००० ग्रॅम'),
+    cropsAll: true,
+    cropsNamed: [],
+    cropsText: ALL_CROPS,
+    calc: [{ mode: 'tank', min: 0.5, max: 0.67, unit: 'g' }],
+  },
+  {
+    slug: 'lancer-12-ferrous',
+    category: 'straight',
+    name: l('Lancer-12 Ferrous', 'लान्सर-१२ फेरस'),
+    subtitle: l('Chelated Ferrous, 12% water soluble', 'चिलेटेड लोह, १२% पाण्यात विरघळणारे'),
+    img: 'lancer-12-ferrous',
+    shape: 'pouch',
+    uses: ['foliar'],
+    nutrients: ['Fe'],
+    contents: [{ k: l('Water-soluble Ferrous (Fe)', 'पाण्यात विरघळणारे लोह (Fe)'), v: '12%' }],
+    benefits: [
+      l('Used to recover ferrous deficiency.', 'लोहाची कमतरता भरून काढण्यासाठी वापरतात.'),
+      l('Dissolves rapidly and completely.', 'जलद आणि पूर्णपणे विरघळते.'),
+    ],
+    dose: l('Spray 100 gm in 150–200 litres of water', '१५०–२०० लिटर पाण्यात १०० ग्रॅम मिसळून फवारणी'),
+    packing: l('250 gm, 500 gm, 1000 gm', '२५० ग्रॅम, ५०० ग्रॅम, १००० ग्रॅम'),
+    cropsAll: true,
+    cropsNamed: [],
+    cropsText: ALL_CROPS,
+    calc: [{ mode: 'tank', min: 0.5, max: 0.67, unit: 'g' }],
+  },
+  {
+    slug: 'flame',
+    category: 'straight',
+    name: l('Flame', 'फ्लेम'),
+    subtitle: l('Ferrous Sulphate', 'फेरस सल्फेट'),
+    img: 'flame',
+    shape: 'bag',
+    uses: ['soil'],
+    nutrients: ['Fe'],
+    contents: [{ k: l('Contents', 'घटक'), v: l('Ferrous Sulphate', 'फेरस सल्फेट') }],
+    benefits: [
+      l('Used to recover ferrous deficiency.', 'लोहाची कमतरता भरून काढण्यासाठी वापरतात.'),
+      l('Increases photosynthesis activity.', 'प्रकाशसंश्लेषण वाढवते.'),
+      l('Plays an important role in the development and differentiation of tissue.', 'ऊतींची वाढ व विभेदन यात महत्त्वाची भूमिका बजावते.'),
+    ],
+    dose: l('15 kg per acre', 'प्रति एकर १५ किलो'),
+    packing: l('5 kg, 10 kg, 25 kg', '५ किलो, १० किलो, २५ किलो'),
+    cropsAll: true,
+    cropsNamed: [],
+    cropsText: ALL_CROPS,
+    calc: [{ mode: 'acre', min: 15, max: 15, unit: 'kg', packs: [25, 10, 5] }],
+  },
+  {
+    slug: 'grow-perfect',
+    category: 'straight',
+    name: l('Grow Perfect', 'ग्रो परफेक्ट'),
+    subtitle: l('Magnesium Sulphate', 'मॅग्नेशियम सल्फेट'),
+    img: 'grow-perfect',
+    partial: true,
+    shape: 'bag',
+    uses: ['foliar'],
+    nutrients: ['Mg', 'S'],
+    contents: [{ k: l('Magnesium Sulphate (MgSO₄)', 'मॅग्नेशियम सल्फेट (MgSO₄)'), v: '9.6%' }],
+    benefits: [
+      l('Keeps plants healthy, with more yield.', 'पिके निरोगी ठेवते आणि उत्पादन वाढवते.'),
+      l('Induces disease resistance against fungal pathogens.', 'बुरशीजन्य रोगांविरुद्ध प्रतिकारशक्ती निर्माण करते.'),
+      l('Increases photosynthesis activity and results in a dark green plant.', 'प्रकाशसंश्लेषण वाढवते आणि पिकाला गडद हिरवा रंग देते.'),
+    ],
+    dose: l('Spray 3 gm per litre of water', 'प्रति लिटर पाण्यात ३ ग्रॅम मिसळून फवारणी'),
+    packing: l('1 kg', '१ किलो'),
+    cropsAll: true,
+    cropsNamed: [],
+    cropsText: ALL_CROPS,
+    calc: [{ mode: 'tank', min: 3, max: 3, unit: 'g' }],
+  },
+  {
+    slug: 'manganese-sulphate',
+    category: 'straight',
+    name: l('Manganese Sulphate', 'मँगनीज सल्फेट'),
+    subtitle: l('Manganese and sulphur', 'मँगनीज व गंधक'),
+    shape: 'bag',
+    uses: ['foliar'],
+    nutrients: ['Mn', 'S'],
+    contents: [
+      { k: l('Sulphur (S)', 'गंधक (S)'), v: '17%' },
+      { k: l('Manganese (Mn)', 'मँगनीज (Mn)'), v: '30.5%' },
+    ],
+    benefits: [
+      l('Manganese is a micronutrient which plays an important role in photosynthesis.', 'मँगनीज हे प्रकाशसंश्लेषणात महत्त्वाची भूमिका बजावणारे सूक्ष्म अन्नद्रव्य आहे.'),
+      l('Keeps the plant healthy and greener, and gives more yield.', 'पीक निरोगी व अधिक हिरवे ठेवते आणि उत्पादन वाढवते.'),
+      l('Induces disease resistance against fungal pathogens.', 'बुरशीजन्य रोगांविरुद्ध प्रतिकारशक्ती निर्माण करते.'),
+    ],
+    dose: l('3 gm per litre of water', 'प्रति लिटर पाण्यात ३ ग्रॅम'),
+    packing: l('10 kg, 25 kg', '१० किलो, २५ किलो'),
+    cropsAll: true,
+    cropsNamed: [],
+    cropsText: ALL_CROPS,
+    calc: [{ mode: 'tank', min: 3, max: 3, unit: 'g' }],
+  },
+  {
+    slug: 'boro-plus',
+    category: 'straight',
+    name: l('Boro Plus', 'बोरो प्लस'),
+    subtitle: l('Boron', 'बोरॉन'),
+    img: 'boro-plus',
+    shape: 'pouch',
+    uses: ['soil', 'foliar'],
+    nutrients: ['B'],
+    contents: [{ k: l('Boron (B)', 'बोरॉन (B)'), v: '10.5%' }],
+    benefits: [
+      l('Boron plays an important role in the development and differentiation of tissue.', 'बोरॉन ऊतींची वाढ व विभेदन यात महत्त्वाची भूमिका बजावते.'),
+      l('Helps the normal growth of the plant and the absorption of nitrogen from the soil.', 'पिकाची सामान्य वाढ आणि जमिनीतून नत्राचे शोषण होण्यास मदत करते.'),
+      l('Helps root development, flowering and pollen grain formation.', 'मुळांची वाढ, फुलोरा व परागकण निर्मितीस मदत करते.'),
+    ],
+    dose: l('2–3 gm per litre of water', 'प्रति लिटर पाण्यात २–३ ग्रॅम'),
+    packing: l('250 gm, 500 gm', '२५० ग्रॅम, ५०० ग्रॅम'),
+    cropsAll: true,
+    cropsNamed: [],
+    cropsText: ALL_CROPS,
+    calc: [{ mode: 'tank', min: 2, max: 3, unit: 'g' }],
+  },
+  {
+    slug: 'champion',
+    category: 'organic',
+    name: l('Champion', 'चॅम्पियन'),
+    subtitle: l('Organic manure fertilizer', 'सेंद्रिय खत'),
+    img: 'champion',
+    shape: 'bag',
+    uses: ['soil'],
+    nutrients: ['N', 'P', 'K'],
+    contents: [
+      { k: l('Organic carbon', 'सेंद्रिय कर्ब'), v: '15%' },
+      { k: l('Phosphorus', 'स्फुरद'), v: '1%' },
+      { k: l('Nitrogen', 'नत्र'), v: '1%' },
+      { k: l('Potash', 'पालाश'), v: '1%' },
+      { k: l('Moisture', 'ओलावा'), v: '25%' },
+      { k: l('pH', 'सामू (pH)'), v: '6.5 – 7.5' },
+    ],
+    benefits: [
+      l('Increases organic carbon in soil, and also increases soil fertility and productivity.', 'जमिनीतील सेंद्रिय कर्ब, सुपीकता व उत्पादकता वाढवते.'),
+      l('Helps to minimise the use of chemical fertilizer.', 'रासायनिक खतांचा वापर कमी करण्यास उपयोगी.'),
+      l('Contains all types of nutrients in organic form.', 'सर्व प्रकारची अन्नद्रव्ये सेंद्रिय स्वरूपात असतात.'),
+      l('Contains micro-organisms that convert insoluble NPK into a soluble form and make it available to the plant.', 'यातील सूक्ष्मजीव अविद्राव्य एन.पी.के.चे विद्राव्य स्वरूपात रूपांतर करून ते पिकाला उपलब्ध करून देतात.'),
+    ],
+    dose: l('200 kg per acre', 'प्रति एकर २०० किलो'),
+    packing: l('50 kg bags', '५० किलो बॅग'),
+    cropsAll: true,
+    cropsNamed: ORGANIC_NAMED,
+    cropsText: ORGANIC_CROPS,
+    calc: [{ mode: 'acre', min: 200, max: 200, unit: 'kg', packs: [50] }],
+    featured: true,
+  },
+  {
+    slug: 'neem',
+    category: 'organic',
+    name: l('Neem', 'नीम'),
+    subtitle: l('Organic product, especially for sugarcane and pomegranate', 'सेंद्रिय उत्पादन, विशेषतः ऊस व डाळिंबासाठी'),
+    shape: 'bag',
+    uses: ['soil'],
+    nutrients: [],
+    contents: [{ k: l('Azadirachtin', 'अझाडिरॅक्टिन'), v: '200 – 300 PPM' }],
+    benefits: [
+      l('Helps to maintain soil pH.', 'जमिनीचा सामू (pH) टिकवण्यास मदत करते.'),
+      l('Increases organic carbon in the soil, and soil fertility and productivity.', 'जमिनीतील सेंद्रिय कर्ब, सुपीकता व उत्पादकता वाढवते.'),
+      l('Helps to minimise the use of chemical fertilizer, and increases useful bacteria in the soil.', 'रासायनिक खतांचा वापर कमी करण्यास उपयोगी; जमिनीतील उपयुक्त जिवाणू वाढवते.'),
+      l('Increases the rate of photosynthesis and plays an important role in crop metabolism.', 'प्रकाशसंश्लेषणाचा वेग वाढवते आणि पिकाच्या चयापचयात महत्त्वाची भूमिका बजावते.'),
+      l('Increases the disease resistance power of the crop and maintains the C:N ratio in the soil.', 'पिकाची रोगप्रतिकारशक्ती वाढवते आणि जमिनीतील कर्ब:नत्र गुणोत्तर टिकवते.'),
+    ],
+    dose: l('50 to 100 kg per acre', 'प्रति एकर ५० ते १०० किलो'),
+    packing: l('50 kg bags', '५० किलो बॅग'),
+    cropsAll: true,
+    cropsNamed: ORGANIC_NAMED,
+    cropsText: ORGANIC_CROPS,
+    calc: [{ mode: 'acre', min: 50, max: 100, unit: 'kg', packs: [50] }],
+  },
+  {
+    slug: 'magsil',
+    category: 'organic',
+    name: l('Magsil', 'मॅगसिल'),
+    subtitle: l('Silicon-based product', 'सिलिकॉनयुक्त उत्पादन'),
+    shape: 'bag',
+    uses: ['soil'],
+    nutrients: ['Si'],
+    contents: [{ k: l('Silicon', 'सिलिकॉन'), v: '30%' }],
+    benefits: [
+      l('Silicon plays a role in increasing the size and shape of fruit crops.', 'सिलिकॉन फळपिकांचा आकार व आकारमान वाढवण्यात भूमिका बजावते.'),
+      l('Maintains pH balance in the soil, and helps organic carbon, fertility, productivity and porosity of the soil.', 'जमिनीचा सामू संतुलित ठेवते; सेंद्रिय कर्ब, सुपीकता, उत्पादकता व सच्छिद्रता वाढवते.'),
+      l('Helps convert non-soluble nutrients into soluble form, and increases the rate of NPK uptake, resulting in increased yield.', 'अविद्राव्य अन्नद्रव्यांचे विद्राव्य स्वरूपात रूपांतर करते आणि एन.पी.के.चे शोषण वाढवून उत्पादन वाढवते.'),
+    ],
+    dose: l('50 to 100 kg per acre', 'प्रति एकर ५० ते १०० किलो'),
+    packing: l('50 kg bags', '५० किलो बॅग'),
+    cropsAll: true,
+    cropsNamed: ORGANIC_NAMED,
+    cropsText: ORGANIC_CROPS,
+    calc: [{ mode: 'acre', min: 50, max: 100, unit: 'kg', packs: [50] }],
+  },
+  {
+    slug: 'azo',
+    category: 'bio-fertilizers',
+    name: l('Azo', 'अझो'),
+    subtitle: l('Azotobacter, nitrogen-fixing bacteria', 'अझोटोबॅक्टर, नत्र स्थिर करणारे जिवाणू'),
+    img: 'azo',
+    shape: 'pouch',
+    uses: ['seed'],
+    nutrients: ['N'],
+    contents: [{ k: l('Culture', 'कल्चर'), v: l('Azotobacter', 'अझोटोबॅक्टर') }],
+    benefits: [
+      l('Used for nitrogen fixation in soil from the environment. Nitrogen is a basic and important nutrient for the crop.', 'वातावरणातील नत्र जमिनीत स्थिर करण्यासाठी वापरतात. नत्र हे पिकासाठी मूलभूत व महत्त्वाचे अन्नद्रव्य आहे.'),
+    ],
+    dose: l('Seed treatment: 500 gm for 10–15 kg of seed', 'बीजप्रक्रिया: १०–१५ किलो बियाण्यास ५०० ग्रॅम'),
+    packing: l('500 gm, 1 kg', '५०० ग्रॅम, १ किलो'),
+    cropsAll: false,
+    cropsNamed: ['sugarcane', 'wheat', 'maize', 'cotton', 'turmeric', 'ginger', 'sorghum', 'tobacco', 'brinjal'],
+    cropsText: l(
+      'Sugarcane, wheat, sorghum, corn, cotton, turmeric, ginger, tobacco, brinjal, floriculture crops, greenhouse crops and more',
+      'ऊस, गहू, ज्वारी, मका, कापूस, हळद, आले, तंबाखू, वांगी, फुलपिके, हरितगृहातील पिके इत्यादी',
+    ),
+  },
+  {
+    slug: 'rhizo',
+    category: 'bio-fertilizers',
+    name: l('Rhizo', 'ऱ्हायझो'),
+    subtitle: l('Rhizobium culture', 'ऱ्हायझोबियम कल्चर'),
+    img: 'rhizo',
+    shape: 'pouch',
+    uses: ['seed'],
+    nutrients: ['N'],
+    contents: [{ k: l('Culture', 'कल्चर'), v: l('Rhizobium', 'ऱ्हायझोबियम') }],
+    benefits: [
+      l('A bio-fertilizer culture for seed treatment of pulses, groundnut and other dicotyledon crops.', 'कडधान्ये, भुईमूग व इतर द्विदल पिकांच्या बीजप्रक्रियेसाठी जैविक खत कल्चर.'),
+    ],
+    dose: l('Seed treatment: 500 gm for 10–15 kg of seed', 'बीजप्रक्रिया: १०–१५ किलो बियाण्यास ५०० ग्रॅम'),
+    packing: l('500 gm, 1 kg', '५०० ग्रॅम, १ किलो'),
+    cropsAll: false,
+    cropsNamed: ['groundnut'],
+    cropsText: l(
+      'Chawli, groundnut, tur, mug, wal, matki, udid, gawar, tag and other dicotyledon crops',
+      'चवळी, भुईमूग, तूर, मूग, वाल, मटकी, उडीद, गवार, ताग व इतर द्विदल पिके',
+    ),
+  },
+  {
+    slug: 'phospho',
+    category: 'bio-fertilizers',
+    name: l('Phospho', 'फॉस्फो'),
+    subtitle: l('P.S.B., phosphate solubilizing bacteria', 'पी.एस.बी., स्फुरद विरघळवणारे जिवाणू'),
+    shape: 'pouch',
+    uses: ['seed'],
+    nutrients: ['P'],
+    contents: [{ k: l('Culture', 'कल्चर'), v: l('Phosphate Solubilizing Bacteria', 'स्फुरद विरघळवणारे जिवाणू') }],
+    benefits: [
+      l('A bio-fertilizer culture of phosphate solubilizing bacteria, used for seed treatment.', 'स्फुरद विरघळवणाऱ्या जिवाणूंचे जैविक खत कल्चर, बीजप्रक्रियेसाठी वापरतात.'),
+    ],
+    dose: l('Seed treatment: 500 gm for 10–15 kg of seed', 'बीजप्रक्रिया: १०–१५ किलो बियाण्यास ५०० ग्रॅम'),
+    packing: l('500 gm, 1 kg', '५०० ग्रॅम, १ किलो'),
+    cropsAll: false,
+    cropsNamed: ['sugarcane', 'wheat', 'maize', 'cotton', 'turmeric', 'ginger', 'sorghum', 'tobacco', 'brinjal', 'grapes', 'pomegranate', 'coconut'],
+    cropsText: l(
+      'Sugarcane, wheat, sorghum, corn, cotton, turmeric, ginger, tobacco, brinjal, grapes, pomegranate, coconut, other horticulture crops, floriculture crops, greenhouse crops and more',
+      'ऊस, गहू, ज्वारी, मका, कापूस, हळद, आले, तंबाखू, वांगी, द्राक्ष, डाळिंब, नारळ, इतर उद्यानविद्या पिके, फुलपिके, हरितगृहातील पिके इत्यादी',
+    ),
+  },
+  {
+    slug: 'composter',
+    category: 'bio-fertilizers',
+    name: l('Composter', 'कंपोस्टर'),
+    subtitle: l('D.C., decomposing culture', 'डी.सी., कुजवणारे कल्चर'),
+    shape: 'pouch',
+    uses: ['compost'],
+    nutrients: [],
+    contents: [{ k: l('Culture', 'कल्चर'), v: l('Decomposing culture', 'कुजवणारे कल्चर') }],
+    benefits: [
+      l('Used to prepare good quality compost from farm raw material such as cow dung, dry crop leaves and dairy farm raw material.', 'शेणखत, पिकांची वाळलेली पाने व गोठ्यातील कच्चा माल यांपासून दर्जेदार कंपोस्ट तयार करण्यासाठी वापरतात.'),
+      l('Compost is important for increasing the quality of the crop as well as the soil.', 'कंपोस्ट पिकाचा तसेच जमिनीचा दर्जा वाढवण्यासाठी महत्त्वाचे आहे.'),
+    ],
+    dose: l('1 to 1.5 kg of Composter for 100 kg of cow dung and raw material', '१०० किलो शेणखत व कच्च्या मालासाठी १ ते १.५ किलो कंपोस्टर'),
+    packing: l('1 kg', '१ किलो'),
+    cropsAll: true,
+    cropsNamed: [],
+  },
+  {
+    slug: 'humic-rich',
+    category: 'growth-promoters',
+    name: l('Humic Rich', 'ह्युमिक रिच'),
+    subtitle: l('Plant growth promoter, liquid and granule', 'वाढ प्रवर्तक, द्रव व दाणेदार'),
+    img: 'humic-rich-granules',
+    gallery: ['humic-rich-liquid'],
+    shape: 'bag',
+    uses: ['foliar', 'soil'],
+    nutrients: [],
+    contents: [
+      { k: l('Humic Acid', 'ह्युमिक आम्ल'), v: '12%' },
+      { k: l('Amino Acid', 'अमिनो आम्ल'), v: '12%' },
+      { k: l('Folic Acid', 'फॉलिक आम्ल'), v: '300 ppm' },
+    ],
+    benefits: [
+      l('Strong and healthy growth of white roots.', 'पांढऱ्या मुळांची मजबूत व निरोगी वाढ.'),
+      l('Increases the efficiency of soil.', 'जमिनीची कार्यक्षमता वाढवते.'),
+      l('Activates cell division, resulting in vigorous crop growth.', 'पेशीविभाजन सक्रिय करून पिकाची जोमदार वाढ करते.'),
+      l('Improves the quality and yield of crops.', 'पिकांचा दर्जा व उत्पादन सुधारते.'),
+    ],
+    dose: l('Liquid: 2–3 ml per litre of water. Granule: 10 kg per acre.', 'द्रव: प्रति लिटर पाण्यात २–३ मिली. दाणेदार: प्रति एकर १० किलो.'),
+    packing: l('Liquid: 250 ml, 500 ml, 1000 ml. Granule: 5 kg, 10 kg.', 'द्रव: २५० मिली, ५०० मिली, १००० मिली. दाणेदार: ५ किलो, १० किलो.'),
+    cropsAll: true,
+    cropsNamed: [],
+    cropsText: ALL_CROPS,
+    calc: [
+      { mode: 'tank', min: 2, max: 3, unit: 'ml', label: l('Humic Rich liquid', 'ह्युमिक रिच द्रव') },
+      { mode: 'acre', min: 10, max: 10, unit: 'kg', packs: [10, 5], label: l('Humic Rich granule', 'ह्युमिक रिच दाणेदार') },
+    ],
+  },
+  {
+    slug: 'maxima',
+    category: 'growth-promoters',
+    name: l('Maxima', 'मॅक्झिमा'),
+    subtitle: l('Amino acid and phosphoric acid bio-stimulant', 'अमिनो आम्ल व फॉस्फोरिक आम्लयुक्त जैव उत्तेजक'),
+    img: 'maxima',
+    shape: 'bottle',
+    uses: ['foliar'],
+    nutrients: ['Mg', 'P'],
+    contents: [
+      { k: l('Amino acid', 'अमिनो आम्ल'), v: '30%' },
+      { k: l('Magnesium', 'मॅग्नेशियम'), v: '0.7%' },
+      { k: l('Phosphoric acid', 'फॉस्फोरिक आम्ल'), v: '30%' },
+    ],
+    benefits: [
+      l('Acts as a bio-stimulant on the plant, with amino acid and phosphoric acid.', 'अमिनो आम्ल व फॉस्फोरिक आम्लामुळे पिकावर जैव उत्तेजक म्हणून काम करते.'),
+      l('Increases resistance power, reduces flower and fruit dropping, and improves uniform shape and colour.', 'प्रतिकारशक्ती वाढवते, फुले-फळगळ कमी करते आणि एकसमान आकार व रंग देते.'),
+      l('Improves nutrient uptake in the plant body.', 'पिकातील अन्नद्रव्यांचे शोषण सुधारते.'),
+    ],
+    dose: l('2 ml per litre of water', 'प्रति लिटर पाण्यात २ मिली'),
+    packing: l('500 ml, 1000 ml, 5 litre', '५०० मिली, १००० मिली, ५ लिटर'),
+    cropsAll: false,
+    cropsNamed: [],
+    calc: [{ mode: 'tank', min: 2, max: 2, unit: 'ml' }],
+  },
+  {
+    slug: 'tryzyme',
+    category: 'growth-promoters',
+    name: l('Tryzyme', 'ट्रायझाइम'),
+    subtitle: l('Seaweed and protein based, for all crops', 'समुद्री शैवाल व प्रथिनांवर आधारित, सर्व पिकांसाठी'),
+    img: 'tryzyme',
+    shape: 'bottle',
+    uses: ['foliar'],
+    nutrients: [],
+    contents: [
+      { k: l('Seaweed extracts', 'समुद्री शैवाल अर्क'), v: '20%' },
+      { k: l('Hydrolyzed protein', 'हायड्रोलाइज्ड प्रथिने'), v: '10%' },
+      { k: l('Other', 'इतर'), v: '70%' },
+    ],
+    benefits: [
+      l('A composite of plant bio-enzymes of pure natural origin, with Zyme as the active ingredient.', 'शुद्ध नैसर्गिक स्रोतातील वनस्पती जैव-एन्झाइम्सचे मिश्रण; झाइम हा सक्रिय घटक.'),
+      l('A unique formula prepared in scientifically controlled conditions, which improves enzymatic activity in the plant by stimulating hormones.', 'शास्त्रीय नियंत्रित परिस्थितीत तयार केलेले सूत्र; संप्रेरकांना चालना देऊन पिकातील एन्झाइम क्रिया सुधारते.'),
+      l('A full range of natural mineral elements in trace amounts, derived from biological sources.', 'जैविक स्रोतांतून मिळालेली सर्व नैसर्गिक खनिज मूलद्रव्ये अल्प प्रमाणात.'),
+    ],
+    dose: l('Spray 2 ml per litre of water', 'प्रति लिटर पाण्यात २ मिली मिसळून फवारणी'),
+    packing: l('500 ml, 1000 ml', '५०० मिली, १००० मिली'),
+    cropsAll: true,
+    cropsNamed: [],
+    cropsText: ALL_CROPS,
+    calc: [{ mode: 'tank', min: 2, max: 2, unit: 'ml' }],
+  },
+  {
+    slug: 'sulpho-plus',
+    category: 'growth-promoters',
+    name: l('Sulpho Plus', 'सल्फो प्लस'),
+    subtitle: l('Liquid sulphur solution', 'द्रव गंधक द्रावण'),
+    shape: 'bottle',
+    uses: ['foliar'],
+    nutrients: ['S'],
+    contents: [{ k: l('Contents', 'घटक'), v: l('Liquid Sulphur Solution', 'द्रव गंधक द्रावण') }],
+    benefits: [
+      l('A sulphur-based liquid solution that is completely soluble in water.', 'पाण्यात पूर्णपणे विरघळणारे गंधकयुक्त द्रावण.'),
+      l('Sulphur is an important secondary nutrient that plays a major role in nitrogen metabolism and the production of chlorophyll.', 'गंधक हे नत्र चयापचय व हरितद्रव्य निर्मितीत मोठी भूमिका बजावणारे महत्त्वाचे दुय्यम अन्नद्रव्य आहे.'),
+      l('Works as a systemic fungicide that prevents powdery mildew and leaf mite on the crop.', 'आंतरप्रवाही बुरशीनाशक म्हणून भुरी रोग व पानांवरील कोळी रोखते.'),
+    ],
+    dose: l('Spray 2 ml per litre of water', 'प्रति लिटर पाण्यात २ मिली मिसळून फवारणी'),
+    packing: l('500 ml, 1000 ml', '५०० मिली, १००० मिली'),
+    cropsAll: true,
+    cropsNamed: [],
+    cropsText: ALL_CROPS,
+    calc: [{ mode: 'tank', min: 2, max: 2, unit: 'ml' }],
+  },
+  {
+    slug: 'zicom',
+    category: 'growth-promoters',
+    name: l('Zicom', 'झायकॉम'),
+    subtitle: l('Soluble rooting stimulant', 'विद्राव्य मूळ उत्तेजक'),
+    img: 'zicom',
+    shape: 'pouch',
+    uses: ['foliar'],
+    nutrients: [],
+    contents: [
+      { k: l('Humic acid', 'ह्युमिक आम्ल'), v: '50%' },
+      { k: l('Amino acid', 'अमिनो आम्ल'), v: '20%' },
+      { k: l('Ascorbic acid', 'ॲस्कॉर्बिक आम्ल'), v: '20%' },
+      { k: l('Vitamins', 'जीवनसत्त्वे'), v: l('Vitamin-A, Vitamin-E', 'जीवनसत्त्व अ, जीवनसत्त्व ई') },
+    ],
+    benefits: [
+      l('Humic acid and amino acid accelerate white root development.', 'ह्युमिक व अमिनो आम्ल पांढऱ्या मुळांची वाढ जलद करतात.'),
+      l('Helps enhance the uptake of nutrients.', 'अन्नद्रव्यांचे शोषण वाढवण्यास मदत करते.'),
+      l('Increases yield parameters such as tiller numbers, branches, panicle numbers and weight.', 'फुटवे, फांद्या, लोंब्यांची संख्या व वजन यांसारखे उत्पादनाचे घटक वाढवते.'),
+    ],
+    dose: l(
+      'Field: mix 2 gm of Zicom with 1 litre of water and spray. First spray 20 days after sowing or transplanting, second spray 25 days after the first. Nursery: 10 ml per sq. ft. of soil or medium.',
+      'शेतात: १ लिटर पाण्यात २ ग्रॅम झायकॉम मिसळून फवारणी. पहिली फवारणी पेरणी किंवा पुनर्लागवडीनंतर २० दिवसांनी, दुसरी पहिल्या फवारणीनंतर २५ दिवसांनी. रोपवाटिका: प्रति चौ. फूट माती किंवा माध्यमात १० मिली.',
+    ),
+    packing: l('250 gm, 500 gm', '२५० ग्रॅम, ५०० ग्रॅम'),
+    cropsAll: false,
+    cropsNamed: ['cotton', 'soybean', 'chilli', 'onion', 'tomato', 'cucumber', 'melon', 'gourds', 'cauliflower', 'cabbage', 'peas', 'potato', 'turmeric', 'ginger', 'banana', 'grapes', 'tea'],
+    cropsText: l(
+      'Cotton, soybean, chilli, onion, tomato, cucumber, melon, gourds, cauliflower, cabbage, peas, potato, turmeric, ginger, banana, grapes, tea and more',
+      'कापूस, सोयाबीन, मिरची, कांदा, टोमॅटो, काकडी, खरबूज, वेलवर्गीय पिके, फुलकोबी, कोबी, वाटाणा, बटाटा, हळद, आले, केळी, द्राक्ष, चहा इत्यादी',
+    ),
+    calc: [{ mode: 'tank', min: 2, max: 2, unit: 'g' }],
+    featured: true,
+  },
+  {
+    slug: 'nitro-charge',
+    category: 'growth-promoters',
+    name: l('Nitro Charge', 'नायट्रो चार्ज'),
+    subtitle: l('Nitrobenzene 20% with natural amino acid', 'नैसर्गिक अमिनो आम्लासह नायट्रोबेंझीन २०%'),
+    img: 'nitro-charge',
+    shape: 'bottle',
+    uses: ['foliar'],
+    nutrients: [],
+    contents: [
+      { k: l('Nitrobenzene', 'नायट्रोबेंझीन'), v: '20% w/w' },
+      { k: l('Natural amino acid', 'नैसर्गिक अमिनो आम्ल'), v: '12%' },
+      { k: l('Solvent', 'द्रावक'), v: '38%' },
+      { k: l('Emulsifier', 'इमल्सिफायर'), v: '30%' },
+    ],
+    benefits: [l('Based on nitrobenzene 20%, it boosts flowering and enhances yields for all crops.', 'नायट्रोबेंझीन २०% वर आधारित; फुलोरा वाढवते आणि सर्व पिकांचे उत्पादन वाढवते.')],
+    note: l('Nitro Charge is compatible with most pesticides and plant growth regulators.', 'नायट्रो चार्ज बहुतेक कीटकनाशके व वाढ नियंत्रकांसोबत मिसळता येते.'),
+    dose: l('Apply 2–3 ml per litre of water and spray well on crops', 'प्रति लिटर पाण्यात २–३ मिली मिसळून पिकांवर चांगली फवारणी करावी'),
+    packing: l('500 ml, 1000 ml', '५०० मिली, १००० मिली'),
+    cropsAll: false,
+    cropsNamed: ['cotton', 'soybean', 'rice', 'wheat', 'chilli', 'tomato', 'orange', 'pomegranate', 'banana', 'sugarcane', 'groundnut'],
+    cropsText: l(
+      'Cotton, soybean, rice, wheat, chillies, tomato, orange, pomegranate, banana, sugarcane, groundnut and all horticulture crops',
+      'कापूस, सोयाबीन, भात, गहू, मिरची, टोमॅटो, संत्रा, डाळिंब, केळी, ऊस, भुईमूग व सर्व उद्यानविद्या पिके',
+    ),
+    calc: [{ mode: 'tank', min: 2, max: 3, unit: 'ml' }],
+  },
+  {
+    slug: 'sardar',
+    category: 'growth-promoters',
+    name: l('Sardar', 'सरदार'),
+    subtitle: l('Humic and amino acid, granule and liquid', 'ह्युमिक व अमिनो आम्ल, दाणेदार व द्रव'),
+    img: 'sardar-granules',
+    gallery: ['sardar-liquid'],
+    shape: 'bag',
+    uses: ['soil', 'foliar'],
+    nutrients: [],
+    contents: [
+      { k: l('Amino acid', 'अमिनो आम्ल'), v: '12%' },
+      { k: l('Nitrobenzene', 'नायट्रोबेंझीन'), v: '12%' },
+      { k: l('Humic acid', 'ह्युमिक आम्ल'), v: '6%' },
+    ],
+    benefits: [
+      l('Humic acid and amino acid accelerate white root development.', 'ह्युमिक व अमिनो आम्ल पांढऱ्या मुळांची वाढ जलद करतात.'),
+      l('Helps enhance the uptake of nutrients.', 'अन्नद्रव्यांचे शोषण वाढवण्यास मदत करते.'),
+      l('Increases yield parameters such as tiller numbers, branches, panicle numbers and weight.', 'फुटवे, फांद्या, लोंब्यांची संख्या व वजन यांसारखे उत्पादनाचे घटक वाढवते.'),
+    ],
+    dose: l('Liquid: 2 to 3 ml per litre of water. Granule: 10 kg per acre.', 'द्रव: प्रति लिटर पाण्यात २ ते ३ मिली. दाणेदार: प्रति एकर १० किलो.'),
+    packing: l('Liquid: 500 ml, 1000 ml. Granule: 10 kg.', 'द्रव: ५०० मिली, १००० मिली. दाणेदार: १० किलो.'),
+    cropsAll: false,
+    cropsNamed: [],
+    calc: [
+      { mode: 'tank', min: 2, max: 3, unit: 'ml', label: l('Sardar liquid', 'सरदार द्रव') },
+      { mode: 'acre', min: 10, max: 10, unit: 'kg', packs: [10], label: l('Sardar granule', 'सरदार दाणेदार') },
+    ],
+  },
+  {
+    slug: 'speed',
+    category: 'bio-stimulants',
+    name: l('Speed', 'स्पीड'),
+    subtitle: l('Balanced systemic bio-stimulant with silicon', 'सिलिकॉनसह संतुलित आंतरप्रवाही जैव उत्तेजक'),
+    img: 'speed',
+    shape: 'bottle',
+    uses: ['foliar'],
+    nutrients: ['Si'],
+    contents: [
+      { k: l('Silicon', 'सिलिकॉन'), v: '30%' },
+      { k: l('Amino acid', 'अमिनो आम्ल'), v: '50%' },
+    ],
+    benefits: [
+      l('A mixture of hydrolyzed proteins, activated with bio-enzymes, vitamins and amino acids, with natural bio-stimulating compounds.', 'जैव-एन्झाइम्स, जीवनसत्त्वे व अमिनो आम्लांनी सक्रिय केलेली हायड्रोलाइज्ड प्रथिने आणि नैसर्गिक जैव उत्तेजक घटकांचे मिश्रण.'),
+      l('Acts as a bio-stimulant on the plant system and helps sustain growth.', 'पिकावर जैव उत्तेजक म्हणून काम करते आणि वाढ टिकवण्यास मदत करते.'),
+      l('Improves nutrient uptake in the plant body.', 'पिकातील अन्नद्रव्यांचे शोषण सुधारते.'),
+      l('Boosts flowering and fruiting, and improves the uniform shape and colour of fruits.', 'फुलोरा व फळधारणा वाढवते आणि फळांना एकसमान आकार व रंग देते.'),
+      l('Reduces flower and fruit dropping, and enhances yield.', 'फुले-फळगळ कमी करते आणि उत्पादन वाढवते.'),
+      l('Silicon increases the resistance power of the crop to disease and pests.', 'सिलिकॉन रोग व किडींविरुद्ध पिकाची प्रतिकारशक्ती वाढवते.'),
+    ],
+    dose: l('1–2 ml per litre of water', 'प्रति लिटर पाण्यात १–२ मिली'),
+    packing: l('250 ml, 500 ml, 1 litre', '२५० मिली, ५०० मिली, १ लिटर'),
+    cropsAll: true,
+    cropsNamed: [],
+    cropsText: l('All kinds of crops, vegetables and fruits', 'सर्व प्रकारची पिके, भाजीपाला व फळे'),
+    calc: [{ mode: 'tank', min: 1, max: 2, unit: 'ml' }],
+    featured: true,
+  },
+  {
+    slug: 'growth-power',
+    category: 'bio-stimulants',
+    name: l('Growth Power', 'ग्रोथ पॉवर'),
+    subtitle: l('Protein hydrolysate and seaweed extract', 'प्रोटीन हायड्रोलायझेट व समुद्री शैवाल अर्क'),
+    shape: 'bottle',
+    uses: ['foliar'],
+    nutrients: [],
+    contents: [
+      { k: l('Protein hydrolyzed', 'प्रोटीन हायड्रोलाइज्ड'), v: '10%' },
+      { k: l('Seaweed extract', 'समुद्री शैवाल अर्क'), v: '36%' },
+    ],
+    contentsNote: l('With folic acid, in ppm.', 'फॉलिक आम्लासह (ppm प्रमाणात).'),
+    benefits: [
+      l('Improves crop quality and increases yield significantly.', 'पिकाचा दर्जा सुधारते आणि उत्पादनात लक्षणीय वाढ करते.'),
+      l('Reduces flower and fruit dropping, and enhances yield.', 'फुले-फळगळ कमी करते आणि उत्पादन वाढवते.'),
+      l('Improves nutrient uptake, and the uniform shape and colour of fruit.', 'अन्नद्रव्यांचे शोषण सुधारते आणि फळांना एकसमान आकार व रंग देते.'),
+      l('Water soluble and non-toxic to plants, animals and humans.', 'पाण्यात विरघळणारे आणि वनस्पती, प्राणी व मानवासाठी बिनविषारी.'),
+    ],
+    dose: l('1–2 ml per litre of water', 'प्रति लिटर पाण्यात १–२ मिली'),
+    packing: l('250 ml, 500 ml, 1 litre', '२५० मिली, ५०० मिली, १ लिटर'),
+    cropsAll: true,
+    cropsNamed: [],
+    cropsText: l('All kinds of crops, vegetables and fruits', 'सर्व प्रकारची पिके, भाजीपाला व फळे'),
+    calc: [{ mode: 'tank', min: 1, max: 2, unit: 'ml' }],
+  },
+  {
+    slug: 'blue-diamond',
+    category: 'bio-fungicides',
+    name: l('Blue Diamond', 'ब्लू डायमंड'),
+    subtitle: l('Liquid copper', 'द्रव तांबे'),
+    shape: 'bottle',
+    uses: ['foliar'],
+    nutrients: ['Cu'],
+    contents: [{ k: l('Contents', 'घटक'), v: l('Liquid Copper', 'द्रव तांबे') }],
+    benefits: [
+      l('A contact and systemic fungicide, useful for the control of rust and blight.', 'स्पर्शजन्य व आंतरप्रवाही बुरशीनाशक; तांबेरा व करपा नियंत्रणासाठी उपयुक्त.'),
+      l('Contains copper, a micronutrient effective against black spot and rotting.', 'यातील तांबे हे सूक्ष्म अन्नद्रव्य काळे ठिपके व सड यांवर प्रभावी आहे.'),
+      l('Improves the growth of the plant.', 'पिकाची वाढ सुधारते.'),
+    ],
+    dose: l('2–3 ml per litre of water', 'प्रति लिटर पाण्यात २–३ मिली'),
+    packing: l('500 ml, 1000 ml', '५०० मिली, १००० मिली'),
+    cropsAll: true,
+    cropsNamed: [],
+    cropsText: ALL_CROPS,
+    calc: [{ mode: 'tank', min: 2, max: 3, unit: 'ml' }],
+  },
+  {
+    slug: 'blue-star',
+    category: 'bio-fungicides',
+    name: l('Blue Star', 'ब्लू स्टार'),
+    subtitle: l('Phosphorus and copper', 'स्फुरद व तांबे'),
+    img: 'blue-star',
+    shape: 'bottle',
+    uses: ['foliar'],
+    nutrients: ['P', 'Cu'],
+    contents: [
+      { k: l('P₂O₅', 'P₂O₅'), v: '35%' },
+      { k: l('Copper (Cu)', 'तांबे (Cu)'), v: '80%' },
+    ],
+    benefits: [
+      l('Improves the resistance power of the crop and protects it from diseases.', 'पिकाची प्रतिकारशक्ती सुधारते आणि रोगांपासून संरक्षण करते.'),
+      l('Effective on downy mildew, root rots, blights, scabs, leaf spots, canker and bacterial diseases of crops.', 'केवडा, मूळकूज, करपा, खवले, पानांवरील ठिपके, कँकर व जिवाणूजन्य रोगांवर प्रभावी.'),
+    ],
+    dose: l('1 ml per litre of water', 'प्रति लिटर पाण्यात १ मिली'),
+    packing: l('500 ml, 1000 ml', '५०० मिली, १००० मिली'),
+    cropsAll: true,
+    cropsNamed: [],
+    cropsText: ALL_CROPS,
+    calc: [{ mode: 'tank', min: 1, max: 1, unit: 'ml' }],
+  },
+  {
+    slug: 'bordo-max',
+    category: 'bio-fungicides',
+    name: l('Bordo Max', 'बोर्डो मॅक्स'),
+    subtitle: l('Bordeaux mixture', 'बोर्डो मिश्रण'),
+    shape: 'bottle',
+    uses: ['foliar'],
+    nutrients: ['Cu'],
+    contents: [{ k: l('Contents', 'घटक'), v: l('Bordeaux Mixture', 'बोर्डो मिश्रण') }],
+    benefits: [
+      l('Effective on downy mildew, root rots, blights, scabs, leaf spots, canker and bacterial diseases of crops.', 'केवडा, मूळकूज, करपा, खवले, पानांवरील ठिपके, कँकर व जिवाणूजन्य रोगांवर प्रभावी.'),
+      l('Improves the resistance power of the crop and protects it from diseases.', 'पिकाची प्रतिकारशक्ती सुधारते आणि रोगांपासून संरक्षण करते.'),
+    ],
+    dose: l('1 litre per 300 litres of water', '३०० लिटर पाण्यात १ लिटर'),
+    packing: l('500 ml, 1000 ml', '५०० मिली, १००० मिली'),
+    cropsAll: true,
+    cropsNamed: ['cotton', 'pomegranate', 'banana', 'grapes', 'vegetables'],
+    cropsText: l('All crops: cotton, pomegranate, banana, grapes, vegetables, fruits, cereals and pulses', 'सर्व पिके: कापूस, डाळिंब, केळी, द्राक्ष, भाजीपाला, फळे, तृणधान्ये व कडधान्ये'),
+    calc: [{ mode: 'tank', min: 3.33, max: 3.33, unit: 'ml' }],
+  },
+  {
+    slug: 'action',
+    category: 'bio-pesticides',
+    name: l('Action', 'ॲक्शन'),
+    subtitle: l('For Heliothis, Spodoptera and other larvae', 'हेलिओथिस, स्पोडोप्टेरा व इतर अळ्यांसाठी'),
+    img: 'action',
+    shape: 'bottle',
+    uses: ['foliar'],
+    nutrients: [],
+    contents: [
+      { k: l('Asafoetida', 'हिंग'), v: '30%' },
+      { k: l('Pongamia glabra', 'करंज (Pongamia glabra)'), v: '30%' },
+      { k: l('Moringa oleifera', 'शेवगा (Moringa oleifera)'), v: '20%' },
+      { k: l('Vitex negundo', 'निर्गुडी (Vitex negundo)'), v: '20%' },
+    ],
+    contentsNote: l('Alkaloid and salt of fatty acid with a mixture of wild plant oil, and the mixture above.', 'अल्कलॉइड व फॅटी आम्लाचे क्षार, जंगली वनस्पती तेलाचे मिश्रण आणि वरील घटकांचे मिश्रण.'),
+    benefitsTitle: l('Function', 'कार्य'),
+    benefits: [l('To control Heliothis, Spodoptera and other larvae.', 'हेलिओथिस, स्पोडोप्टेरा व इतर अळ्यांचे नियंत्रण.')],
+    dose: l('Spray 1.3 ml to 1.5 ml per litre of water', 'प्रति लिटर पाण्यात १.३ ते १.५ मिली मिसळून फवारणी'),
+    packing: l('250 ml, 500 ml, 1 litre', '२५० मिली, ५०० मिली, १ लिटर'),
+    cropsAll: true,
+    cropsNamed: [],
+    cropsText: BIO_PEST_CROPS,
+    calc: [{ mode: 'tank', min: 1.3, max: 1.5, unit: 'ml' }],
+    featured: true,
+  },
+  {
+    slug: 'ben-10',
+    category: 'bio-pesticides',
+    name: l('Ben-10', 'बेन-१०'),
+    subtitle: l('For thrips, mites, white fly and sucking pests', 'फुलकिडे, कोळी, पांढरी माशी व रसशोषक किडींसाठी'),
+    img: 'ben-10',
+    shape: 'bottle',
+    uses: ['foliar'],
+    nutrients: [],
+    contents: [
+      { k: l('Calotropis gigantea', 'रुई (Calotropis gigantea)'), v: '30%' },
+      { k: l('Lantana camara', 'घाणेरी (Lantana camara)'), v: '20%' },
+      { k: l('Ipomoea crystolfa', 'Ipomoea crystolfa'), v: '20%' },
+    ],
+    contentsNote: l('Alkaloid and fatty acid with a mixture of wild plant oil, and the mixture above.', 'अल्कलॉइड व फॅटी आम्ल, जंगली वनस्पती तेलाचे मिश्रण आणि वरील घटकांचे मिश्रण.'),
+    benefitsTitle: l('Function', 'कार्य'),
+    benefits: [l('To control thrips, red mites, white fly, bugs and all sucking pests.', 'फुलकिडे, लाल कोळी, पांढरी माशी, ढेकूण व सर्व रसशोषक किडींचे नियंत्रण.')],
+    dose: l('Spray 1.3 ml to 1.5 ml per litre of water', 'प्रति लिटर पाण्यात १.३ ते १.५ मिली मिसळून फवारणी'),
+    packing: l('250 ml, 500 ml, 1 litre', '२५० मिली, ५०० मिली, १ लिटर'),
+    cropsAll: true,
+    cropsNamed: [],
+    cropsText: BIO_PEST_CROPS,
+    calc: [{ mode: 'tank', min: 1.3, max: 1.5, unit: 'ml' }],
+  },
+  {
+    slug: 'stick-up',
+    category: 'adjuvants',
+    name: l('Stick Up', 'स्टिक अप'),
+    subtitle: l('Wetting agent, spreader and activator', 'ओलावा वाढवणारे, प्रसारक व सक्रिय करणारे द्रव्य'),
+    shape: 'bottle',
+    uses: ['tank-mix'],
+    nutrients: [],
+    contents: [],
+    benefits: [
+      l('Works as a wetting agent, spreader and activator.', 'ओलावा वाढवणारे, प्रसारक व सक्रिय करणारे द्रव्य म्हणून काम करते.'),
+      l('Used for all types of crops to increase the efficiency of spreading.', 'सर्व प्रकारच्या पिकांवर फवारणीचा प्रसार वाढवण्यासाठी वापरतात.'),
+      l('Use with all types of pesticides, fungicides, weedicides and plant growth promoters for better wetting and spreading.', 'चांगल्या प्रसारासाठी सर्व प्रकारची कीटकनाशके, बुरशीनाशके, तणनाशके व वाढ प्रवर्तकांसोबत वापरावे.'),
+    ],
+    dose: l('1 ml in 3–5 litres of water', '३–५ लिटर पाण्यात १ मिली'),
+    packing: l('500 ml, 1000 ml, 5 litre', '५०० मिली, १००० मिली, ५ लिटर'),
+    cropsAll: true,
+    cropsNamed: [],
+    cropsText: l('All types of crops', 'सर्व प्रकारची पिके'),
+    calc: [{ mode: 'tank', min: 0.2, max: 0.33, unit: 'ml' }],
+  },
+];
+
+/** Listed in the range but with no detail in the company data yet. Shown by name only. */
+export const NAME_ONLY: { category: CategoryId; name: L; note?: L }[] = [
+  { category: 'straight', name: l('Zordar', 'जोरदार'), note: l('Zinc Sulphate', 'झिंक सल्फेट') },
+  { category: 'growth-promoters', name: l('Himraj-98', 'हिमराज-९८') },
+  { category: 'growth-promoters', name: l('Supersil', 'सुपरसिल') },
+  { category: 'organic', name: l('Neemstar', 'नीमस्टार') },
+  { category: 'bio-fertilizers', name: l('KSB', 'के.एस.बी.'), note: l('Potassium solubilizing bacteria', 'पालाश विरघळवणारे जिवाणू') },
+];
+
+export const productUrl = (p: Product) => `/products/${p.category}/${p.slug}/`;
+export const categoryUrl = (c: CategoryId) => `/products/${c}/`;
+export const categoryOf = (id: CategoryId) => CATEGORIES.find((c) => c.id === id)!;
+export const bySlug = (slug: string) => PRODUCTS.find((p) => p.slug === slug)!;
+export const inCategory = (id: CategoryId) => PRODUCTS.filter((p) => p.category === id);
+export const productTitle = (p: Product, lang: 'en' | 'mr') => (p.grade && /:/.test(p.grade) ? `${p.name[lang]} ${p.grade}` : p.name[lang]);
+export const TOTAL_PRODUCTS = PRODUCTS.length + NAME_ONLY.length;

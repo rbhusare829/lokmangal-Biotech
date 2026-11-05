@@ -1,0 +1,40 @@
+---
+import { href, type Lang } from '../data/types';
+import { CONTACT } from '../data/site';
+import Icon from './Icon.astro';
+
+interface Props {
+  lang: Lang;
+  title?: string;
+  text?: string;
+  primaryLabel?: string;
+  primaryTo?: string;
+}
+
+const { lang } = Astro.props;
+const {
+  title = lang === 'mr' ? 'लोकमंगल परिवारात <em>सहभागी व्हा</em>' : 'Grow with the <em>Lokmangal family</em>',
+  text = lang === 'mr'
+    ? 'उत्पादनांची माहिती, डीलरशिप किंवा माती व पाणी परीक्षण, कोणत्याही गोष्टीसाठी आमची टीम मदतीला तयार आहे.'
+    : 'Whether it is a product question, a dealership or a soil and water test, our team is ready to help.',
+  primaryLabel = lang === 'mr' ? 'डीलर व्हा' : 'Become a dealer',
+  primaryTo = '/dealers/',
+} = Astro.props;
+---
+
+<section class="section section--tight cta-wrap">
+  <div class="container">
+    <div class="cta" data-reveal="zoom">
+      <span class="cta__glow"></span>
+      <img class="cta__emblem" src="/brand/logo-mark.svg" alt="" width="417" height="504" loading="lazy" />
+      <div>
+        <h2 class="h2" set:html={title} />
+        <p>{text}</p>
+      </div>
+      <div class="cta__actions">
+        <a class="btn btn--primary btn--lg" href={href(lang, primaryTo)} data-magnetic>{primaryLabel} <Icon name="arrow" size={18} class="icon--arrow" /></a>
+        <a class="btn btn--outline-light btn--lg" href={`tel:${CONTACT.phonePrimary.tel}`}><Icon name="phone" size={18} /> {CONTACT.phonePrimary.label}</a>
+      </div>
+    </div>
+  </div>
+</section>

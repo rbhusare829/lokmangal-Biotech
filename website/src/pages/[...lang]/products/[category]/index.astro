@@ -1,0 +1,91 @@
+---
+import Base from '../../../../layouts/Base.astro';
+import PageHero from '../../../../components/PageHero.astro';
+import ProductCard from '../../../../components/ProductCard.astro';
+import PackImage from '../../../../components/PackImage.astro';
+import PackArt from '../../../../components/PackArt.astro';
+import Icon from '../../../../components/Icon.astro';
+import Cta from '../../../../components/Cta.astro';
+import { href, type Lang } from '../../../../data/types';
+import { t } from '../../../../data/i18n';
+import { withLangs } from '../../../../data/routes';
+import { CATEGORIES, NAME_ONLY, bySlug, categoryUrl, inCategory, type Category } from '../../../../data/products';
+
+export function getStaticPaths() {
+  return withLangs(CATEGORIES.map((c) => ({ params: { category: c.id }, props: { cat: c } })));
+}
+
+const { lang, cat } = Astro.props as { lang: Lang; cat: Category };
+const d = t(lang);
+const m = lang === 'mr';
+const items = inCategory(cat.id);
+const names = NAME_ONLY.filter((n) => n.category === cat.id);
+const others = CATEGORIES.filter((c) => c.id !== cat.id);
+---
+
+<Base lang={lang} path={categoryUrl(cat.id)} title={cat.name[lang]} description={cat.blurb[lang]}>
+  <PageHero
+    lang={lang}
+    eyebrow={d.productCount(items.length)}
+    title={cat.name[lang]}
+    lead={cat.blurb[lang]}
+    image={cat.id === 'organic' || cat.id === 'bio-fertilizers' ? 'hero-soil' : cat.id === 'water-soluble' ? 'drip-line' : cat.id === 'bio-pesticides' || cat.id === 'bio-fungicides' || cat.id === 'adjuvants' ? 'spray-cabbage' : 'hero-rows'}
+    imageAlt=""
+    focus="50% 60%"
+    crumbs={[{ label: d.products, to: '/products/' }, { label: cat.short[lang] }]}
+  />
+
+  <section class="section section--tight">
+    <div class="container">
+      <h2 class="sr-only">{d.products}</h2>
+      <div class="p-grid" data-stagger>
+        {items.map((p) => <ProductCard product={p} lang={lang} morph hideCategory />)}
+      </div>
+      {
+        names.length > 0 && (
+          <div class="card" style="margin-top:28px" data-reveal>
+            <h2 class="h4">{d.alsoRange}</h2>
+            <p class="muted small" style="margin-block:4px 12px">{d.alsoRangeHint}</p>
+            <ul class="chips">
+              {names.map((n) => (
+                <li class="chip chip--line">
+                  {n.name[lang]}
+                  {n.note && <span class="muted" style="font-weight:500">· {n.note[lang]}</span>}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )
+      }
+    </div>
+  </section>
+
+  <section class="section section--tight section--cream">
+    <div class="container">
+      <div class="section-head section-head--row" data-reveal>
+        <div class="section-head__text">
+          <span class="eyebrow">{m ? 'इतर गट' : 'Other families'}</span>
+          <h2 class="h2">{m ? 'इतर उत्पादन गट पाहा' : 'Explore other product families'}</h2>
+        </div>
+        <a class="btn btn--ghost" href={href(lang, '/products/')}>{d.allProducts} <Icon name="arrow" size={17} class="icon--arrow" /></a>
+      </div>
+      <div class="fam-grid" data-stagger>
+        {
+          others.map((c) => (
+            <a class={`fam tone-${c.tone}`} href={href(lang, categoryUrl(c.id))}>
+              <span>
+                <h3>{c.short[lang]}</h3>
+                <span class="fam__count">
+                  {d.productCount(inCategory(c.id).length)} <Icon name="arrow" size={14} />
+                </span>
+              </span>
+              {c.hero[0] ? <PackImage name={c.hero[0]} alt="" class="fam__img" widths={[160, 240]} sizes="96px" /> : <span class="fam__img" style="display:grid;place-items:center"><PackArt product={bySlug('stick-up')} lang={lang} /></span>}
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <Cta lang={lang} />
+</Base>

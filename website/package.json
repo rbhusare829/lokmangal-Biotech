@@ -1,0 +1,26 @@
+{
+  "name": "lokmangal-biotech-website",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check",
+    "pdf": "node scripts/make-pdfs.mjs",
+    "build:full": "astro build && node scripts/make-pdfs.mjs"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.4",
+    "@fontsource-variable/bricolage-grotesque": "^5.3.0",
+    "@fontsource-variable/hanken-grotesk": "^5.3.0",
+    "astro": "^7.4.5",
+    "sharp": "^0.35.5"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.12",
+    "puppeteer-core": "^25.16.0",
+    "typescript": "^5.9.3"
+  }
+}

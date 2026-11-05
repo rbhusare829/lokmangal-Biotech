@@ -1,0 +1,40 @@
+---
+import Base from '../../../layouts/Base.astro';
+import PageHero from '../../../components/PageHero.astro';
+import type { Lang } from '../../../data/types';
+import { t } from '../../../data/i18n';
+import { langPaths } from '../../../data/routes';
+import credits from '../../../data/photo-credits.json';
+
+export const getStaticPaths = () => langPaths();
+
+const { lang } = Astro.props as { lang: Lang };
+const d = t(lang);
+const m = lang === 'mr';
+---
+
+<Base lang={lang} path="/credits/" title={d.credits} description={m ? 'या वेबसाइटवरील शेत व पिकांच्या फोटोंचे श्रेय.' : 'Credits for the field and crop photographs on this website.'} noindex>
+  <PageHero lang={lang} eyebrow={d.credits} title={d.credits} lead={m ? 'कंपनीची इमारत, टीम व उत्पादनांचे फोटो लोकमंगल बायोटेकचे आहेत. शेत व पिकांचे खालील फोटो Wikimedia Commons वरील मुक्त परवान्याखालील आहेत.' : 'Photographs of the company’s buildings, team and products belong to Lokmangal Biotech. The field and crop photographs below are from Wikimedia Commons, under free licences.'} crumbs={[{ label: d.credits }]} />
+  <section class="section section--tight">
+    <div class="container">
+      <div class="table-wrap">
+        <table class="credits">
+          <thead>
+            <tr><th>{m ? 'फोटो' : 'Photograph'}</th><th>{m ? 'छायाचित्रकार' : 'Photographer'}</th><th>{m ? 'परवाना' : 'Licence'}</th></tr>
+          </thead>
+          <tbody>
+            {
+              credits.map((c) => (
+                <tr>
+                  <td><a href={c.page} target="_blank" rel="noopener">{c.title}</a></td>
+                  <td>{c.artist || '—'}</td>
+                  <td>{c.license}</td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+</Base>

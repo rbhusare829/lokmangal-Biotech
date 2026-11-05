@@ -1,0 +1,113 @@
+---
+import '@fontsource-variable/bricolage-grotesque/wght.css';
+import '@fontsource-variable/hanken-grotesk/wght.css';
+import '../styles/global.css';
+import brico from '@fontsource-variable/bricolage-grotesque/files/bricolage-grotesque-latin-wght-normal.woff2?url';
+import hanken from '@fontsource-variable/hanken-grotesk/files/hanken-grotesk-latin-wght-normal.woff2?url';
+import anek from '../assets/fonts/anek-devanagari-700.woff2?url';
+import noto from '../assets/fonts/noto-sans-devanagari-400-700.woff2?url';
+import { href, type Lang } from '../data/types';
+import { t } from '../data/i18n';
+import { COMPANY, CONTACT, ESTABLISHED } from '../data/site';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import SearchDialog from '../components/SearchDialog.astro';
+import Icon from '../components/Icon.astro';
+
+interface Props {
+  lang: Lang;
+  /** Path without language prefix, e.g. "/products/". */
+  path: string;
+  title: string;
+  description: string;
+  ogImage?: string;
+  jsonLd?: object[];
+  noindex?: boolean;
+}
+
+const { lang, path, title, description, ogImage = '/og-default.jpg', jsonLd = [], noindex = false } = Astro.props;
+const d = t(lang);
+const site = Astro.site!.origin;
+const canonical = `${site}${href(lang, path)}`;
+const fullTitle = path === '/' ? title : `${title} | ${COMPANY.short[lang]}`;
+const org = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'Lokmangal Bio-Tech Pvt. Ltd.',
+  alternateName: ['Lokmangal Biotech', 'लोकमंगल बायोटेक प्रा. लि.'],
+  url: site,
+  logo: `${site}/icon-512.png`,
+  email: CONTACT.email,
+  telephone: CONTACT.phonePrimary.tel,
+  foundingDate: String(ESTABLISHED),
+  slogan: COMPANY.motto.en,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: 'A-61, M.I.D.C., Chincholi',
+    addressLocality: 'Solapur',
+    postalCode: '413255',
+    addressRegion: 'Maharashtra',
+    addressCountry: 'IN',
+  },
+  sameAs: [CONTACT.facebook],
+};
+const speculation = JSON.stringify({ prerender: [{ where: { and: [{ href_matches: '/*' }, { not: { href_matches: '/*.pdf' } }, { not: { selector_matches: '[download]' } }] }, eagerness: 'moderate' }] });
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" hreflang="en-IN" href={`${site}${href('en', path)}`} />
+    <link rel="alternate" hreflang="mr-IN" href={`${site}${href('mr', path)}`} />
+    <link rel="alternate" hreflang="x-default" href={`${site}${href('en', path)}`} />
+    {noindex && <meta name="robots" content="noindex" />}
+    <meta name="theme-color" content="#083822" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.png" type="image/png" sizes="48x48" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    {
+      lang === 'mr' ? (
+        <>
+          <link rel="preload" href={anek} as="font" type="font/woff2" crossorigin />
+          <link rel="preload" href={noto} as="font" type="font/woff2" crossorigin />
+        </>
+      ) : (
+        <>
+          <link rel="preload" href={brico} as="font" type="font/woff2" crossorigin />
+          <link rel="preload" href={hanken} as="font" type="font/woff2" crossorigin />
+        </>
+      )
+    }
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={COMPANY.short[lang]} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={`${site}${ogImage}`} />
+    <meta property="og:locale" content={lang === 'mr' ? 'mr_IN' : 'en_IN'} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <script type="application/ld+json" set:html={JSON.stringify([org, ...jsonLd])} />
+    <script is:inline>document.documentElement.classList.add('js');</script>
+    <script type="speculationrules" set:html={speculation} />
+  </head>
+  <body>
+    <Header lang={lang} path={path} />
+    <main id="main" tabindex="-1" style="outline:0">
+      <slot />
+    </main>
+    <Footer lang={lang} />
+    <SearchDialog lang={lang} />
+    <a class="fab-wa" href={`https://wa.me/${CONTACT.phonePrimary.wa}`} target="_blank" rel="noopener" aria-label={d.whatsapp}><Icon name="whatsapp" size={26} /></a>
+    <button class="totop" type="button" data-to-top aria-label={d.backToTop}>
+      <svg class="ring" viewBox="0 0 36 36" aria-hidden="true"><circle cx="18" cy="18" r="15.9" pathLength="100"></circle></svg>
+      <Icon name="arrow-up" size={18} />
+    </button>
+    <script src="../scripts/core.ts"></script>
+  </body>
+</html>

@@ -1,0 +1,124 @@
+---
+import Base from '../../../layouts/Base.astro';
+import PageHero from '../../../components/PageHero.astro';
+import ProductCard from '../../../components/ProductCard.astro';
+import CropCard from '../../../components/CropCard.astro';
+import Rail from '../../../components/Rail.astro';
+import Icon from '../../../components/Icon.astro';
+import Cta from '../../../components/Cta.astro';
+import { href, num, type Lang } from '../../../data/types';
+import { t } from '../../../data/i18n';
+import { withLangs } from '../../../data/routes';
+import { CROPS, cropUrl, generalFor, namedFor, type Crop } from '../../../data/crops';
+import { CATEGORIES, categoryUrl } from '../../../data/products';
+
+export function getStaticPaths() {
+  return withLangs(CROPS.map((c) => ({ params: { crop: c.id }, props: { crop: c } })));
+}
+
+const { lang, crop } = Astro.props as { lang: Lang; crop: Crop };
+const d = t(lang);
+const m = lang === 'mr';
+const name = crop.name[lang];
+const named = namedFor(crop.id);
+const general = generalFor(crop.id);
+const generalGroups = CATEGORIES.map((c) => ({ c, items: general.filter((p) => p.category === c.id) })).filter((g) => g.items.length);
+---
+
+<Base
+  lang={lang}
+  path={cropUrl(crop.id)}
+  title={m ? `${name} पिकासाठी उत्पादने` : `Products for ${name}`}
+  description={m ? `${name} पिकासाठी लोकमंगल बायोटेकची नमूद उत्पादने, मात्रा व पॅकिंग.` : `Lokmangal Biotech products named for ${name.toLowerCase()}, with doses and packing.`}
+>
+  <PageHero
+    lang={lang}
+    eyebrow={m ? 'पिकानुसार' : 'By crop'}
+    title={m ? `${name} <em>पिकासाठी</em>` : `For <em>${name.toLowerCase()}</em>`}
+    lead={m ? `${name} पिकासाठी आमच्या माहितीत नमूद ${num(lang, named.length)} उत्पादने, तसेच सर्व पिकांसाठी वापरली जाणारी उत्पादने.` : `${named.length} ${named.length === 1 ? 'product' : 'products'} named for ${name.toLowerCase()} in our product data, plus those used for all crops.`}
+    image={crop.photo}
+    imageAlt={name}
+    focus={crop.focus}
+    crumbs={[{ label: d.crops, to: '/crops/' }, { label: name }]}
+  />
+
+  <section class="section section--tight">
+    <div class="container">
+      <div class="section-head" data-reveal>
+        <span class="eyebrow">{d.namedCrops}</span>
+        <h2 class="h2" set:html={m ? `${name} पिकासाठी <em>नमूद उत्पादने</em>` : `Products named for <em>${name.toLowerCase()}</em>`} />
+      </div>
+      <div class="p-grid" data-stagger>
+        {named.map((p) => <ProductCard product={p} lang={lang} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tight section--white">
+    <div class="container">
+      <div class="section-head" data-reveal>
+        <span class="eyebrow">{d.usedForAll}</span>
+        <h2 class="h2" set:html={m ? `${name} पिकासाठीही <em>उपयुक्त</em>` : `Also useful for <em>${name.toLowerCase()}</em>`} />
+        <p class="lead">{m ? 'ही उत्पादने सर्व पिकांसाठी वापरली जातात.' : 'These products are used for all crops.'}</p>
+      </div>
+      <div class="accordion" data-reveal>
+        {
+          generalGroups.map((g) => (
+            <details class="acc">
+              <summary>
+                <span>
+                  {g.c.short[lang]} <span class="muted small" style="font-weight:500">· {d.productCount(g.items.length)}</span>
+                </span>
+                <span class="acc__icon"><Icon name="plus" size={16} /></span>
+              </summary>
+              <div class="acc__body">
+                <div class="p-grid">
+                  {g.items.map((p) => (
+                    <ProductCard product={p} lang={lang} hideCategory />
+                  ))}
+                </div>
+                <a class="link-arrow" style="margin-top:14px" href={href(lang, categoryUrl(g.c.id))}>
+                  {g.c.name[lang]} <Icon name="arrow" size={16} />
+                </a>
+              </div>
+            </details>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tight section--mint">
+    <div class="container split">
+      <div class="stack" data-reveal="left">
+        <span class="eyebrow">{m ? 'पुढचे पाऊल' : 'Next step'}</span>
+        <h2 class="h2" set:html={m ? `${name} पिकाचे <em>नियोजन करा</em>` : `Plan for your <em>${name.toLowerCase()}</em>`} />
+        <p class="lead">{m ? 'आपल्या जमिनीचे माती व पाणी परीक्षण करून घ्या, मग मात्रेनुसार लागणारे प्रमाण काढा. पिकाच्या अवस्थेनुसार नियोजनासाठी आमच्या टीमशी बोला.' : 'Get your soil and water tested, then work out the quantity you need. For a plan by crop stage, talk to our team.'}</p>
+        <div class="btn-row">
+          <a class="btn btn--green" href={href(lang, '/research-lab/#sample')}>{m ? 'माती व पाणी परीक्षण' : 'Soil and water testing'} <Icon name="arrow" size={17} class="icon--arrow" /></a>
+          <a class="btn btn--ghost" href={`${href(lang, '/knowledge/')}#calculator`}>{m ? 'मात्रा मोजा' : 'Dose calculator'}</a>
+          <a class="btn btn--ghost" href={href(lang, '/contact/')}>{d.contact}</a>
+        </div>
+      </div>
+      <div></div>
+    </div>
+  </section>
+
+  <section class="section section--tight" style="padding-bottom:clamp(40px,5vw,60px)">
+    <div class="container">
+      <div class="section-head section-head--row" data-reveal>
+        <div class="section-head__text">
+          <span class="eyebrow">{d.crops}</span>
+          <h2 class="h2">{m ? 'इतर पिके' : 'Other crops'}</h2>
+        </div>
+        <div class="rail-controls">
+          <button class="iconbtn" type="button" data-rail-prev aria-label={d.prev}><Icon name="prev" size={18} /></button>
+          <button class="iconbtn" type="button" data-rail-next aria-label={d.next}><Icon name="next" size={18} /></button>
+        </div>
+      </div>
+    </div>
+    <Rail>{CROPS.filter((c) => c.id !== crop.id).map((c) => <CropCard crop={c} lang={lang} />)}</Rail>
+  </section>
+
+  <Cta lang={lang} />
+</Base>

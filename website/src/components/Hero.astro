@@ -1,0 +1,195 @@
+---
+import { href, type Lang } from '../data/types';
+import { t } from '../data/i18n';
+import Icon from './Icon.astro';
+import Photo from './Photo.astro';
+import PackImage from './PackImage.astro';
+import Words from './Words.astro';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const d = t(lang);
+
+const SLIDES = {
+  en: [
+    {
+      img: 'hero-rows',
+      alt: 'Women farmers walking between rows of a young green crop',
+      eyebrow: 'Lokmangal Biotech · Since 2006',
+      a: 'Balanced nutrition,',
+      b: 'richer harvests',
+      text: 'Research-based fertilizers and bio-products from Solapur, made for the crops you grow and the soil you farm.',
+      cta: [['Explore products', '/products/'], ['Find by crop', '/crops/']],
+      note: ['About 30% more production', 'What farmers have seen with balanced use of organic, bio and chemical fertilizers with micronutrients.'],
+    },
+    {
+      img: 'hero-lab',
+      alt: 'Laboratory staff testing soil samples at a long bench of beakers',
+      eyebrow: 'Our mission',
+      a: 'From the laboratory',
+      b: 'to your land',
+      text: 'We transfer new technology from the lab to the field, with the help of agricultural scientists.',
+      cta: [['Research & Lab', '/research-lab/'], ['Our story', '/about/']],
+      note: ['Analysed in our own lab', 'Raw material, finished products, soil and water are all tested in-house.'],
+    },
+    {
+      img: 'hero-sunset',
+      alt: 'Ploughed farmland under a dramatic evening sky',
+      eyebrow: 'Our products',
+      a: 'Twelve product families,',
+      b: 'one trusted name',
+      text: 'NPK mixtures, secondary nutrients, water soluble grades, micronutrients, organic and bio-products.',
+      cta: [['View the catalogue', '/products/'], ['Downloads', '/downloads/']],
+      packs: true,
+    },
+    {
+      img: 'hero-soil',
+      alt: 'Cupped hands holding dark, fertile soil',
+      eyebrow: 'Free for users',
+      a: 'Know your soil',
+      b: 'before you feed it',
+      text: 'The Lokmangal research centre offers free soil and water testing, so that your fertilizer plan starts from facts.',
+      cta: [['How to send a sample', '/research-lab/#sample'], ['Contact the team', '/contact/']],
+      note: ['Soil and water testing', 'At the Maharashtra Research and Development Centre of the Lokmangal Group.'],
+    },
+  ],
+  mr: [
+    {
+      img: 'hero-rows',
+      alt: 'हिरव्या पिकाच्या ओळींमधून चालणाऱ्या महिला शेतकरी',
+      eyebrow: 'लोकमंगल बायोटेक · २००६ पासून',
+      a: 'संतुलित पोषण,',
+      b: 'भरघोस उत्पादन',
+      text: 'सोलापूरची संशोधनावर आधारित खते व जैविक उत्पादने, तुमच्या पिकासाठी आणि तुमच्या जमिनीसाठी.',
+      cta: [['उत्पादने पाहा', '/products/'], ['पिकानुसार शोधा', '/crops/']],
+      note: ['उत्पादनात सुमारे ३०% वाढ', 'सेंद्रिय, जैविक व रासायनिक खते आणि सूक्ष्म अन्नद्रव्यांच्या संतुलित वापराने शेतकऱ्यांना मिळालेला अनुभव.'],
+    },
+    {
+      img: 'hero-lab',
+      alt: 'बीकरांच्या लांब टेबलावर माती नमुन्यांचे परीक्षण करणारे प्रयोगशाळा कर्मचारी',
+      eyebrow: 'आमचे ध्येय',
+      a: 'प्रयोगशाळेतून',
+      b: 'थेट तुमच्या शेतात',
+      text: 'कृषी शास्त्रज्ञांच्या मदतीने नवीन तंत्रज्ञान प्रयोगशाळेतून शेतापर्यंत पोहोचवणे हेच आमचे ध्येय आहे.',
+      cta: [['संशोधन व प्रयोगशाळा', '/research-lab/'], ['आमची वाटचाल', '/about/']],
+      note: ['आमच्या प्रयोगशाळेत विश्लेषण', 'कच्चा माल, तयार उत्पादने, माती व पाणी यांचे परीक्षण येथेच होते.'],
+    },
+    {
+      img: 'hero-sunset',
+      alt: 'संध्याकाळच्या आभाळाखाली नांगरलेली शेतजमीन',
+      eyebrow: 'आमची उत्पादने',
+      a: 'बारा उत्पादन गट,',
+      b: 'एकच विश्वासार्ह नाव',
+      text: 'एन.पी.के. मिश्र खते, दुय्यम अन्नद्रव्ये, विद्राव्य खते, सूक्ष्म अन्नद्रव्ये, सेंद्रिय व जैविक उत्पादने.',
+      cta: [['कॅटलॉग पाहा', '/products/'], ['डाउनलोड', '/downloads/']],
+      packs: true,
+    },
+    {
+      img: 'hero-soil',
+      alt: 'ओंजळीत घेतलेली काळी सुपीक माती',
+      eyebrow: 'वापरकर्त्यांसाठी मोफत',
+      a: 'खत देण्यापूर्वी',
+      b: 'जमीन ओळखा',
+      text: 'लोकमंगलच्या संशोधन केंद्रात माती व पाणी परीक्षण मोफत होते, त्यामुळे खतांच्या नियोजनाला पक्का आधार मिळतो.',
+      cta: [['नमुना कसा पाठवायचा', '/research-lab/#sample'], ['टीमशी संपर्क करा', '/contact/']],
+      note: ['माती व पाणी परीक्षण', 'लोकमंगल समूहाच्या महाराष्ट्र संशोधन व विकास केंद्रात.'],
+    },
+  ],
+}[lang];
+
+const PACKS = [
+  { n: 'krishi-vardan-18', s: 'left:0;top:9%;width:36%;--rot:-8deg;--delay:-1.2s;z-index:1' },
+  { n: 'magnet', s: 'left:25%;top:0;width:43%;--rot:1deg;--delay:0s;z-index:3' },
+  { n: 'faster-plus', s: 'right:0;top:7%;width:33%;--rot:7deg;--delay:-2.4s;z-index:2' },
+  { n: 'champion', s: 'left:5%;bottom:0;width:32%;--rot:-4deg;--delay:-3.4s;z-index:4' },
+  { n: 'lancer-bucket', s: 'right:6%;bottom:0;width:34%;--rot:3deg;--delay:-4.6s;z-index:4' },
+];
+---
+
+<section class="hero" data-hero aria-roledescription="carousel" aria-label={lang === 'mr' ? 'मुख्य संदेश' : 'Highlights'}>
+  <div class="hero__media" aria-hidden="true">
+    {
+      SLIDES.map((s, i) =>
+        i === 0 ? (
+          <Photo name={s.img} alt="" class="hero__img is-active" widths={[800, 1280, 1920]} sizes="100vw" eager quality={62} />
+        ) : (
+          <template data-later>
+            <Photo name={s.img} alt="" class="hero__img" widths={[800, 1280, 1920]} sizes="100vw" eager quality={62} />
+          </template>
+        ),
+      )
+    }
+  </div>
+  <div class="container hero__inner">
+    <div class="hero__copy">
+      <div class="hero__slides">
+        {
+          SLIDES.map((s, i) => (
+            <div class={`hero__slide${i === 0 ? ' is-active' : ''}`} data-slide aria-hidden={i === 0 ? 'false' : 'true'}>
+              <span class="eyebrow">{s.eyebrow}</span>
+              {i === 0 ? (
+                <h1 class="display hero__title">
+                  <Words text={s.a} />
+                  <em>
+                    <Words text={s.b} start={3} />
+                  </em>
+                </h1>
+              ) : (
+                <h2 class="display hero__title">
+                  <Words text={s.a} />
+                  <em>
+                    <Words text={s.b} start={3} />
+                  </em>
+                </h2>
+              )}
+              <p class="hero__text">{s.text}</p>
+              <div class="btn-row hero__ctas">
+                <a class="btn btn--primary btn--lg" href={href(lang, s.cta[0][1])} data-magnetic tabindex={i === 0 ? undefined : -1}>
+                  {s.cta[0][0]} <Icon name="arrow" size={18} class="icon--arrow" />
+                </a>
+                <a class="btn btn--outline-light btn--lg" href={href(lang, s.cta[1][1])} tabindex={i === 0 ? undefined : -1}>
+                  {s.cta[1][0]}
+                </a>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+      <div class="hero__controls">
+        <button class="hero__arrow hero__toggle" type="button" data-hero-toggle aria-pressed="false" aria-label={d.pause}>
+          <Icon name="pause" size={15} class="hero__toggle-pause" />
+          <Icon name="play" size={15} class="hero__toggle-play" />
+        </button>
+        <button class="hero__arrow" type="button" data-hero-prev aria-label={d.prev}><Icon name="prev" size={18} /></button>
+        <div class="hero__dots">
+          {SLIDES.map((_, i) => <button class={`hero__dot${i === 0 ? ' is-active' : ''}`} type="button" data-dot aria-label={`${i + 1} / ${SLIDES.length}`} aria-current={i === 0 ? 'true' : 'false'}><span></span></button>)}
+        </div>
+        <button class="hero__arrow" type="button" data-hero-next aria-label={d.next}><Icon name="next" size={18} /></button>
+      </div>
+      <p class="sr-only" aria-live="polite" data-hero-status></p>
+    </div>
+  </div>
+  {
+    SLIDES.map((s, i) =>
+      s.packs ? (
+        <div class="hero__packs" data-aside={i} data-parallax aria-hidden="true">
+          {PACKS.map((p) => (
+            <div class="hero__pack" style={p.s}>
+              <PackImage name={p.n} alt="" widths={[220, 340]} sizes="200px" />
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div class="hero__glass" data-aside={i}>
+          <strong>{s.note?.[0]}</strong>
+          <span>{s.note?.[1]}</span>
+        </div>
+      ),
+    )
+  }
+</section>
+
+<script src="../scripts/hero.ts"></script>

@@ -1,0 +1,73 @@
+---
+import Base from '../../../layouts/Base.astro';
+import PageHero from '../../../components/PageHero.astro';
+import Icon from '../../../components/Icon.astro';
+import SectionHead from '../../../components/SectionHead.astro';
+import Cta from '../../../components/Cta.astro';
+import type { Lang } from '../../../data/types';
+import { t } from '../../../data/i18n';
+import { langPaths } from '../../../data/routes';
+import { CATEGORIES, inCategory, productTitle } from '../../../data/products';
+
+export const getStaticPaths = () => langPaths();
+
+const { lang } = Astro.props as { lang: Lang };
+const d = t(lang);
+const m = lang === 'mr';
+---
+
+<Base lang={lang} path="/downloads/" title={d.downloads} description={m ? 'लोकमंगल बायोटेकचा उत्पादन कॅटलॉग आणि प्रत्येक उत्पादनाची माहिती पत्रिका PDF मध्ये.' : 'The Lokmangal Biotech product catalogue, and a PDF data sheet for every product.'}>
+  <PageHero
+    lang={lang}
+    eyebrow={d.downloads}
+    title={m ? 'कॅटलॉग आणि <em>उत्पादन माहिती पत्रिका</em>' : 'Catalogue and <em>product data sheets</em>'}
+    lead={m ? 'संपूर्ण कॅटलॉग किंवा प्रत्येक उत्पादनाची एका पानाची माहिती PDF मध्ये डाउनलोड करा.' : 'Download the full catalogue, or a one-page PDF for any product.'}
+    image="lineup-bottles"
+    imageAlt=""
+    crumbs={[{ label: d.downloads }]}
+  />
+  <section class="section section--tight">
+    <div class="container">
+      <SectionHead eyebrow={m ? 'कॅटलॉग' : 'Catalogue'} title={m ? 'संपूर्ण <em>उत्पादन कॅटलॉग</em>' : 'The complete <em>product catalogue</em>'} />
+      <div class="grid grid-2" data-stagger>
+        <a class="dl" href="/downloads/en/catalogue.pdf" download>
+          <span class="dl__icon">PDF</span>
+          <span><b>{m ? 'इंग्रजी कॅटलॉग' : 'Catalogue in English'}</b><small>Lokmangal Biotech Product Catalogue</small></span>
+          <Icon name="download" size={20} class="dl__go" />
+        </a>
+        <a class="dl" href="/downloads/mr/catalogue.pdf" download>
+          <span class="dl__icon">PDF</span>
+          <span><b>{m ? 'मराठी कॅटलॉग' : 'Catalogue in Marathi'}</b><small class="sysdeva">लोकमंगल बायोटेक उत्पादन कॅटलॉग</small></span>
+          <Icon name="download" size={20} class="dl__go" />
+        </a>
+      </div>
+    </div>
+  </section>
+  <section class="section section--tight section--white">
+    <div class="container">
+      <SectionHead eyebrow={m ? 'माहिती पत्रिका' : 'Data sheets'} title={m ? 'प्रत्येक उत्पादनाची <em>माहिती</em>' : 'A sheet for <em>every product</em>'} />
+      <div class="stack" style="--stack:32px">
+        {
+          CATEGORIES.map((c) => (
+            <div data-reveal>
+              <h3 class="h4" style="margin-bottom:12px">{c.name[lang]}</h3>
+              <div class="grid grid-3" style="gap:10px">
+                {inCategory(c.id).map((p) => (
+                  <a class="dl" href={`/downloads/${lang}/${p.slug}.pdf`} download>
+                    <span class="dl__icon">PDF</span>
+                    <span>
+                      <b>{productTitle(p, lang)}</b>
+                      <small>{d.downloadPdf}</small>
+                    </span>
+                    <Icon name="download" size={18} class="dl__go" />
+                  </a>
+                ))}
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+  <Cta lang={lang} />
+</Base>

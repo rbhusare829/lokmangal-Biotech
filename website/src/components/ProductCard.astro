@@ -1,0 +1,50 @@
+---
+import { href, type Lang } from '../data/types';
+import { categoryOf, productTitle, productUrl, type Product } from '../data/products';
+import { CROP_NAMES } from '../data/crops';
+import PackImage from './PackImage.astro';
+import PackArt from './PackArt.astro';
+import Icon from './Icon.astro';
+
+interface Props {
+  product: Product;
+  lang: Lang;
+  /** Morph the pack into the product page (only where a product appears once on the page). */
+  morph?: boolean;
+  hideCategory?: boolean;
+}
+
+const { product: p, lang, morph = false, hideCategory = false } = Astro.props;
+const cat = categoryOf(p.category);
+const title = productTitle(p, lang);
+const searchText = [p.name.en, p.name.mr, p.subtitle.en, p.subtitle.mr, p.grade ?? '', cat.name.en, cat.name.mr, ...(p.grades?.map((g) => g.grade) ?? []), ...p.cropsNamed.flatMap((c) => (CROP_NAMES[c] ? [CROP_NAMES[c].en, CROP_NAMES[c].mr] : []))]
+  .join(' ')
+  .toLowerCase();
+const gradeLabel = p.grades ? (lang === 'mr' ? '७ ग्रेड' : '7 grades') : p.grade;
+---
+
+<article
+  class={`pcard tone-${cat.tone}`}
+  data-kind={p.category}
+  data-uses={p.uses.join(' ')}
+  data-nutrients={p.nutrients.join(' ')}
+  data-crops={[...p.cropsNamed, p.cropsAll ? 'all' : ''].join(' ')}
+  data-text={searchText}
+>
+  <div class:list={['pcard__media', p.partial && 'pcard__media--partial']}>
+    {
+      p.img ? (
+        <PackImage name={p.img} alt={title} class="pcard__img" sizes="(width < 560px) 46vw, 240px" widths={[220, 340, 480]} style={morph ? `view-transition-name:pack-${p.slug}` : undefined} />
+      ) : (
+        <PackArt product={p} lang={lang} />
+      )
+    }
+    {gradeLabel && <span class="pcard__grade grade">{gradeLabel}</span>}
+  </div>
+  <div class="pcard__body">
+    {!hideCategory && <span class="pcard__cat">{cat.short[lang]}</span>}
+    <h3><a class="pcard__link" href={href(lang, productUrl(p))}>{p.name[lang]}</a></h3>
+    <p class="pcard__sub">{p.subtitle[lang]}</p>
+    <p class="pcard__dose"><Icon name="scale" size={15} />{p.dose[lang].length > 64 ? `${p.dose[lang].slice(0, p.dose[lang].lastIndexOf(' ', 62))}…` : p.dose[lang]}</p>
+  </div>
+</article>

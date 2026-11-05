@@ -1,0 +1,14 @@
+---
+/* Horizontal drag rail with arrows and a scroll progress line. */
+---
+
+<div data-rail-root>
+  <div class="rail" data-rail tabindex="0">
+    <slot />
+  </div>
+  <div class="container">
+    <div class="rail-progress" aria-hidden="true"><span data-rail-bar></span></div>
+  </div>
+</div>
+
+<script src="../scripts/rail.ts"></script>

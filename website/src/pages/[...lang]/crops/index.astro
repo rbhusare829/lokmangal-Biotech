@@ -1,0 +1,55 @@
+---
+import Base from '../../../layouts/Base.astro';
+import PageHero from '../../../components/PageHero.astro';
+import CropCard from '../../../components/CropCard.astro';
+import Icon from '../../../components/Icon.astro';
+import Cta from '../../../components/Cta.astro';
+import { href, type Lang } from '../../../data/types';
+import { t } from '../../../data/i18n';
+import { langPaths } from '../../../data/routes';
+import { CROPS } from '../../../data/crops';
+
+export const getStaticPaths = () => langPaths();
+
+const { lang } = Astro.props as { lang: Lang };
+const d = t(lang);
+const m = lang === 'mr';
+---
+
+<Base lang={lang} path="/crops/" title={m ? 'पिकानुसार उत्पादने' : 'Products by crop'} description={m ? 'ऊस, केळी, द्राक्ष, डाळिंब, कांदा, कापूस, सोयाबीन व इतर पिकांसाठी लोकमंगल बायोटेकची उत्पादने आणि मात्रा.' : 'Lokmangal Biotech products and doses for sugarcane, banana, grapes, pomegranate, onion, cotton, soybean and other crops.'}>
+  <PageHero
+    lang={lang}
+    eyebrow={m ? 'पिकानुसार' : 'By crop'}
+    title={m ? 'तुमचे पीक निवडा, <em>योग्य उत्पादन पाहा</em>' : 'Choose your crop, <em>see the right products</em>'}
+    lead={m ? 'प्रत्येक पिकासाठी आमच्या उत्पादन माहितीत नमूद उत्पादने, त्यांची मात्रा आणि पॅकिंग एकाच ठिकाणी.' : 'For each crop, the products named in our product data, with their doses and packing, in one place.'}
+    image="crop-sugarcane"
+    imageAlt={m ? 'ऊसाचे शेत' : 'A sugarcane field'}
+    crumbs={[{ label: d.crops }]}
+  />
+  <section class="section section--tight">
+    <div class="container">
+      <div class="crop-grid" data-stagger>
+        {CROPS.map((c) => <CropCard crop={c} lang={lang} />)}
+      </div>
+    </div>
+  </section>
+  <section class="section section--tight section--mint">
+    <div class="container split">
+      <div class="stack" data-reveal="left">
+        <span class="eyebrow">{m ? 'सुरुवात जमिनीपासून' : 'Start with the soil'}</span>
+        <h2 class="h2" set:html={m ? 'आधी <em>माती परीक्षण</em> करा' : 'Test your soil <em>first</em>'} />
+        <p class="lead">{m ? 'जमिनीत काय कमी आहे हे समजल्यावर खतांचे नियोजन सोपे होते. नमुना कसा घ्यायचा आणि कुठे द्यायचा ते पाहा.' : 'Once you know what your soil lacks, planning is easier. See how to take a sample and where to send it.'}</p>
+        <a class="btn btn--green" style="width:fit-content" href={href(lang, '/research-lab/#sample')}>{m ? 'नमुना कसा पाठवायचा' : 'How to send a sample'} <Icon name="arrow" size={17} class="icon--arrow" /></a>
+      </div>
+      <div class="card" data-reveal="right">
+        <h3 class="h3">{m ? 'इतर पिके घेता का?' : 'Growing another crop?'}</h3>
+        <p class="muted" style="margin-block:8px 16px">{m ? 'आमची बहुतेक उत्पादने सर्व पिके, भाजीपाला, फळे, तृणधान्ये व कडधान्यांसाठी वापरली जातात.' : 'Most of our products are used for all crops, vegetables, fruits, cereals and pulses.'}</p>
+        <div class="btn-row">
+          <a class="btn btn--ghost btn--sm" href={href(lang, '/products/')}>{d.allProducts}</a>
+          <a class="btn btn--ghost btn--sm" href={href(lang, '/contact/')}>{d.contact}</a>
+        </div>
+      </div>
+    </div>
+  </section>
+  <Cta lang={lang} />
+</Base>

@@ -1,0 +1,114 @@
+---
+import Base from '../../../layouts/Base.astro';
+import PageHero from '../../../components/PageHero.astro';
+import Photo from '../../../components/Photo.astro';
+import Icon from '../../../components/Icon.astro';
+import SectionHead from '../../../components/SectionHead.astro';
+import Cta from '../../../components/Cta.astro';
+import type { Lang } from '../../../data/types';
+import { t } from '../../../data/i18n';
+import { langPaths } from '../../../data/routes';
+import { OFFICES, PLANTS, STATS } from '../../../data/site';
+
+export const getStaticPaths = () => langPaths();
+
+const { lang } = Astro.props as { lang: Lang };
+const d = t(lang);
+const m = lang === 'mr';
+const fmt = (n: number) => new Intl.NumberFormat(m ? 'mr-IN' : 'en-IN').format(n);
+const photos = [
+  { img: 'factory-front', alt: m ? 'लोकमंगल बायोटेकची इमारत' : 'The Lokmangal Bio-Tech building' },
+  { img: 'factory-gate', alt: m ? 'कारखान्याचे प्रवेशद्वार' : 'The factory entrance' },
+  { img: 'lokmangal-house', alt: m ? 'लोकमंगल हाऊस, कॉर्पोरेट कार्यालय' : 'Lokmangal House, the corporate office' },
+];
+---
+
+<Base lang={lang} path="/manufacturing/" title={d.manufacturing} description={m ? 'सोलापूर व वडोदरा येथील लोकमंगल बायोटेकची उत्पादन केंद्रे, प्रत्येकी २५,००० मे. टन प्रति वर्ष क्षमता, कार्यक्षेत्र आणि गोदामे.' : 'Lokmangal Biotech production units at Solapur and Vadodara, each with 25,000 MT per year capacity, their covering areas and warehouses.'}>
+  <PageHero
+    lang={lang}
+    eyebrow={d.manufacturing}
+    title={m ? 'दोन केंद्रे, <em>५०,००० मे. टन वार्षिक क्षमता</em>' : 'Two units, <em>50,000 MT of yearly capacity</em>'}
+    lead={m ? 'सोलापूर (महाराष्ट्र) आणि वडोदरा (गुजरात) येथील उत्पादन केंद्रांतून पश्चिम व दक्षिण भारतातील शेतकऱ्यांपर्यंत पोहोच.' : 'Production units at Solapur (Maharashtra) and Vadodara (Gujarat) reach farmers across western and southern India.'}
+    image="company-building"
+    imageAlt={m ? 'लोकमंगल बायोटेकचा कारखाना' : 'The Lokmangal Biotech factory'}
+    crumbs={[{ label: d.manufacturing }]}
+  />
+
+  <section class="section section--tight">
+    <div class="container">
+      <SectionHead eyebrow={m ? 'उत्पादन केंद्रे' : 'Production units'} title={m ? 'क्षमता आणि <em>कार्यक्षेत्र</em>' : 'Capacity and <em>covering area</em>'} />
+      <div class="grid grid-2" data-stagger>
+        {
+          PLANTS.map((plant) => (
+            <article class="plant">
+              <Photo name={plant.id === 'solapur' ? 'factory-front' : 'lineup-bottles'} alt={plant.id === 'solapur' ? (m ? 'सोलापूर येथील लोकमंगल बायोटेकची इमारत' : 'The Lokmangal Biotech building at Solapur') : (m ? 'लोकमंगल बायोटेकची द्रव उत्पादन श्रेणी' : 'The Lokmangal Biotech liquid product range')} class="plant__img" widths={[640, 1000]} sizes="(width < 900px) 92vw, 600px" />
+              <div class="plant__body">
+                <h3 class="h3">{plant.name[lang]}, {plant.state[lang]}</h3>
+                <div class="plant__cap">{fmt(plant.capacity)} <small>{m ? 'मे. टन प्रति वर्ष' : 'MT per year'}</small></div>
+                <div>
+                  <p class="muted small" style="font-weight:650;margin-bottom:8px">{m ? 'कार्यक्षेत्र' : 'Covering area'}</p>
+                  <ul class="chips">{plant.coverage.map((c) => <li class="chip chip--line">{c[lang]}</li>)}</ul>
+                </div>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--dark">
+    <div class="container">
+      <div class="stats" style="background:transparent;border-color:#ffffff24;box-shadow:none" data-reveal>
+        <div class="stat"><div class="stat__num" style="color:#fff" data-count={STATS.capacityTotal} data-suffix={m ? ' मे. टन' : ' MT'}>{fmt(STATS.capacityTotal)}{m ? ' मे. टन' : ' MT'}</div><div class="stat__label" style="color:#fff">{m ? 'एकूण वार्षिक क्षमता' : 'Total yearly capacity'}</div></div>
+        <div class="stat"><div class="stat__num" style="color:var(--o-400)">{fmt(2)}</div><div class="stat__label" style="color:#fff">{m ? 'उत्पादन केंद्रे' : 'Production units'}</div></div>
+        <div class="stat"><div class="stat__num" style="color:#fff" data-count={STATS.dealers} data-suffix="+">{fmt(STATS.dealers)}+</div><div class="stat__label" style="color:#fff">{m ? 'डीलर्स' : 'Dealers'}</div></div>
+        <div class="stat"><div class="stat__num" style="color:var(--o-400)" data-count={STATS.dealerStates}>{fmt(STATS.dealerStates)}</div><div class="stat__label" style="color:#fff">{m ? 'राज्ये' : 'States'}</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tight">
+    <div class="container">
+      <SectionHead eyebrow={m ? 'आमच्या इमारती' : 'Our facilities'} title={m ? 'कारखाना आणि <em>कार्यालय</em>' : 'Factory and <em>office</em>'} />
+      <div class="grid grid-3" data-stagger>
+        {
+          photos.map((p) => (
+            <figure style="margin:0">
+              <Photo name={p.img} alt={p.alt} class="media-frame__img" widths={[480, 800]} sizes="(width < 960px) 92vw, 400px" style="aspect-ratio:1/0.86" />
+              <figcaption class="muted small" style="margin-top:8px;font-weight:600">{p.alt}</figcaption>
+            </figure>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tight section--white" id="offices">
+    <div class="container">
+      <SectionHead eyebrow={m ? 'गोदामे व कार्यालये' : 'Warehouses and offices'} title={m ? 'आमची <em>ठिकाणे</em>' : 'Where to <em>find us</em>'} />
+      <div class="grid grid-3" data-stagger>
+        {
+          OFFICES.map((o) => (
+            <article class="office">
+              <p class="chip" style="width:fit-content">{o.kind[lang]}</p>
+              <h3>{o.title[lang]}</h3>
+              <p>{o.lines[lang]}</p>
+              <a class="link-arrow" href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(o.map)}`} target="_blank" rel="noopener">
+                <Icon name="pin" size={16} /> {m ? 'नकाशावर पाहा' : 'View on map'}
+              </a>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tight">
+    <div class="container" data-reveal>
+      <Photo name="lineup" alt={m ? 'लोकमंगल बायोटेकची संपूर्ण उत्पादन श्रेणी' : 'The Lokmangal Biotech product range'} class="media-frame__img" widths={[800, 1280, 1920, 2400]} sizes="(width < 1280px) 96vw, 1240px" />
+    </div>
+  </section>
+
+  <Cta lang={lang} />
+</Base>

@@ -1,0 +1,105 @@
+@import "tailwindcss";
+
+@theme {
+  --color-forest: #174D36;
+  --color-forest-deep: #0D2E20;
+  --color-forest-dark: #0f3625;
+  --color-forest-light: #1f6446;
+  
+  --color-fresh: #70A95B;
+  --color-fresh-dark: #2E7D32;
+  --color-fresh-light: #8ec37a;
+
+  --color-gold-accent: #D97706;
+  --color-gold-light: #FDE68A;
+
+  --color-lime-accent: #C5DF83;
+  --color-lime-light: #EDF7D2;
+
+  --color-brand-bg: #F7F9F5;
+  --color-brand-card: #FFFFFF;
+  --color-brand-text: #17251D;
+  --color-brand-muted: #4B5A50;
+  --color-brand-border: #E0E7DC;
+
+  --font-devanagari: "Mukta", "Noto Sans Devanagari", "Plus Jakarta Sans", system-ui, sans-serif;
+  --font-devanagari-title: "Mukta", "Plus Jakarta Sans", sans-serif;
+  --font-serif: "Rozha One", "Playfair Display", Georgia, serif;
+}
+
+:root {
+  color-scheme: light;
+}
+
+html {
+  font-family: var(--font-devanagari);
+  background-color: #F7F9F5;
+  color: #17251D;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: "Mukta", "Noto Sans Devanagari", "Plus Jakarta Sans", sans-serif;
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 9px;
+}
+::-webkit-scrollbar-track {
+  background: #EFF4EB;
+}
+::-webkit-scrollbar-thumb {
+  background: #70A95B;
+  border-radius: 6px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #174D36;
+}
+
+/* Advanced Keyframe Animations */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-7px); }
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.6); }
+  70% { transform: scale(1); box-shadow: 0 0 0 14px rgba(37, 211, 102, 0); }
+  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(37, 211, 102, 0); }
+}
+
+@keyframes shine {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(200%); }
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+.animate-pulse-ring {
+  animation: pulse-ring 2.5s infinite;
+}
+
+.shine-effect {
+  position: relative;
+  overflow: hidden;
+}
+
+.shine-effect::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.25) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: skewX(-25deg);
+  animation: shine 6s infinite;
+}

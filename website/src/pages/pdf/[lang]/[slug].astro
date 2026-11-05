@@ -1,0 +1,107 @@
+---
+import Sheet from '../../../layouts/Sheet.astro';
+import PackImage from '../../../components/PackImage.astro';
+import PackArt from '../../../components/PackArt.astro';
+import SheetFoot from '../../../components/SheetFoot.astro';
+import Mark from '../../../assets/brand/logo-mark.svg';
+import Word from '../../../assets/brand/logo-word.svg';
+import { LANGS, type Lang } from '../../../data/types';
+import { t } from '../../../data/i18n';
+import { PRODUCTS, USES, cellValue, categoryOf, productTitle, type Product } from '../../../data/products';
+import { COMPANY } from '../../../data/site';
+
+export function getStaticPaths() {
+  return LANGS.flatMap((lang) => PRODUCTS.map((product) => ({ params: { lang, slug: product.slug }, props: { lang, product } })));
+}
+
+const { lang, product: p } = Astro.props as { lang: Lang; product: Product };
+const d = t(lang);
+const cat = categoryOf(p.category);
+const label = lang === 'mr' ? 'वापरण्यापूर्वी पॅकवरील सूचना वाचा.' : 'Read the pack label before use.';
+---
+
+<Sheet lang={lang} title={`${productTitle(p, lang)} | ${COMPANY.short[lang]}`}>
+  <article class="sheet">
+    <header class="sheet__top">
+      <div class="sheet__brand">
+        <Mark class="sheet__mark" aria-hidden="true" />
+        <div>
+          <Word class="sheet__word" aria-hidden="true" />
+          <div class="sheet__sub">Lokmangal Bio-Tech Pvt. Ltd.</div>
+        </div>
+      </div>
+      <span class="sheet__cat">{cat.name[lang]}</span>
+    </header>
+    <section class="sheet__hero">
+      <div class="sheet__stage">
+        {p.img ? <PackImage name={p.img} alt={p.name[lang]} eager widths={[360]} sizes="240px" /> : <PackArt product={p} lang={lang} />}
+      </div>
+      <div>
+        <h1 class="sheet__title">{p.name[lang]}</h1>
+        {p.grade && /:/.test(p.grade) && <div class="sheet__grade">{p.grade}</div>}
+        <p class="sheet__subtitle">{p.subtitle[lang]}</p>
+        <dl class="facts">
+          <div class="fact"><dt>{d.dose}</dt><dd>{p.dose[lang]}</dd></div>
+          <div class="fact"><dt>{d.packing}</dt><dd>{p.packing[lang]}</dd></div>
+          <div class="fact"><dt>{d.use}</dt><dd>{p.uses.map((u) => USES[u][lang]).join(', ')}</dd></div>
+        </dl>
+      </div>
+    </section>
+    <section class="sheet__body">
+      <div>
+        <div class="block">
+          <h2>{p.benefitsTitle?.[lang] ?? d.benefits}</h2>
+          <ul class="benefits">{p.benefits.map((b) => <li>{b[lang]}</li>)}</ul>
+          {p.note && <p class="note">{p.note[lang]}</p>}
+        </div>
+      </div>
+      <div>
+        {
+          p.grades && (
+            <div class="block">
+              <h2>{d.grades}</h2>
+              <table class="spec">
+                <tbody>
+                  {p.grades.map((g) => (
+                    <tr>
+                      <th scope="row">{g.name[lang]}</th>
+                      <td>{g.grade}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )
+        }
+        {
+          p.contents.length > 0 && (
+            <div class="block">
+              <h2>{d.contents}</h2>
+              <table class="spec">
+                <tbody>
+                  {p.contents.map((row) => (
+                    <tr>
+                      <th scope="row">{row.k[lang]}</th>
+                      <td>{cellValue(row, lang)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              {p.contentsNote && <p class="note">{p.contentsNote[lang]}</p>}
+            </div>
+          )
+        }
+        {
+          p.cropsText && (
+            <div class="block">
+              <h2>{d.cropsLabel}</h2>
+              <p>{p.cropsText[lang]}</p>
+            </div>
+          )
+        }
+        <p class="note" style="margin-top:5mm">{label}</p>
+      </div>
+    </section>
+    <SheetFoot lang={lang} />
+  </article>
+</Sheet>

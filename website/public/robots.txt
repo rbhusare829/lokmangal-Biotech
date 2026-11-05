@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /pdf/
+
+Sitemap: https://www.lokmangalbiotech.com/sitemap-index.xml

@@ -1,0 +1,91 @@
+---
+import Base from '../../../layouts/Base.astro';
+import PageHero from '../../../components/PageHero.astro';
+import Icon from '../../../components/Icon.astro';
+import SectionHead from '../../../components/SectionHead.astro';
+import EnquiryForm from '../../../components/EnquiryForm.astro';
+import type { Lang } from '../../../data/types';
+import { t } from '../../../data/i18n';
+import { langPaths } from '../../../data/routes';
+import { CONTACT, OFFICES } from '../../../data/site';
+
+export const getStaticPaths = () => langPaths();
+
+const { lang } = Astro.props as { lang: Lang };
+const d = t(lang);
+const m = lang === 'mr';
+const ways = [
+  { icon: 'whatsapp', label: d.whatsapp, value: CONTACT.phonePrimary.label, to: `https://wa.me/${CONTACT.phonePrimary.wa}`, ext: true },
+  { icon: 'whatsapp', label: d.whatsapp, value: CONTACT.phoneSecond.label, to: `https://wa.me/${CONTACT.phoneSecond.wa}`, ext: true },
+  { icon: 'phone', label: d.callUs, value: CONTACT.landline.label, to: `tel:${CONTACT.landline.tel}` },
+  { icon: 'mail', label: d.email, value: CONTACT.email, to: `mailto:${CONTACT.email}` },
+] as const;
+const factory = OFFICES.find((o) => o.id === 'factory')!;
+---
+
+<Base lang={lang} path="/contact/" title={d.contact} description={m ? 'लोकमंगल बायोटेकशी संपर्क: ए-६१, एम.आय.डी.सी., चिंचोळी, सोलापूर. फोन, व्हॉट्सॲप, ई-मेल आणि चौकशी अर्ज.' : 'Contact Lokmangal Biotech: A-61, MIDC, Chincholi, Solapur. Phone, WhatsApp, email and enquiry form.'}>
+  <PageHero
+    lang={lang}
+    eyebrow={d.contact}
+    title={m ? 'आम्ही <em>मदतीला तयार आहोत</em>' : 'We are <em>ready to help</em>'}
+    lead={m ? 'उत्पादन, डीलरशिप किंवा माती व पाणी परीक्षण, कोणत्याही प्रश्नासाठी संपर्क करा.' : 'Reach out about a product, a dealership or soil and water testing.'}
+    image="factory-gate"
+    imageAlt=""
+    crumbs={[{ label: d.contact }]}
+  />
+
+  <section class="section section--tight">
+    <div class="container">
+      <div class="grid grid-4" data-stagger>
+        {
+          ways.map((w) => (
+            <a class="card card--hover" href={w.to} target={'ext' in w ? '_blank' : undefined} rel={'ext' in w ? 'noopener' : undefined}>
+              <span class:list={['icon-badge', w.icon !== 'whatsapp' && 'icon-badge--orange']}><Icon name={w.icon} size={23} /></span>
+              <p class="muted small" style="margin-top:14px;font-weight:650">{w.label}</p>
+              <p style="color:var(--ink);font-weight:750;overflow-wrap:anywhere">{w.value}</p>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tight section--cream" id="enquiry">
+    <div class="container split split--wide-right split--top">
+      <div class="stack" data-reveal="left">
+        <span class="eyebrow">{m ? 'चौकशी' : 'Enquiry'}</span>
+        <h2 class="h2" set:html={m ? 'आपला संदेश <em>पाठवा</em>' : 'Send us <em>a message</em>'} />
+        <p class="lead">{m ? 'अर्ज भरा आणि व्हॉट्सॲप किंवा ई-मेलने पाठवा.' : 'Fill in the form and send it by WhatsApp or email.'}</p>
+        <div class="office">
+          <p class="chip" style="width:fit-content">{factory.kind[lang]}</p>
+          <h3>{factory.title[lang]}</h3>
+          <p>{factory.lines[lang]}</p>
+          <a class="link-arrow" href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(factory.map)}`} target="_blank" rel="noopener"><Icon name="pin" size={16} /> {m ? 'नकाशावर पाहा' : 'View on map'}</a>
+        </div>
+      </div>
+      <div class="form-card" data-reveal="right">
+        <EnquiryForm lang={lang} />
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tight">
+    <div class="container">
+      <SectionHead eyebrow={m ? 'गोदामे व कार्यालये' : 'Warehouses and offices'} title={m ? 'आमची <em>ठिकाणे</em>' : 'Where to <em>find us</em>'} />
+      <div class="grid grid-3" data-stagger>
+        {
+          OFFICES.map((o) => (
+            <article class="office">
+              <p class="chip" style="width:fit-content">{o.kind[lang]}</p>
+              <h3>{o.title[lang]}</h3>
+              <p>{o.lines[lang]}</p>
+              <a class="link-arrow" href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(o.map)}`} target="_blank" rel="noopener">
+                <Icon name="pin" size={16} /> {m ? 'नकाशावर पाहा' : 'View on map'}
+              </a>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+</Base>

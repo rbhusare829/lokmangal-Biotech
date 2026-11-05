@@ -1,0 +1,76 @@
+---
+/**
+ * Illustrated pack, used until a real photograph of the product is supplied.
+ * It carries the product name and the group colours, and is not a photo of the real label.
+ */
+import type { Lang } from '../data/types';
+import type { Product } from '../data/products';
+import { categoryOf } from '../data/products';
+
+interface Props {
+  product: Product;
+  lang: Lang;
+}
+
+const { product, lang } = Astro.props;
+const tone = categoryOf(product.category).tone;
+const COLORS: Record<string, [string, string]> = {
+  green: ['#187a46', '#0d4a2d'],
+  orange: ['#ec6a1e', '#b6470b'],
+  gold: ['#e8a521', '#a86f05'],
+  teal: ['#17907f', '#0f6b5f'],
+  earth: ['#9a6a39', '#6f4620'],
+  blue: ['#2f7bd0', '#1c5ea8'],
+};
+const [c1, c2] = COLORS[tone];
+const id = `pa-${product.slug}`;
+const name = product.name[lang];
+const words = name.split(' ');
+const lines = words.length > 1 && name.length > 9 ? [words.slice(0, Math.ceil(words.length / 2)).join(' '), words.slice(Math.ceil(words.length / 2)).join(' ')] : [name];
+const isBottle = product.shape === 'bottle';
+const longest = Math.max(...lines.map((s) => s.length));
+---
+
+{
+  isBottle ? (
+    <svg class="packart packart--bottle" viewBox="0 0 120 300" role="img" aria-label={name}>
+      <defs>
+        <linearGradient id={id} x1="0" x2="1" y1="0" y2="1">
+          <stop offset="0" stop-color={c1} />
+          <stop offset="1" stop-color={c2} />
+        </linearGradient>
+        <linearGradient id={`${id}-b`} x1="0" x2="1">
+          <stop offset="0" stop-color="#e9eeeb" />
+          <stop offset=".35" stop-color="#fff" />
+          <stop offset="1" stop-color="#dfe6e2" />
+        </linearGradient>
+      </defs>
+      <rect x="38" y="4" width="44" height="30" rx="6" fill={`url(#${id})`} />
+      <path d="M42 34h36v14c0 6 26 14 26 40v184c0 12-8 22-20 22H36c-12 0-20-10-20-22V88c0-26 26-34 26-40V34Z" fill={`url(#${id}-b)`} />
+      <path d="M16 104h88v136H16z" fill={`url(#${id})`} />
+      {lines.map((line, i) => (
+        <text x="60" y={lines.length > 1 ? 162 + i * 22 : 176} text-anchor="middle" fill="#fff" font-weight="700" font-size={longest > 8 ? 15 : 19}>
+          {line}
+        </text>
+      ))}
+      <rect x="28" y="214" width="64" height="4" rx="2" fill="#ffffff66" />
+    </svg>
+  ) : (
+    <svg class="packart" viewBox="0 0 220 280" role="img" aria-label={name}>
+      <defs>
+        <linearGradient id={id} x1="0" x2="1" y1="0" y2="1">
+          <stop offset="0" stop-color={c1} />
+          <stop offset="1" stop-color={c2} />
+        </linearGradient>
+      </defs>
+      <path d="M22 14c20 6 40-2 88 2s62-6 88-2c-4 22 2 40 2 60v150c0 16 4 28 2 42-30 4-54-4-92-2s-58 6-88 2c-4-14 2-26 2-42V74c0-20 2-38-2-60Z" fill={`url(#${id})`} />
+      <path d="M22 14c20 6 40-2 88 2s62-6 88-2l1 22c-28 6-58-2-89 0s-60 6-89 0l1-22Z" fill="#fff" fill-opacity=".22" />
+      <path d="M36 206c34-14 74-8 148-8v54c-38 2-96 6-148 0v-46Z" fill="#fff" fill-opacity=".14" />
+      {lines.map((line, i) => (
+        <text x="110" y={lines.length > 1 ? 128 + i * 32 : 144} text-anchor="middle" fill="#fff" font-weight="750" font-size={longest > 9 ? 22 : 30}>
+          {line}
+        </text>
+      ))}
+    </svg>
+  )
+}

@@ -1,0 +1,54 @@
+---
+import Base from '../../../layouts/Base.astro';
+import PageHero from '../../../components/PageHero.astro';
+import Photo from '../../../components/Photo.astro';
+import Icon from '../../../components/Icon.astro';
+import Cta from '../../../components/Cta.astro';
+import { href, type Lang } from '../../../data/types';
+import { t } from '../../../data/i18n';
+import { langPaths } from '../../../data/routes';
+import { FOUNDER } from '../../../data/site';
+
+export const getStaticPaths = () => langPaths();
+
+const { lang } = Astro.props as { lang: Lang };
+const d = t(lang);
+const m = lang === 'mr';
+---
+
+<Base lang={lang} path="/about/founder-message/" title={d.founder} description={m ? 'लोकमंगल समूहाचे संस्थापक अध्यक्ष श्री. सुभाष देशमुख यांचा संदेश.' : 'A message from Shri Subhash S. Deshmukh, Founder Chairman of the Lokmangal Group.'}>
+  <PageHero
+    lang={lang}
+    eyebrow={m ? 'लोकमंगल समूह' : 'Lokmangal Group'}
+    title={d.founder}
+    lead={FOUNDER.pull[lang]}
+    image="valley"
+    imageAlt=""
+    crumbs={[{ label: m ? 'आमच्याविषयी' : 'About us', to: '/about/' }, { label: d.founder }]}
+  />
+
+  <section class="section">
+    <div class="container split split--wide-right split--top">
+      <div class="founder-card" data-reveal="left" style="position:sticky;top:calc(var(--header-h) + 18px)">
+        <Photo name="founder" alt={FOUNDER.name[lang]} widths={[480, 760]} sizes="(width < 960px) 92vw, 420px" eager />
+        <div class="founder-card__body">
+          <div class="founder-card__name">{FOUNDER.name[lang]}</div>
+          <div class="muted small">{FOUNDER.role[lang]}</div>
+        </div>
+      </div>
+      <div class="stack" data-reveal="right">
+        <p class="quote">“{FOUNDER.pull[lang]}”</p>
+        <div class="prose stack">
+          {FOUNDER.paragraphs.map((p) => <p>{p[lang]}</p>)}
+        </div>
+        <p style="margin-top:1.6rem">
+          <strong style="color:var(--ink);font-family:var(--font-display);font-size:1.15rem">{FOUNDER.name[lang]}</strong><br />
+          <span class="muted">{FOUNDER.role[lang]}</span>
+        </p>
+        <a class="link-arrow" href={href(lang, '/about/')}>{d.company} <Icon name="arrow" size={17} /></a>
+      </div>
+    </div>
+  </section>
+
+  <Cta lang={lang} />
+</Base>

@@ -1,0 +1,155 @@
+---
+import Base from '../../../layouts/Base.astro';
+import PageHero from '../../../components/PageHero.astro';
+import Photo from '../../../components/Photo.astro';
+import Icon from '../../../components/Icon.astro';
+import SectionHead from '../../../components/SectionHead.astro';
+import NutrientTable from '../../../components/NutrientTable.astro';
+import DoseCalculator from '../../../components/DoseCalculator.astro';
+import Cta from '../../../components/Cta.astro';
+import { href, type Lang } from '../../../data/types';
+import { t } from '../../../data/i18n';
+import { langPaths } from '../../../data/routes';
+import { FAQS } from '../../../data/site';
+import { PRODUCTS, USES, bySlug, productTitle, productUrl, type Use } from '../../../data/products';
+
+export const getStaticPaths = () => langPaths();
+
+const { lang } = Astro.props as { lang: Lang };
+const d = t(lang);
+const m = lang === 'mr';
+
+const methods: { use: Use; icon: 'sack' | 'spray' | 'droplet' | 'seed' | 'recycle'; text: string; photo: string; focus?: string }[] = [
+  { use: 'soil', icon: 'sack', photo: 'man-sowing', text: m ? 'दाणेदार किंवा पावडर उत्पादने थेट जमिनीत दिली जातात. मात्रा प्रति एकर या प्रमाणात असते.' : 'Granules and powders go straight into the soil. The dose is given per acre.' },
+  { use: 'foliar', icon: 'spray', photo: 'spray-cabbage', focus: '50% 6%', text: m ? 'पाण्यात मिसळून पानांवर फवारणी केली जाते. मात्रा प्रति लिटर पाणी या प्रमाणात असते.' : 'Mixed in water and sprayed on the leaves. The dose is given per litre of water.' },
+  { use: 'drip', icon: 'droplet', photo: 'drip-banana', text: m ? 'पूर्ण विरघळणारी खते ठिबक सिंचनातून थेट मुळांजवळ पोहोचवली जातात.' : 'Fully soluble fertilizers reach the root zone through the drip line.' },
+  { use: 'seed', icon: 'seed', photo: 'crop-soybean', text: m ? 'पेरणीपूर्वी बियाण्यावर जैविक कल्चरची प्रक्रिया केली जाते: १०–१५ किलो बियाण्यास ५०० ग्रॅम.' : 'Biological cultures are applied to seed before sowing: 500 gm for 10–15 kg of seed.' },
+];
+const byUse = (u: Use) => PRODUCTS.filter((p) => p.uses.includes(u)).slice(0, 6);
+const faqLd = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: FAQS.map((f) => ({ '@type': 'Question', name: f.q[lang], acceptedAnswer: { '@type': 'Answer', text: f.a[lang] } })),
+  },
+];
+const sample = [
+  { g: '19:19:19', n: 19, p: 19, k: 19 },
+  { g: '13:00:45', n: 13, p: 0, k: 45 },
+  { g: '12:61:00', n: 12, p: 61, k: 0 },
+];
+const faster = bySlug('faster-plus');
+---
+
+<Base lang={lang} path="/knowledge/" title={d.knowledge} description={m ? 'अन्नद्रव्य तक्ता, संतुलित पोषण, एन.पी.के. ग्रेड कसा वाचावा, वापराच्या पद्धती, मात्रा कॅल्क्युलेटर आणि नेहमीचे प्रश्न.' : 'The nutrient table, balanced nutrition, how to read an NPK grade, methods of application, a dose calculator and common questions.'} jsonLd={faqLd}>
+  <PageHero
+    lang={lang}
+    eyebrow={d.knowledge}
+    title={m ? 'शेतकऱ्यांसाठी <em>उपयोगी माहिती</em>' : 'Useful knowledge <em>for farmers</em>'}
+    lead={m ? 'अन्नद्रव्ये काय करतात, ग्रेड कसा वाचावा आणि आपल्या शेतासाठी किती प्रमाण लागेल, हे एकाच ठिकाणी समजून घ्या.' : 'What nutrients do, how to read a grade, and how much you need for your farm, all in one place.'}
+    image="crop-rice"
+    imageAlt={m ? 'हिरवेगार भाताचे शेत' : 'A lush green paddy field'}
+    focus="50% 70%"
+    crumbs={[{ label: d.knowledge }]}
+  />
+
+  <section class="section section--dark ptable-sec" id="nutrients">
+    <div class="container">
+      <SectionHead eyebrow={m ? 'अन्नद्रव्य तक्ता' : 'The nutrient table'} title={m ? 'प्रत्येक अन्नद्रव्याचे <em>कार्य</em>' : 'What each nutrient <em>does</em>'} lead={m ? 'पिकांना मुख्य, दुय्यम आणि सूक्ष्म अन्नद्रव्यांची गरज असते. कोणत्याही अन्नद्रव्यावर क्लिक करा.' : 'Crops need major, secondary and micro nutrients. Tap any nutrient to learn more.'} />
+      <NutrientTable lang={lang} />
+    </div>
+  </section>
+
+  <section class="section section--white">
+    <div class="container split">
+      <div class="stack" data-reveal="left">
+        <span class="eyebrow">{m ? 'ग्रेड वाचायला शिका' : 'Reading a grade'}</span>
+        <h2 class="h2" set:html={m ? '19:19:19 म्हणजे <em>काय?</em>' : 'What does 19:19:19 <em>mean?</em>'} />
+        <p class="lead">{m ? 'एन.पी.के. ग्रेडमधील तीन आकडे अनुक्रमे नत्र (N), स्फुरद (P) व पालाश (K) यांचे टक्केवारीतील प्रमाण दाखवतात. उदा. 13:00:45 मध्ये नत्र १३%, स्फुरद ०% आणि पालाश ४५% असतो.' : 'The three numbers in an NPK grade show the percentage of nitrogen (N), phosphorus (P) and potassium (K), in that order. So 13:00:45 has 13% nitrogen, no phosphorus and 45% potassium.'}</p>
+        <a class="link-arrow" href={href(lang, productUrl(faster))}>{productTitle(faster, lang)} <Icon name="arrow" size={17} /></a>
+      </div>
+      <div class="grades" data-stagger>
+        <div class="npk-legend">
+          <span><i style="background:var(--g-500)"></i> N {m ? 'नत्र' : 'Nitrogen'}</span>
+          <span><i style="background:var(--gold)"></i> P {m ? 'स्फुरद' : 'Phosphorus'}</span>
+          <span><i style="background:var(--o-500)"></i> K {m ? 'पालाश' : 'Potassium'}</span>
+        </div>
+        {
+          sample.map((s) => (
+            <div class="gradecard" style="grid-template-columns:110px 1fr">
+              <div class="gradecard__grade">{s.g}</div>
+              <div class="npk" style="grid-column:auto">
+                <i class="n" style={`--v:${s.n}`} />
+                <i class="p" style={`--v:${s.p}`} />
+                <i class="k" style={`--v:${s.k}`} />
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--cream">
+    <div class="container">
+      <SectionHead eyebrow={m ? 'वापराच्या पद्धती' : 'Methods of application'} title={m ? 'खत पिकापर्यंत <em>कसे पोहोचते</em>' : 'How nutrition <em>reaches the crop</em>'} />
+      <div class="grid grid-2" data-stagger>
+        {
+          methods.map((mt) => (
+            <article class="plant">
+              <Photo name={mt.photo} alt={USES[mt.use][lang]} class="plant__img" widths={[640, 1000]} sizes="(width < 900px) 92vw, 600px" style={mt.focus ? `object-position:${mt.focus}` : undefined} />
+              <div class="plant__body">
+                <h3 class="h3" style="display:flex;gap:10px;align-items:center">
+                  <Icon name={mt.icon} size={22} style="color:var(--o-600)" /> {USES[mt.use][lang]}
+                </h3>
+                <p class="muted">{mt.text}</p>
+                <ul class="chips">
+                  {byUse(mt.use).map((p) => (
+                    <li>
+                      <a class="chip chip--line" href={href(lang, productUrl(p))}>
+                        {productTitle(p, lang)}
+                      </a>
+                    </li>
+                  ))}
+                  <li>
+                    <a class="chip" href={`${href(lang, '/products/')}?use=${mt.use}`}>
+                      {d.viewAll}
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="calculator">
+    <div class="container">
+      <SectionHead center eyebrow={m ? 'मात्रा मोजा' : 'Dose calculator'} title={m ? 'तुम्हाला <em>किती लागेल</em> ते काढा' : 'Work out <em>how much you need</em>'} lead={m ? 'उत्पादन निवडा, क्षेत्र किंवा टाकीतील पाणी ठरवा. आमच्या उत्पादन माहितीतील मात्रेनुसार प्रमाण लगेच दिसेल.' : 'Choose a product, then set your area or tank size. The quantity follows the dose in our product data.'} />
+      <DoseCalculator lang={lang} />
+    </div>
+  </section>
+
+  <section class="section section--white" id="faq">
+    <div class="container--narrow">
+      <SectionHead center eyebrow={m ? 'नेहमीचे प्रश्न' : 'Common questions'} title={m ? 'शेतकरी <em>विचारतात</em>' : 'Questions farmers <em>ask</em>'} />
+      <div class="accordion" data-reveal>
+        {
+          FAQS.map((f) => (
+            <details class="acc">
+              <summary>
+                {f.q[lang]}
+                <span class="acc__icon"><Icon name="plus" size={16} /></span>
+              </summary>
+              <div class="acc__body">{f.a[lang]}</div>
+            </details>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <Cta lang={lang} primaryLabel={d.enquire} primaryTo="/contact/" />
+</Base>

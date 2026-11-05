@@ -1,0 +1,40 @@
+---
+import { href, type Lang } from '../data/types';
+import { t } from '../data/i18n';
+import Photo from './Photo.astro';
+
+interface Crumb {
+  label: string;
+  to?: string;
+}
+
+interface Props {
+  lang: Lang;
+  title: string;
+  eyebrow?: string;
+  lead?: string;
+  image?: string;
+  imageAlt?: string;
+  focus?: string;
+  crumbs?: Crumb[];
+}
+
+const { lang, title, eyebrow, lead, image, imageAlt = '', focus, crumbs = [] } = Astro.props;
+const d = t(lang);
+---
+
+<section class="page-hero">
+  {image && <Photo name={image} alt={imageAlt} class="page-hero__img" widths={[800, 1280, 1920]} sizes="100vw" eager style={focus ? `object-position:${focus}` : undefined} />}
+  <div class="container page-hero__inner">
+    <nav aria-label="Breadcrumb">
+      <ol class="crumbs">
+        <li><a href={href(lang, '/')}>{d.home}</a></li>
+        {crumbs.map((c, i) => <li>{c.to && i < crumbs.length - 1 ? <a href={href(lang, c.to)}>{c.label}</a> : <span aria-current="page">{c.label}</span>}</li>)}
+      </ol>
+    </nav>
+    {eyebrow && <span class="eyebrow">{eyebrow}</span>}
+    <h1 class="h1" set:html={title} />
+    {lead && <p class="lead">{lead}</p>}
+    <slot />
+  </div>
+</section>

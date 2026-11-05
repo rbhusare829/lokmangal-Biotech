@@ -1,0 +1,21 @@
+---
+import { href, num, type Lang } from '../data/types';
+import { cropUrl, namedFor, type Crop } from '../data/crops';
+import Photo from './Photo.astro';
+import Icon from './Icon.astro';
+
+interface Props {
+  crop: Crop;
+  lang: Lang;
+}
+
+const { crop, lang } = Astro.props;
+const count = namedFor(crop.id).length;
+const countText = lang === 'mr' ? `${num(lang, count)} ${count === 1 ? 'उत्पादन' : 'उत्पादने'} नमूद` : `${count} ${count === 1 ? 'product' : 'products'} named`;
+---
+
+<a class="crop-card" href={href(lang, cropUrl(crop.id))} draggable="false">
+  <Photo name={crop.photo} alt={crop.name[lang]} class="crop-card__img" widths={[360, 620]} sizes="(width < 600px) 70vw, 300px" style={crop.focus ? `object-position:${crop.focus}` : undefined} />
+  <h3>{crop.name[lang]}</h3>
+  <div class="crop-card__meta"><span>{countText}</span><span class="crop-card__go"><Icon name="arrow" size={16} /></span></div>
+</a>

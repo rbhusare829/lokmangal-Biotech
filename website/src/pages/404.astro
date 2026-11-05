@@ -1,0 +1,17 @@
+---
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+---
+
+<Base lang="en" path="/" title="Page not found" description="This page could not be found." noindex>
+  <section class="err container">
+    <div class="err__num">404</div>
+    <h1 class="h2" style="margin-top:8px">This page could not be found.</h1>
+    <p class="lead sysdeva" style="margin:10px auto 22px">हे पान सापडले नाही.</p>
+    <div class="btn-row" style="justify-content:center">
+      <a class="btn btn--primary" href="/">Home <Icon name="arrow" size={17} class="icon--arrow" /></a>
+      <a class="btn btn--ghost" href="/products/">Products</a>
+      <a class="btn btn--ghost sysdeva" href="/mr/">मराठी</a>
+    </div>
+  </section>
+</Base>

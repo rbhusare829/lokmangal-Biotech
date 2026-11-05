@@ -1,0 +1,69 @@
+---
+import { href, type Lang } from '../data/types';
+import { NUTRIENTS, TIERS, type Tier } from '../data/nutrients';
+import { PRODUCTS, productTitle, productUrl } from '../data/products';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const tiers: Tier[] = ['major', 'secondary', 'micro', 'beneficial'];
+const label = lang === 'mr' ? 'हे अन्नद्रव्य देणारी लोकमंगल उत्पादने' : 'Lokmangal products that supply it';
+---
+
+<div class="ptable" data-ptable>
+  <div class="ptable__tiers" data-stagger>
+    {
+      tiers.map((tier) => (
+        <div class={`ptier tier-${tier}`}>
+          <div class="ptier__name">
+            {TIERS[tier].name[lang]} <small>{TIERS[tier].hint[lang]}</small>
+          </div>
+          <div class="ptier__row">
+            {NUTRIENTS.filter((n) => n.tier === tier).map((n) => (
+              <button class="ptile" type="button" data-tile={n.id} aria-pressed={n.id === 'Ca' ? 'true' : 'false'} aria-controls={`pn-${n.id}`}>
+                <span class="ptile__no">{n.no}</span>
+                <span class="ptile__sym">{n.id}</span>
+                <span class="ptile__name">{n.name[lang]}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      ))
+    }
+  </div>
+  <div class="ptable__panels" data-reveal="right" style="display:grid">
+    {
+      NUTRIENTS.map((n) => {
+        const items = PRODUCTS.filter((p) => p.nutrients.includes(n.id));
+        return (
+          <article class={`ptable__panel tier-${n.tier}`} id={`pn-${n.id}`} data-panel={n.id} hidden={n.id !== 'Ca'} aria-live="polite">
+            <div class="ptable__head">
+              <span class="ptable__sym" style="--tile:var(--tile)">
+                {n.id}
+              </span>
+              <div>
+                <h3>{n.name[lang]}</h3>
+                <p class="ptable__tier">{TIERS[n.tier].name[lang]}</p>
+              </div>
+            </div>
+            <p class="ptable__role">{n.role[lang]}</p>
+            <div class="ptable__products">
+              <small>{label}</small>
+              <div class="chips">
+                {items.map((p) => (
+                  <a class="chip chip--line" href={href(lang, productUrl(p))}>
+                    {productTitle(p, lang)}
+                  </a>
+                ))}
+              </div>
+            </div>
+          </article>
+        );
+      })
+    }
+  </div>
+</div>
+
+<script src="../scripts/ptable.ts"></script>

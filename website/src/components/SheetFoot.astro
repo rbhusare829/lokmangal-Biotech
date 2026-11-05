@@ -1,0 +1,22 @@
+---
+import type { Lang } from '../data/types';
+import { COMPANY, CONTACT, OFFICES } from '../data/site';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const factory = OFFICES.find((o) => o.id === 'factory')!;
+---
+
+<footer class="sheet__foot">
+  <div>
+    <b>{COMPANY.name[lang]}</b><br />
+    {factory.lines[lang]}
+  </div>
+  <div>
+    {CONTACT.phonePrimary.label} · {CONTACT.phoneSecond.label} · {CONTACT.landline.label}<br />
+    {CONTACT.email} · lokmangalbiotech.com
+  </div>
+</footer>

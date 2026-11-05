@@ -1,0 +1,73 @@
+---
+import { getImage } from 'astro:assets';
+import Base from '../../../layouts/Base.astro';
+import PageHero from '../../../components/PageHero.astro';
+import Photo from '../../../components/Photo.astro';
+import Lightbox from '../../../components/Lightbox.astro';
+import Cta from '../../../components/Cta.astro';
+import type { Lang } from '../../../data/types';
+import { t } from '../../../data/i18n';
+import { langPaths } from '../../../data/routes';
+import { photo } from '../../../data/media';
+
+export const getStaticPaths = () => langPaths();
+
+const { lang } = Astro.props as { lang: Lang };
+const d = t(lang);
+const m = lang === 'mr';
+
+const kinds = [
+  ['all', m ? 'सर्व' : 'All'],
+  ['facility', m ? 'कारखाना व कार्यालय' : 'Factory & office'],
+  ['people', m ? 'टीम व कार्यक्रम' : 'Team & events'],
+  ['products', m ? 'उत्पादने' : 'Products'],
+  ['campaigns', m ? 'जाहिराती' : 'Campaigns'],
+];
+
+const raw = [
+  { img: 'factory-front', kind: 'facility', cap: m ? 'लोकमंगल बायोटेकची इमारत, चिंचोळी एम.आय.डी.सी., सोलापूर' : 'The Lokmangal Bio-Tech building, Chincholi MIDC, Solapur' },
+  { img: 'lineup-bags', kind: 'products', cap: m ? 'खतांच्या बॅगांची श्रेणी' : 'The range of fertilizer bags' },
+  { img: 'team', kind: 'people', cap: m ? 'लोकमंगल बायोटेकची टीम' : 'The Lokmangal Bio-Tech team' },
+  { img: 'company-building', kind: 'facility', cap: m ? 'लोकमंगल बायोटेकचा कारखाना' : 'The Lokmangal Biotech factory' },
+  { img: 'hoarding-crops', kind: 'campaigns', cap: m ? 'लोकमंगल बायोटेकची दर्जेदार उत्पादने' : 'Our quality products, a brand hoarding' },
+  { img: 'lineup-bottles', kind: 'products', cap: m ? 'द्रव व बकेट उत्पादनांची श्रेणी' : 'The range of liquid and bucket products' },
+  { img: 'anniversary', kind: 'people', cap: m ? 'कंपनीच्या वर्धापन दिनानिमित्त टीम' : 'The team at a company anniversary' },
+  { img: 'factory-gate', kind: 'facility', cap: m ? 'कारखान्याचे प्रवेशद्वार' : 'The factory entrance' },
+  { img: 'hoarding-bottles', kind: 'campaigns', cap: m ? 'द्रव उत्पादनांची जाहिरात' : 'A hoarding for our liquid range' },
+  { img: 'lokmangal-house', kind: 'facility', cap: m ? 'लोकमंगल हाऊस, कॉर्पोरेट कार्यालय' : 'Lokmangal House, the corporate office' },
+  { img: 'ad-action', kind: 'campaigns', cap: m ? 'ॲक्शन जैविक कीटकनाशकाची जाहिरात' : 'A campaign for Action bio-pesticide' },
+  { img: 'ad-ben10', kind: 'campaigns', cap: m ? 'बेन-१० जैविक कीटकनाशकाची जाहिरात' : 'A campaign for Ben-10 bio-pesticide' },
+];
+const items = await Promise.all(raw.map(async (r) => ({ ...r, full: (await getImage({ src: photo(r.img), format: 'webp', width: Math.min(1600, photo(r.img).width), quality: 80 })).src })));
+---
+
+<Base lang={lang} path="/gallery/" title={d.gallery} description={m ? 'लोकमंगल बायोटेकचा कारखाना, टीम, उत्पादने आणि जाहिरातींचे फोटो.' : 'Photographs of the Lokmangal Biotech factory, team, products and campaigns.'}>
+  <PageHero
+    lang={lang}
+    eyebrow={d.gallery}
+    title={m ? 'लोकमंगल बायोटेक <em>प्रत्यक्ष</em>' : 'Lokmangal Biotech, <em>up close</em>'}
+    lead={m ? 'आमच्या कारखान्याची, टीमची आणि उत्पादनांची एक झलक.' : 'A look at our factory, our team and our products.'}
+    image="factory-gate"
+    imageAlt=""
+    crumbs={[{ label: d.gallery }]}
+  />
+  <section class="section section--tight">
+    <div class="container">
+      <div class="filterbar" data-gallery-filter role="group" aria-label={d.gallery}>
+        {kinds.map(([k, label], i) => <button class="fchip" type="button" data-filter={k} aria-pressed={i === 0 ? 'true' : 'false'}>{label}</button>)}
+      </div>
+      <div class="gal">
+        {
+          items.map((it) => (
+            <button class="gal__item" type="button" data-zoom data-kind={it.kind} data-full={it.full} data-caption={it.cap} aria-label={it.cap}>
+              <Photo name={it.img} alt={it.cap} widths={[480, 800]} sizes="(width < 700px) 92vw, 400px" />
+              <span class="gal__cap">{it.cap}</span>
+            </button>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+  <Lightbox lang={lang} />
+  <Cta lang={lang} />
+</Base>

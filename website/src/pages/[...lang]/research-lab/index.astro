@@ -1,0 +1,188 @@
+---
+import Base from '../../../layouts/Base.astro';
+import PageHero from '../../../components/PageHero.astro';
+import Photo from '../../../components/Photo.astro';
+import Icon from '../../../components/Icon.astro';
+import SectionHead from '../../../components/SectionHead.astro';
+import EnquiryForm from '../../../components/EnquiryForm.astro';
+import Cta from '../../../components/Cta.astro';
+import type { Lang } from '../../../data/types';
+import { t } from '../../../data/i18n';
+import { langPaths } from '../../../data/routes';
+import { COMPANY, CONTACT, OFFICES } from '../../../data/site';
+
+export const getStaticPaths = () => langPaths();
+
+const { lang } = Astro.props as { lang: Lang };
+const d = t(lang);
+const m = lang === 'mr';
+const factory = OFFICES.find((o) => o.id === 'factory')!;
+
+const services = [
+  { icon: 'sprout', title: m ? 'माती परीक्षण' : 'Soil testing', text: m ? 'जमिनीतील अन्नद्रव्यांची स्थिती समजून घेण्यासाठी.' : 'To understand the nutrient condition of your land.', tag: m ? 'शेतकऱ्यांसाठी' : 'For farmers', tone: 'green' },
+  { icon: 'droplet', title: m ? 'पाणी परीक्षण' : 'Water testing', text: m ? 'सिंचनाच्या पाण्याची गुणवत्ता तपासण्यासाठी.' : 'To check the quality of your irrigation water.', tag: m ? 'शेतकऱ्यांसाठी' : 'For farmers', tone: 'green' },
+  { icon: 'mix', title: m ? 'कच्च्या मालाचे विश्लेषण' : 'Raw material analysis', text: m ? 'उत्पादन सुरू होण्यापूर्वी सर्व कच्च्या मालाची तपासणी.' : 'All raw material is analysed before production.', tag: m ? 'गुणवत्ता नियंत्रण' : 'Quality control', tone: 'orange' },
+  { icon: 'shield', title: m ? 'तयार उत्पादनांचे विश्लेषण' : 'Finished product analysis', text: m ? 'बाजारात जाण्यापूर्वी तयार उत्पादनांची तपासणी.' : 'Finished products are analysed before they go out.', tag: m ? 'गुणवत्ता नियंत्रण' : 'Quality control', tone: 'orange' },
+] as const;
+
+const soilSteps = m
+  ? [
+      ['ठिकाणे निवडा', 'शेतात नागमोडी पद्धतीने ८ ते १० ठिकाणे निवडा. बांध, खताचे ढीग आणि झाडांखालील जागा टाळा.'],
+      ['माती घ्या', 'वरचा कचरा बाजूला करून “V” आकाराचा १५ सें.मी. (सुमारे ६ इंच) खोल खड्डा घ्या आणि कडेची मातीची चकती काढा.'],
+      ['अर्धा किलो नमुना करा', 'सर्व माती स्वच्छ कापडावर मिसळा, चार भाग करून समोरासमोरचे दोन भाग ठेवा. असे करत सुमारे ५०० ग्रॅम नमुना तयार करा व सावलीत वाळवा.'],
+      ['नाव लिहून द्या', 'स्वच्छ पिशवीत भरून नाव, गाव, गट क्रमांक, मोबाइल क्रमांक व पुढील पीक लिहा आणि प्रयोगशाळेत द्या.'],
+    ]
+  : [
+      ['Choose the spots', 'Walk the field in a zig-zag and choose 8 to 10 spots. Avoid bunds, manure heaps and the ground under trees.'],
+      ['Take the soil', 'Clear the surface, cut a “V” shaped pit about 15 cm (6 inches) deep, and take a slice of soil from its side.'],
+      ['Make a half-kilo sample', 'Mix all the soil on a clean cloth, divide it into four and keep two opposite parts. Repeat until about 500 gm is left, then dry it in the shade.'],
+      ['Label and deliver', 'Pack it in a clean bag with your name, village, survey number, mobile number and next crop, and hand it to the laboratory.'],
+    ];
+const waterSteps = m
+  ? [
+      ['पाणी वाहू द्या', 'विहीर किंवा बोअरचा पंप १० ते १५ मिनिटे चालू ठेवा.'],
+      ['स्वच्छ बाटली वापरा', 'सुमारे १ लिटरची स्वच्छ प्लास्टिक बाटली त्याच पाण्याने २-३ वेळा धुऊन भरा.'],
+      ['नाव लिहून लवकर द्या', 'बाटलीवर नाव, गाव, पाण्याचा स्रोत व मोबाइल क्रमांक लिहा आणि लवकरात लवकर प्रयोगशाळेत द्या.'],
+    ]
+  : [
+      ['Let the water run', 'Run the well or borewell pump for 10 to 15 minutes.'],
+      ['Use a clean bottle', 'Rinse a clean plastic bottle of about 1 litre 2 to 3 times with the same water, then fill it.'],
+      ['Label and deliver soon', 'Write your name, village, water source and mobile number on it, and bring it to the laboratory soon.'],
+    ];
+const pillars = m
+  ? [
+      ['संशोधन', 'आमचे तज्ज्ञ व शास्त्रज्ञ जमिनीची उत्पादकता वाढवण्यावर संशोधन करतात. याच संशोधनातून “मॅग्नेट” तयार झाले.', 'flask'],
+      ['गुणवत्ता नियंत्रण', 'सुसज्ज प्रयोगशाळेत सर्व कच्चा माल आणि तयार उत्पादनांचे विश्लेषण केले जाते.', 'shield'],
+      ['प्रयोगशाळेतून शेतापर्यंत', 'कृषी शास्त्रज्ञांच्या मदतीने नवीन तंत्रज्ञान प्रत्यक्ष शेतापर्यंत पोहोचवणे, हे आमचे उद्दिष्ट आहे.', 'sprout'],
+    ]
+  : [
+      ['Research', 'Our experts and scientists research how to increase the productivity of soil. That work led to Magnet.', 'flask'],
+      ['Quality control', 'All raw material and finished products are analysed in our well-equipped laboratory.', 'shield'],
+      ['From lab to land', 'Our mission is to transfer new technology to the field with the help of agricultural scientists.', 'sprout'],
+    ];
+---
+
+<Base
+  lang={lang}
+  path="/research-lab/"
+  title={d.lab}
+  description={m ? 'लोकमंगल बायोटेकची प्रयोगशाळा: माती व पाणी परीक्षण, कच्चा माल व तयार उत्पादनांचे विश्लेषण. नमुना कसा घ्यायचा आणि कुठे द्यायचा.' : 'The Lokmangal Biotech laboratory: soil and water testing, raw material and finished product analysis. How to take a sample and where to send it.'}
+>
+  <PageHero
+    lang={lang}
+    eyebrow={d.lab}
+    title={m ? 'प्रयोगशाळेतून <em>थेट शेतापर्यंत</em>' : 'From the laboratory <em>to the land</em>'}
+    lead={COMPANY.mission[lang]}
+    image="hero-lab"
+    imageAlt={m ? 'प्रयोगशाळेत माती नमुन्यांचे परीक्षण' : 'Soil samples being tested in a laboratory'}
+    crumbs={[{ label: d.lab }]}
+  >
+    <div class="btn-row" style="margin-top:22px">
+      <a class="btn btn--primary" href="#sample">{m ? 'नमुना कसा पाठवायचा' : 'How to send a sample'} <Icon name="arrow" size={17} class="icon--arrow" /></a>
+      <a class="btn btn--outline-light" href={`tel:${CONTACT.phonePrimary.tel}`}><Icon name="phone" size={17} /> {CONTACT.phonePrimary.label}</a>
+    </div>
+  </PageHero>
+
+  <section class="section section--tight">
+    <div class="container">
+      <SectionHead eyebrow={m ? 'उपलब्ध चाचण्या' : 'Tests available'} title={m ? 'प्रयोगशाळेत <em>काय तपासले जाते</em>' : 'What the laboratory <em>analyses</em>'} />
+      <div class="grid grid-4" data-stagger>
+        {
+          services.map((s) => (
+            <article class="card card--hover">
+              <span class:list={['icon-badge', s.tone === 'orange' && 'icon-badge--orange']}><Icon name={s.icon} size={24} /></span>
+              <p class:list={['chip', s.tone === 'orange' && 'chip--orange']} style="margin-top:14px">{s.tag}</p>
+              <h3 class="h4" style="margin-top:10px">{s.title}</h3>
+              <p class="muted small" style="margin-top:6px">{s.text}</p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--mint">
+    <div class="container split">
+      <div class="stack" data-reveal="left">
+        <span class="eyebrow">{m ? 'महाराष्ट्र संशोधन व विकास केंद्र' : 'Maharashtra Research and Development Centre'}</span>
+        <h2 class="h2" set:html={m ? 'माती व पाणी परीक्षण, <em>मोफत सुविधा</em>' : 'Soil and water testing, <em>free of charge</em>'} />
+        <p class="lead">{m ? 'शेतकऱ्यांच्या गरजा लक्षात घेऊन लोकमंगल समूहाने साखर कारखान्याजवळ हे केंद्र स्थापन केले. येथे सुसज्ज व प्रगत प्रयोगशाळा असून पात्र व कुशल कर्मचारी कार्यरत आहेत.' : 'Keeping the needs of farmers in view, the Lokmangal Group established this centre near the sugar factory. It has a well-equipped, advanced laboratory with qualified and skilled staff.'}</p>
+        <p>{m ? 'तसेच कंपनीच्या स्वतःच्या प्रयोगशाळेत कच्चा माल, तयार उत्पादने यांचे विश्लेषण आणि माती व पाणी परीक्षण केले जाते.' : 'The Company’s own laboratory also analyses all raw material and finished products, and carries out soil and water testing.'}</p>
+      </div>
+      <div class="offset-frame" data-reveal="right">
+        <Photo name="lab-man" alt={m ? 'प्रयोगशाळेत काम करणारा तज्ज्ञ (प्रातिनिधिक छायाचित्र)' : 'A specialist working in a laboratory (representative image)'} widths={[480, 800, 1200]} sizes="(width < 960px) 90vw, 560px" style="aspect-ratio:5/4" />
+        <span class="photo-note">{m ? 'प्रातिनिधिक छायाचित्र' : 'Representative image'}</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tight section--white">
+    <div class="container">
+      <SectionHead eyebrow={m ? 'आमचा दृष्टिकोन' : 'Our approach'} title={m ? 'संशोधन आणि <em>गुणवत्ता</em>' : 'Research and <em>quality</em>'} />
+      <div class="grid grid-3" data-stagger>
+        {
+          pillars.map(([a, b, ic]) => (
+            <article class="card card--hover">
+              <span class="icon-badge"><Icon name={ic as 'flask'} size={24} /></span>
+              <h3 class="h4" style="margin-top:14px">{a}</h3>
+              <p class="muted" style="margin-top:6px">{b}</p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="sample">
+    <div class="container">
+      <SectionHead eyebrow={m ? 'नमुना देण्याची प्रक्रिया' : 'How to send a sample'} title={m ? 'मातीचा नमुना <em>असा घ्या</em>' : 'Taking a <em>soil sample</em>'} lead={m ? 'योग्य नमुना म्हणजे योग्य अहवाल. या सोप्या पायऱ्या पाळा.' : 'A good sample gives a good report. Follow these simple steps.'} />
+      <ol class="step-grid" data-stagger>
+        {
+          soilSteps.map(([a, b]) => (
+            <li class="step">
+              <h3>{a}</h3>
+              <p>{b}</p>
+            </li>
+          ))
+        }
+      </ol>
+      <div class="section-head" style="margin-top:clamp(40px,5vw,64px)" data-reveal>
+        <h2 class="h2" set:html={m ? 'पाण्याचा नमुना <em>असा घ्या</em>' : 'Taking a <em>water sample</em>'} />
+      </div>
+      <ol class="step-grid" data-stagger>
+        {
+          waterSteps.map(([a, b]) => (
+            <li class="step">
+              <h3>{a}</h3>
+              <p>{b}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="section section--cream">
+    <div class="container split split--top">
+      <div class="stack" data-reveal="left">
+        <span class="eyebrow">{d.contact}</span>
+        <h2 class="h2" set:html={m ? 'नमुना देण्यापूर्वी <em>संपर्क करा</em>' : 'Talk to us <em>before you send a sample</em>'} />
+        <p class="lead">{m ? 'नमुना कुठे व कधी द्यायचा हे विचारून घेण्यासाठी आमच्या टीमला फोन करा किंवा हा अर्ज भरा.' : 'Call our team or fill in this form to ask where and when to bring your sample.'}</p>
+        <div class="office">
+          <p class="chip" style="width:fit-content">{factory.kind[lang]}</p>
+          <h3>{factory.title[lang]}</h3>
+          <p>{factory.lines[lang]}</p>
+          <p><a class="link-arrow" href={`tel:${CONTACT.landline.tel}`}><Icon name="phone" size={16} /> {CONTACT.landline.label}</a></p>
+          <p><a class="link-arrow" href={`tel:${CONTACT.phonePrimary.tel}`}><Icon name="phone" size={16} /> {CONTACT.phonePrimary.label}</a></p>
+          <p><a class="link-arrow" href={`mailto:${CONTACT.email}`}><Icon name="mail" size={16} /> {CONTACT.email}</a></p>
+        </div>
+      </div>
+      <div class="form-card" data-reveal="right">
+        <h3 class="h3" style="margin-bottom:14px">{m ? 'परीक्षणासाठी चौकशी' : 'Testing enquiry'}</h3>
+        <EnquiryForm lang={lang} topic="lab" />
+      </div>
+    </div>
+  </section>
+
+  <Cta lang={lang} primaryLabel={m ? 'उत्पादने पाहा' : 'Explore products'} primaryTo="/products/" />
+</Base>

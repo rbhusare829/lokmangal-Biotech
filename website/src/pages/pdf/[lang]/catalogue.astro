@@ -1,0 +1,107 @@
+---
+import Sheet from '../../../layouts/Sheet.astro';
+import PackImage from '../../../components/PackImage.astro';
+import PackArt from '../../../components/PackArt.astro';
+import SheetFoot from '../../../components/SheetFoot.astro';
+import Photo from '../../../components/Photo.astro';
+import Mark from '../../../assets/brand/logo-mark.svg';
+import Word from '../../../assets/brand/logo-word.svg';
+import { LANGS, type Lang } from '../../../data/types';
+import { t } from '../../../data/i18n';
+import { CATEGORIES, NAME_ONLY, cellValue, inCategory, USES } from '../../../data/products';
+import { COMPANY, CONTACT, OFFICES } from '../../../data/site';
+
+export function getStaticPaths() {
+  return LANGS.map((lang) => ({ params: { lang }, props: { lang } }));
+}
+
+const { lang } = Astro.props as { lang: Lang };
+const d = t(lang);
+const m = lang === 'mr';
+const factory = OFFICES.find((o) => o.id === 'factory')!;
+---
+
+<Sheet lang={lang} title={`${m ? 'उत्पादन कॅटलॉग' : 'Product catalogue'} | ${COMPANY.short[lang]}`}>
+  <section class="cover">
+    <Photo name="hero-rows" alt="" class="cover__img" widths={[1200]} sizes="210mm" eager />
+    <div>
+      <div class="cover__plate">
+        <Mark style="width:18mm;height:auto" aria-hidden="true" />
+        <div>
+          <Word style="width:56mm;height:auto" aria-hidden="true" />
+          <div style="color:#5b6b63;font-size:9pt;font-weight:600">Lokmangal Bio-Tech Pvt. Ltd.</div>
+        </div>
+      </div>
+      <h1>{m ? 'उत्पादन कॅटलॉग' : 'Product catalogue'} <em>{m ? 'संतुलित पोषण, भरघोस उत्पादन' : 'Balanced nutrition, richer harvests'}</em></h1>
+      <p>{COMPANY.vision[lang]}</p>
+    </div>
+    <div class="cover__foot">
+      <b>{COMPANY.name[lang]}</b><br />
+      {factory.lines[lang]}<br />
+      {CONTACT.phonePrimary.label} · {CONTACT.phoneSecond.label} · {CONTACT.landline.label} · {CONTACT.email}
+    </div>
+  </section>
+
+  {
+    CATEGORIES.map((c) => (
+      <section class="cat">
+        {inCategory(c.id).map((p, i) => (
+          <div class:list={[i === 0 && 'cat__start']}>
+            {i === 0 && (
+              <header class="cat__head">
+                <h2>{c.name[lang]}</h2>
+                <p>{c.blurb[lang]}</p>
+              </header>
+            )}
+            <article class="item">
+              <div class="item__img">{p.img ? <PackImage name={p.img} alt={p.name[lang]} eager widths={[180]} sizes="120px" /> : <PackArt product={p} lang={lang} />}</div>
+              <div>
+                <h3>
+                  {p.name[lang]}
+                  {p.grade && /:/.test(p.grade) && <span class="item__grade">{p.grade}</span>}
+                </h3>
+                <p class="item__sub">{p.subtitle[lang]}</p>
+                <div class="item__facts">
+                  <div><b>{d.dose}:</b> {p.dose[lang]}</div>
+                  <div><b>{d.packing}:</b> {p.packing[lang]}</div>
+                  {p.contents.length > 0 && (
+                    <div class="wide">
+                      <b>{d.contents}:</b> {p.contents.map((r) => (r.k.en === 'Contents' || r.k.en === 'Culture' ? cellValue(r, lang) : `${r.k[lang]} ${cellValue(r, lang)}`)).join(', ')}
+                    </div>
+                  )}
+                  {p.grades && (
+                    <div class="wide">
+                      <b>{d.grades}:</b> {p.grades.map((g) => g.grade).join(', ')}
+                    </div>
+                  )}
+                  <div class="wide"><b>{d.use}:</b> {p.uses.map((u) => USES[u][lang]).join(', ')}</div>
+                  {p.cropsText && <div class="wide"><b>{d.cropsLabel}:</b> {p.cropsText[lang]}</div>}
+                </div>
+              </div>
+            </article>
+          </div>
+        ))}
+        {NAME_ONLY.some((n) => n.category === c.id) && (
+          <p class="note" style="margin-top:3mm">
+            {d.alsoRange}: {NAME_ONLY.filter((n) => n.category === c.id).map((n) => n.name[lang]).join(', ')}
+          </p>
+        )}
+      </section>
+    ))
+  }
+  <section class="sheet" style="page-break-before:always;page-break-after:auto">
+    <div style="padding:14mm">
+      <h2 style="font-size:19pt">{d.contact}</h2>
+      {
+        OFFICES.map((o) => (
+          <p style="margin-top:4mm">
+            <b>{o.kind[lang]}: {o.title[lang]}</b>
+            <br />
+            {o.lines[lang]}
+          </p>
+        ))
+      }
+    </div>
+    <SheetFoot lang={lang} />
+  </section>
+</Sheet>

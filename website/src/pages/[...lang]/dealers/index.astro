@@ -1,0 +1,99 @@
+---
+import Base from '../../../layouts/Base.astro';
+import PageHero from '../../../components/PageHero.astro';
+import Icon from '../../../components/Icon.astro';
+import SectionHead from '../../../components/SectionHead.astro';
+import EnquiryForm from '../../../components/EnquiryForm.astro';
+import { num, type Lang } from '../../../data/types';
+import { t } from '../../../data/i18n';
+import { langPaths } from '../../../data/routes';
+import { CONTACT, DEALER_STATES, ESTABLISHED, PLANTS, STATS } from '../../../data/site';
+import { TOTAL_PRODUCTS } from '../../../data/products';
+
+export const getStaticPaths = () => langPaths();
+
+const { lang } = Astro.props as { lang: Lang };
+const d = t(lang);
+const m = lang === 'mr';
+const fmt = (n: number) => new Intl.NumberFormat(m ? 'mr-IN' : 'en-IN').format(n);
+const reasons = [
+  { icon: 'grid', a: m ? 'विस्तृत उत्पादन श्रेणी' : 'A wide range', b: m ? `१२ उत्पादन गटांत ${num(lang, TOTAL_PRODUCTS)} उत्पादने.` : `${TOTAL_PRODUCTS} products in 12 families.` },
+  { icon: 'factory', a: m ? 'दोन उत्पादन केंद्रे' : 'Two production units', b: m ? `सोलापूर व वडोदरा, एकूण ${fmt(STATS.capacityTotal)} मे. टन प्रति वर्ष.` : `Solapur and Vadodara, ${fmt(STATS.capacityTotal)} MT per year in all.` },
+  { icon: 'store', a: m ? 'विश्वासू जाळे' : 'A trusted network', b: m ? `${fmt(STATS.dealers)}+ डीलर्स आधीच आमच्यासोबत.` : `More than ${fmt(STATS.dealers)} dealers already work with us.` },
+  { icon: 'flask', a: m ? 'प्रयोगशाळेचा आधार' : 'Backed by a laboratory', b: m ? 'कच्चा माल व तयार उत्पादनांचे प्रयोगशाळेत विश्लेषण.' : 'Raw material and finished products are analysed in our lab.' },
+  { icon: 'users', a: m ? 'लोकमंगल समूहाचे नाव' : 'The Lokmangal name', b: m ? `${num(lang, ESTABLISHED)} पासून शेतकऱ्यांच्या सेवेत.` : `Serving farmers since ${ESTABLISHED}.` },
+  { icon: 'sprout', a: m ? 'शेतकऱ्यांची पसंती' : 'Farmers’ choice', b: m ? 'ऊस, केळी, सोयाबीन, कांदा, कापूस व भाजीपाला पिकांसाठी.' : 'For sugarcane, banana, soybean, onion, cotton and vegetables.' },
+] as const;
+---
+
+<Base lang={lang} path="/dealers/" title={d.dealers} description={m ? 'लोकमंगल बायोटेकचे डीलर व्हा. १०००+ डीलर्सचे जाळे, ८ राज्ये, ४० उत्पादने. आपली माहिती पाठवा.' : 'Become a Lokmangal Biotech dealer. A network of 1000+ dealers in 8 states, with 40 products. Send us your details.'}>
+  <PageHero
+    lang={lang}
+    eyebrow={d.dealers}
+    title={m ? 'आपल्या भागात <em>लोकमंगल पोहोचवा</em>' : 'Bring <em>Lokmangal to your area</em>'}
+    lead={m ? `${num(lang, STATS.dealerStates)} राज्यांतील ${fmt(STATS.dealers)}+ डीलर्सच्या जाळ्यात सहभागी व्हा.` : `Join a network of more than ${fmt(STATS.dealers)} dealers across ${STATS.dealerStates} states.`}
+    image="lineup-bags"
+    imageAlt=""
+    crumbs={[{ label: d.dealers }]}
+  >
+    <div class="btn-row" style="margin-top:22px">
+      <a class="btn btn--primary" href="#apply">{m ? 'अर्ज भरा' : 'Apply now'} <Icon name="arrow" size={17} class="icon--arrow" /></a>
+      <a class="btn btn--outline-light" href={`tel:${CONTACT.phonePrimary.tel}`}><Icon name="phone" size={17} /> {CONTACT.phonePrimary.label}</a>
+    </div>
+  </PageHero>
+
+  <section class="section section--tight">
+    <div class="container">
+      <SectionHead eyebrow={m ? 'लोकमंगलच का?' : 'Why Lokmangal?'} title={m ? 'डीलर म्हणून <em>काय मिळते</em>' : 'What you get <em>as a dealer</em>'} />
+      <div class="grid grid-3" data-stagger>
+        {
+          reasons.map((r) => (
+            <article class="card card--hover">
+              <span class="icon-badge"><Icon name={r.icon} size={24} /></span>
+              <h3 class="h4" style="margin-top:14px">{r.a}</h3>
+              <p class="muted" style="margin-top:6px">{r.b}</p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tight section--white">
+    <div class="container split">
+      <div class="stack" data-reveal="left">
+        <span class="eyebrow">{m ? 'आमचा विस्तार' : 'Our reach'}</span>
+        <h2 class="h2" set:html={m ? `<em>${num(lang, STATS.dealerStates)} राज्यांत</em> डीलर्स` : `Dealers in <em>${STATS.dealerStates} states</em>`} />
+        <ul class="chips">{DEALER_STATES.map((s) => <li class="chip">{s[lang]}</li>)}</ul>
+      </div>
+      <div class="grid" data-stagger>
+        {
+          PLANTS.map((pl) => (
+            <article class="office">
+              <h3>{pl.name[lang]}, {pl.state[lang]}</h3>
+              <p>{pl.coverage.map((c) => c[lang]).join(', ')}</p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--cream" id="apply">
+    <div class="container split split--wide-right split--top">
+      <div class="stack" data-reveal="left">
+        <span class="eyebrow">{m ? 'डीलर चौकशी' : 'Dealer enquiry'}</span>
+        <h2 class="h2" set:html={m ? 'आपली माहिती <em>पाठवा</em>' : 'Send us <em>your details</em>'} />
+        <p class="lead">{m ? 'अर्ज भरून व्हॉट्सॲप किंवा ई-मेलने पाठवा. पुढील प्रक्रियेसाठी आमची टीम आपल्याशी संपर्क करेल.' : 'Fill in the form and send it by WhatsApp or email. Our team will get in touch about the next steps.'}</p>
+        <ul class="check-list">
+          <li><a href={`tel:${CONTACT.phonePrimary.tel}`}>{CONTACT.phonePrimary.label}</a></li>
+          <li><a href={`tel:${CONTACT.phoneSecond.tel}`}>{CONTACT.phoneSecond.label}</a></li>
+          <li><a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a></li>
+        </ul>
+      </div>
+      <div class="form-card" data-reveal="right">
+        <EnquiryForm lang={lang} topic="dealer" dealer />
+      </div>
+    </div>
+  </section>
+</Base>

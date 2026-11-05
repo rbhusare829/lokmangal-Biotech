@@ -1,0 +1,187 @@
+---
+import { href, type Lang } from '../data/types';
+import { t } from '../data/i18n';
+import { CONTACT } from '../data/site';
+import { CATEGORIES, categoryUrl, inCategory } from '../data/products';
+import { CROPS, cropUrl } from '../data/crops';
+import Icon from './Icon.astro';
+import Logo from './Logo.astro';
+import PackImage from './PackImage.astro';
+import { Image } from 'astro:assets';
+import { photo } from '../data/media';
+
+interface Props {
+  lang: Lang;
+  path: string;
+}
+
+const { lang, path } = Astro.props;
+const d = t(lang);
+const altLang: Lang = lang === 'en' ? 'mr' : 'en';
+const altHref = href(altLang, path);
+const altLabel = lang === 'en' ? 'मराठी' : 'English';
+const announce =
+  lang === 'mr'
+    ? 'लोकमंगल समूहाच्या संशोधन केंद्रात माती व पाणी परीक्षणाची मोफत सुविधा.'
+    : 'Free soil and water testing at the Lokmangal Group research centre.';
+const announceLink = lang === 'mr' ? 'नमुना कसा पाठवायचा' : 'How to send a sample';
+const isActive = (p: string) => (p === '/' ? path === '/' : path.startsWith(p));
+const aboutLinks = [
+  { to: '/about/', label: d.company, icon: 'building' },
+  { to: '/about/founder-message/', label: d.founder, icon: 'users' },
+  { to: '/manufacturing/', label: d.manufacturing, icon: 'factory' },
+  { to: '/gallery/', label: d.gallery, icon: 'image' },
+  { to: '/downloads/', label: d.downloads, icon: 'download' },
+] as const;
+const topCrops = CROPS.slice(0, 9);
+---
+
+<a class="skip" href="#main">{d.skip}</a>
+<div class="scroll-progress" aria-hidden="true"></div>
+
+<div class="announce" data-announce hidden>
+  <div class="container announce__inner">
+    <span class="announce__dot" aria-hidden="true"></span>
+    <span>{announce}</span>
+    <a href={href(lang, '/research-lab/#sample')}>{announceLink} <Icon name="arrow" size={14} /></a>
+    <button class="announce__close" type="button" data-announce-close aria-label={d.closeWord}><Icon name="close" size={15} /></button>
+  </div>
+</div>
+
+<div class="utilbar">
+  <div class="container utilbar__inner">
+    <div class="utilbar__group">
+      <a href={`mailto:${CONTACT.email}`}><Icon name="mail" size={14} /> {CONTACT.email}</a>
+      <a href={`tel:${CONTACT.phonePrimary.tel}`}><Icon name="phone" size={14} /> {CONTACT.phonePrimary.label}</a>
+      <a href={`tel:${CONTACT.landline.tel}`}><Icon name="phone" size={14} /> {CONTACT.landline.label}</a>
+    </div>
+    <div class="utilbar__group">
+      <a href={href(lang, '/downloads/')}>{d.downloads}</a>
+      <a href={href(lang, '/gallery/')}>{d.gallery}</a>
+      <a href={href(lang, '/contact/')}>{d.contact}</a>
+      <a class="utilbar__social" href={CONTACT.facebook} target="_blank" rel="noopener" aria-label="Facebook"><Icon name="facebook" size={14} /></a>
+    </div>
+  </div>
+</div>
+
+<header class="header" data-header>
+  <div class="container header__inner">
+    <Logo lang={lang} />
+    <nav class="nav" aria-label={d.menu}>
+      <ul class="nav__list">
+        <li class="nav__item has-menu" data-nav-item>
+          <button class:list={['nav__link', (isActive('/about/') || isActive('/manufacturing/') || isActive('/gallery/') || isActive('/downloads/')) && 'is-active']} type="button" data-nav-trigger aria-expanded="false">
+            {d.about} <Icon name="chev" size={15} class="nav__chev" />
+          </button>
+          <div class="dropdown">
+            {
+              aboutLinks.map((a) => (
+                <a href={href(lang, a.to)}>
+                  <span class="dropdown__icon"><Icon name={a.icon} size={18} /></span>
+                  {a.label}
+                </a>
+              ))
+            }
+          </div>
+        </li>
+        <li class="nav__item nav__item--static has-menu" data-nav-item>
+          <button class:list={['nav__link', isActive('/products/') && 'is-active']} type="button" data-nav-trigger aria-expanded="false">
+            {d.products} <Icon name="chev" size={15} class="nav__chev" />
+          </button>
+          <div class="dropdown mega">
+            <div class="mega__grid">
+              <div class="mega__links">
+                {
+                  CATEGORIES.map((c) => (
+                    <a href={href(lang, categoryUrl(c.id))}>
+                      {c.hero[0] ? <PackImage name={c.hero[0]} alt="" class="mega__thumb" widths={[120]} sizes="46px" /> : <span class="dropdown__icon"><Icon name="droplet" size={18} /></span>}
+                      <span>
+                        {c.short[lang]}
+                        <small>{d.productCount(inCategory(c.id).length)}</small>
+                      </span>
+                    </a>
+                  ))
+                }
+              </div>
+              <div class="mega__side">
+                <PackImage name="magnet" alt="" class="mega__side-img" widths={[160]} sizes="92px" />
+                <h3>{lang === 'mr' ? 'योग्य उत्पादन शोधा' : 'Find the right product'}</h3>
+                <p>{lang === 'mr' ? 'उत्पादन गट, वापराची पद्धत, अन्नद्रव्य किंवा पिकानुसार निवडा.' : 'Filter by family, method of use, nutrient or crop.'}</p>
+                <a class="btn btn--primary btn--sm" href={href(lang, '/products/')}>{d.allProducts} <Icon name="arrow" size={16} class="icon--arrow" /></a>
+              </div>
+            </div>
+          </div>
+        </li>
+        <li class="nav__item nav__item--static has-menu" data-nav-item>
+          <button class:list={['nav__link', isActive('/crops/') && 'is-active']} type="button" data-nav-trigger aria-expanded="false">
+            {d.crops} <Icon name="chev" size={15} class="nav__chev" />
+          </button>
+          <div class="dropdown mega">
+            <div class="mega__grid">
+              <div class="mega__links">
+                {
+                  topCrops.map((c) => (
+                    <a href={href(lang, cropUrl(c.id))}>
+                      <Image src={photo(c.photo)} alt="" class="mega__crop" format="webp" width={96} height={96} quality={60} loading="lazy" decoding="async" />
+                      {c.name[lang]}
+                    </a>
+                  ))
+                }
+              </div>
+              <div class="mega__side">
+                <h3>{lang === 'mr' ? 'पिकानुसार मार्गदर्शन' : 'Guidance by crop'}</h3>
+                <p>{lang === 'mr' ? 'आपल्या पिकासाठी नमूद केलेली उत्पादने आणि त्यांची मात्रा एकाच ठिकाणी.' : 'The products named for your crop, with their doses, in one place.'}</p>
+                <a class="btn btn--primary btn--sm" href={href(lang, '/crops/')}>{d.allCrops} <Icon name="arrow" size={16} class="icon--arrow" /></a>
+              </div>
+            </div>
+          </div>
+        </li>
+        <li class="nav__item"><a class:list={['nav__link', isActive('/research-lab/') && 'is-active']} href={href(lang, '/research-lab/')}>{d.lab}</a></li>
+        <li class="nav__item"><a class:list={['nav__link', isActive('/knowledge/') && 'is-active']} href={href(lang, '/knowledge/')}>{d.knowledge}</a></li>
+        <li class="nav__item"><a class:list={['nav__link', isActive('/dealers/') && 'is-active']} href={href(lang, '/dealers/')}>{d.dealersShort}</a></li>
+      </ul>
+    </nav>
+    <div class="header__actions">
+      <button class="iconbtn" type="button" data-search-open aria-label={d.search}><Icon name="search" size={18} /></button>
+      <a class="langbtn sysdeva" href={altHref} hreflang={altLang} lang={altLang} data-lang-switch>{altLabel}</a>
+      <a class="btn btn--primary btn--sm header__cta" href={href(lang, '/contact/')}>{d.enquire} <Icon name="arrow" size={16} class="icon--arrow" /></a>
+      <button class="iconbtn burger" type="button" data-burger aria-label={d.menu} aria-expanded="false"><Icon name="menu" size={20} /></button>
+    </div>
+  </div>
+</header>
+
+<div class="drawer" data-drawer aria-hidden="true">
+  <div class="drawer__panel">
+    <div class="drawer__head">
+      <Logo lang={lang} />
+      <button class="iconbtn" type="button" data-drawer-close aria-label={d.closeMenu}><Icon name="close" size={20} /></button>
+    </div>
+    <details>
+      <summary>{d.about} <Icon name="chev" size={18} /></summary>
+      <div class="drawer__sub">{aboutLinks.map((a) => <a href={href(lang, a.to)}>{a.label}</a>)}</div>
+    </details>
+    <details>
+      <summary>{d.products} <Icon name="chev" size={18} /></summary>
+      <div class="drawer__sub">
+        <a href={href(lang, '/products/')}><b>{d.allProducts}</b></a>
+        {CATEGORIES.map((c) => <a href={href(lang, categoryUrl(c.id))}>{c.short[lang]}</a>)}
+      </div>
+    </details>
+    <details>
+      <summary>{d.crops} <Icon name="chev" size={18} /></summary>
+      <div class="drawer__sub">
+        <a href={href(lang, '/crops/')}><b>{d.allCrops}</b></a>
+        {CROPS.map((c) => <a href={href(lang, cropUrl(c.id))}>{c.name[lang]}</a>)}
+      </div>
+    </details>
+    <a class="drawer__link" href={href(lang, '/research-lab/')}>{d.lab}</a>
+    <a class="drawer__link" href={href(lang, '/knowledge/')}>{d.knowledge}</a>
+    <a class="drawer__link" href={href(lang, '/dealers/')}>{d.dealers}</a>
+    <a class="drawer__link" href={href(lang, '/contact/')}>{d.contact}</a>
+    <div class="drawer__cta">
+      <a class="btn btn--primary btn--block" href={href(lang, '/contact/')}>{d.enquire} <Icon name="arrow" size={16} class="icon--arrow" /></a>
+      <a class="btn btn--wa btn--block" href={`https://wa.me/${CONTACT.phonePrimary.wa}`} target="_blank" rel="noopener"><Icon name="whatsapp" size={18} /> {d.whatsapp}</a>
+      <a class="btn btn--ghost btn--block" href={`tel:${CONTACT.phonePrimary.tel}`}><Icon name="phone" size={17} /> {CONTACT.phonePrimary.label}</a>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,193 @@
+---
+import Base from '../../../layouts/Base.astro';
+import PageHero from '../../../components/PageHero.astro';
+import Photo from '../../../components/Photo.astro';
+import Icon from '../../../components/Icon.astro';
+import SectionHead from '../../../components/SectionHead.astro';
+import Cta from '../../../components/Cta.astro';
+import { href, num, type Lang } from '../../../data/types';
+import { t } from '../../../data/i18n';
+import { langPaths } from '../../../data/routes';
+import { COMPANY, FOUNDER, GROUP_UNITS, JOURNEY, STATS, YEARS_OF_SERVICE } from '../../../data/site';
+import { TIERS, NUTRIENTS, type Tier } from '../../../data/nutrients';
+import { CATEGORIES, categoryUrl } from '../../../data/products';
+
+export const getStaticPaths = () => langPaths();
+
+const { lang } = Astro.props as { lang: Lang };
+const d = t(lang);
+const m = lang === 'mr';
+
+const overview = m
+  ? [
+      '“लोकमंगल बायोटेक प्रा. लि.” ही २००६ मध्ये स्थापन झालेली कृषी-आधारित जैवतंत्रज्ञान उत्पादन कंपनी असून ती लोकमंगल समूहाचा अभिमान आहे.',
+      'पर्यावरणाप्रती कंपनी कटिबद्ध आहे. नैसर्गिक संसाधनांचे जतन करत, शक्य तितक्या नैसर्गिक मार्गाने त्यांचा लाभ मिळवणे हा आमच्या उपक्रमांचा उद्देश आहे. जनजागृती कार्यक्रम, संशोधन उपक्रम आणि उपयुक्त जैविक उत्पादनांमुळे शेतकरी समाजात मोठा बदल घडला आहे. जैव उत्तेजके व जैविक खतांचा वापर यांसारख्या पर्यावरणपूरक उपायांना सर्वत्र पसंती मिळत आहे.',
+      'एन.पी.के. मिश्र खते, दुय्यम अन्नद्रव्य मिश्र खते (सॉइल कंडिशनर), सेंद्रिय खते, नीम डी.ओ.सी., जैविक खते, चिलेटेड अन्नद्रव्ये, सरळ खते, विद्राव्य खते, सूक्ष्म अन्नद्रव्ये आणि वाढ प्रवर्तके यांचे आम्ही अग्रगण्य उत्पादक आहोत. प्रत्येक पिकाची नेमकी गरज लक्षात घेऊन आम्ही उत्पादने तयार करतो.',
+    ]
+  : [
+      '“Lokmangal Bio-Tech Pvt. Ltd.” is an agro-based biotechnological production company, established in 2006. It is one of the pride industries of the Lokmangal Group.',
+      'The Company is committed to the environment. Its initiatives preserve natural resources and reap their benefits in the most natural way. Community awareness programmes, research activities and beneficial bio-products have brought a revolutionary change to the farming community, and eco-friendly measures such as bio-stimulants and bio-fertilizers are enjoying wide appreciation.',
+      'We are a leading manufacturer of NPK mixture fertilizers, secondary nutrient mixture fertilizers (soil conditioner), organic fertilizers, neem DOC, bio-fertilizers, chelated nutrients, straight fertilizers, water soluble fertilizers, micronutrients and plant growth promoters, keeping the exact crop-wise need of the user in mind.',
+    ];
+
+const story = m
+  ? [
+      'अधिक उत्पादनासाठी शेतकरी प्रामुख्याने मुख्य अन्नद्रव्ये (एन.पी.के.) वापरतात. त्यामुळे जमिनीची उत्पादकता दिवसेंदिवस कमी होते आणि जमीन क्षारयुक्त होते.',
+      'हे लक्षात घेऊन आमच्या तज्ज्ञ व शास्त्रज्ञांनी जमिनीची उत्पादकता वाढवण्यावर संशोधन केले. जमिनीची सुपीकता व उत्पादकता टिकवण्यासाठी एन.पी.के. खतांसोबत “दुय्यम अन्नद्रव्य मिश्र खत” देणे अत्यावश्यक असल्याचे त्यांना आढळले.',
+      'या संशोधनातूनच कॅल्शियम, मॅग्नेशियम व गंधक यांचे मिश्रण असलेले आमचे स्वतःचे “मॅग्नेट” तयार झाले. ऊस, केळी, सोयाबीन, कांदा, कापूस व भाजीपाला या पिकांसाठी ही उत्पादने शेतकऱ्यांची पहिली पसंती ठरली आहेत.',
+    ]
+  : [
+      'For more production, farmers prefer to use the major nutrients (NPK). This has decreased the productivity of soil day by day and made it salty.',
+      'Keeping this in view, our experts and scientists researched how to increase the productivity of soil, and observed that a “secondary nutrient mixture fertilizer” is essential alongside NPK fertilizers to maintain the fertility and productivity of soil.',
+      'That research led to our own product, “Magnet”, a mixture of calcium, magnesium and sulphur. These products have become the first choice of farmers for crops such as sugarcane, banana, soybean, onion, cotton and vegetables.',
+    ];
+
+const tiers: Tier[] = ['major', 'secondary', 'micro'];
+---
+
+<Base
+  lang={lang}
+  path="/about/"
+  title={m ? 'आमच्याविषयी' : 'About us'}
+  description={m ? 'लोकमंगल बायोटेक प्रा. लि.: २००६ मध्ये स्थापन झालेली कृषी-आधारित जैवतंत्रज्ञान कंपनी, ध्येय व उद्दिष्ट, वाटचाल आणि लोकमंगल समूह.' : 'Lokmangal Bio-Tech Pvt. Ltd.: an agro-based biotechnology company established in 2006. Our vision, mission, story and the Lokmangal Group.'}
+>
+  <PageHero
+    lang={lang}
+    eyebrow={m ? 'आमच्याविषयी' : 'About us'}
+    title={m ? 'शेतीची उत्पादकता वाढवणारी <em>संशोधनाधारित कंपनी</em>' : 'A research-based company for <em>more productive farming</em>'}
+    lead={m ? 'लोकमंगल समूहाचा भाग असलेली, २००६ पासून शेतकऱ्यांसोबत काम करणारी कृषी-आधारित जैवतंत्रज्ञान कंपनी.' : 'An agro-based biotechnology company of the Lokmangal Group, working with farmers since 2006.'}
+    image="lokmangal-house"
+    imageAlt={m ? 'लोकमंगल हाऊस, सोलापूर' : 'Lokmangal House, Solapur'}
+    focus="60% 30%"
+    crumbs={[{ label: m ? 'आमच्याविषयी' : 'About us' }]}
+  />
+
+  <section class="section">
+    <div class="container split split--wide-left">
+      <div class="stack prose" data-reveal="left">
+        <span class="eyebrow">{d.company}</span>
+        <h2 class="h2" set:html={m ? 'लोकमंगल समूहाचा <em>अभिमान</em>' : 'One of the <em>pride industries</em> of Lokmangal Group'} />
+        {overview.map((p) => <p>{p}</p>)}
+        <div class="btn-row">
+          <a class="btn btn--green" href={href(lang, '/products/')}>{d.allProducts} <Icon name="arrow" size={17} class="icon--arrow" /></a>
+          <a class="btn btn--ghost" href={href(lang, '/manufacturing/')}>{d.manufacturing}</a>
+        </div>
+      </div>
+      <div class="media-frame" data-reveal="right">
+        <Photo name="company-building" alt={m ? 'लोकमंगल बायोटेकची कारखाना इमारत, सोलापूर' : 'Lokmangal Biotech factory building, Solapur'} class="media-frame__img" widths={[480, 800, 1200]} sizes="(width < 960px) 92vw, 500px" style="aspect-ratio:5/4" />
+        <div class="media-frame__badge"><b>{num(lang, YEARS_OF_SERVICE)}</b><span>{m ? 'वर्षांची शेतकरी सेवा' : 'years of serving farmers'}</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tight section--white">
+    <div class="container grid grid-2" data-stagger>
+      <article class="card card--hover">
+        <span class="icon-badge"><Icon name="leaf" size={24} /></span>
+        <h2 class="h3" style="margin-top:16px">{m ? 'ध्येय (Vision)' : 'Vision'}</h2>
+        <p class="lead" style="margin-top:8px">{COMPANY.vision[lang]}</p>
+      </article>
+      <article class="card card--hover">
+        <span class="icon-badge icon-badge--orange"><Icon name="flask" size={24} /></span>
+        <h2 class="h3" style="margin-top:16px">{m ? 'उद्दिष्ट (Mission)' : 'Mission'}</h2>
+        <p class="lead" style="margin-top:8px">{COMPANY.mission[lang]}</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="section lattice" id="balanced-nutrition">
+    <div class="container split">
+      <div class="stack prose" data-reveal="left">
+        <span class="eyebrow">{m ? 'संतुलित पोषण' : 'Balanced nutrition'}</span>
+        <h2 class="h2" set:html={m ? 'फक्त एन.पी.के. <em>पुरेसे नाही</em>' : 'NPK alone <em>is not enough</em>'} />
+        {story.map((p) => <p>{p}</p>)}
+        <a class="link-arrow" href={href(lang, '/knowledge/')}>{d.knowledge} <Icon name="arrow" size={17} /></a>
+      </div>
+      <div class="tier-stack" data-stagger>
+        {
+          tiers.map((tier) => (
+            <article class={`tier-card tier-${tier}`}>
+              <div class="tier-card__syms">
+                {NUTRIENTS.filter((n) => n.tier === tier).map((n) => (
+                  <b>{n.id}</b>
+                ))}
+              </div>
+              <div>
+                <h3>{TIERS[tier].name[lang]}</h3>
+                <p>{TIERS[tier].hint[lang]}</p>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--dark">
+    <div class="container split split--wide-right split--top">
+      <div class="stack on-dark" data-reveal="left">
+        <span class="eyebrow">{m ? 'आमची वाटचाल' : 'Our journey'}</span>
+        <h2 class="h2" set:html={m ? 'एका ध्येयाकडे नेणारी <em>वाटचाल</em>' : 'A journey with <em>one aim</em>'} />
+        <p class="lead">{m ? `आज ${new Intl.NumberFormat('mr-IN').format(STATS.dealers)}+ डीलर्स आणि दोन उत्पादन केंद्रांसह लोकमंगल बायोटेक शेतकऱ्यांच्या सेवेत आहे.` : `Today, with more than ${STATS.dealers} dealers and two production units, Lokmangal Biotech serves farmers across ${STATS.dealerStates} states.`}</p>
+      </div>
+      <ol class="timeline" data-stagger>
+        {
+          JOURNEY.map((j) => (
+            <li class="timeline__item">
+              <span class="timeline__dot" aria-hidden="true" />
+              <div>
+                <span class="timeline__year">{num(lang, j.year)}</span>
+                <h3>{j.title[lang]}</h3>
+                <p>{j.text[lang]}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container split split--wide-right">
+      <div class="founder-card" data-reveal="left">
+        <Photo name="founder" alt={FOUNDER.name[lang]} widths={[480, 760]} sizes="(width < 960px) 92vw, 420px" />
+        <div class="founder-card__body">
+          <div class="founder-card__name">{FOUNDER.name[lang]}</div>
+          <div class="muted small">{FOUNDER.role[lang]}</div>
+        </div>
+      </div>
+      <div class="stack" data-reveal="right">
+        <span class="eyebrow">{d.founder}</span>
+        <p class="quote">“{FOUNDER.pull[lang]}”</p>
+        <p class="lead">{m ? 'बँक, साखर कारखाना, दूध डेअरी, कृषी शिक्षण आणि संशोधन केंद्र: शेतकऱ्यासाठी उभ्या राहिलेल्या लोकमंगल समूहाची कहाणी संस्थापकांच्या शब्दांत वाचा.' : 'A bank, a sugar factory, a dairy, agricultural education and a research centre. Read the story of a group built around the farmer, in the founder’s own words.'}</p>
+        <a class="btn btn--green" href={href(lang, '/about/founder-message/')} style="width:fit-content">{m ? 'संपूर्ण संदेश वाचा' : 'Read the full message'} <Icon name="arrow" size={17} class="icon--arrow" /></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section terra">
+    <div class="container split">
+      <div class="stack">
+        <span class="eyebrow">{COMPANY.group[lang]}</span>
+        <h2 class="h2" set:html={m ? 'लोकमंगल समूहाची <em>व्याप्ती</em>' : 'The reach of the <em>Lokmangal Group</em>'} />
+        <p class="lead">{m ? 'संस्थापक अध्यक्ष श्री. सुभाष (बापू) देशमुख यांचा लोकमंगल समूह हा राज्यातील एक सुप्रसिद्ध उद्योग समूह आहे.' : 'Founded by Chairman Shri Subhash (Bapu) Deshmukh, the Lokmangal Group is one of the well-known industrial groups in our state.'}</p>
+        <ul class="numbered">{GROUP_UNITS.slice(0, 8).map((u) => <li>{u[lang]}</li>)}</ul>
+      </div>
+      <button class="video" type="button" data-video="dozQfM5OD0Y" aria-label="Lokmangal Yeshogatha" data-reveal="right">
+        <img src="https://i.ytimg.com/vi/dozQfM5OD0Y/hqdefault.jpg" alt="" loading="lazy" decoding="async" width="480" height="360" />
+        <span class="video__play"><Icon name="play" size={30} /></span>
+      </button>
+    </div>
+  </section>
+
+  <section class="section section--tight">
+    <div class="container">
+      <SectionHead eyebrow={m ? 'उत्पादन श्रेणी' : 'Range of our products'} title={m ? 'आमचे <em>१२ उत्पादन गट</em>' : 'Our <em>12 product families</em>'} />
+      <ul class="chips" data-reveal>
+        {CATEGORIES.map((c) => <li><a class="chip chip--line" href={href(lang, categoryUrl(c.id))}>{c.name[lang]}</a></li>)}
+      </ul>
+    </div>
+  </section>
+
+  <Cta lang={lang} />
+</Base>

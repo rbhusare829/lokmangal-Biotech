@@ -1,0 +1,79 @@
+---
+import { href, type Lang } from '../data/types';
+import { t } from '../data/i18n';
+import { COMPANY, CONTACT, OFFICES, ESTABLISHED } from '../data/site';
+import { CATEGORIES, categoryUrl } from '../data/products';
+import Icon from './Icon.astro';
+
+interface Props {
+  lang: Lang;
+}
+
+const { lang } = Astro.props;
+const d = t(lang);
+const year = new Date().getFullYear();
+const factory = OFFICES.find((o) => o.id === 'factory')!;
+const links = [
+  ['/about/', d.company],
+  ['/about/founder-message/', d.founder],
+  ['/manufacturing/', d.manufacturing],
+  ['/research-lab/', d.lab],
+  ['/knowledge/', d.knowledge],
+  ['/crops/', d.crops],
+  ['/gallery/', d.gallery],
+  ['/downloads/', d.downloads],
+  ['/dealers/', d.dealers],
+  ['/contact/', d.contact],
+];
+const blurb =
+  lang === 'mr'
+    ? `लोकमंगल समूहाचा अभिमान असलेली, ${String(ESTABLISHED).replace(/[0-9]/g, (x) => '०१२३४५६७८९'[Number(x)])} मध्ये स्थापन झालेली कृषी-आधारित जैवतंत्रज्ञान कंपनी. संशोधनावर आधारित उत्पादने आणि संतुलित पोषणाद्वारे शेतीची उत्पादकता वाढवणे हे आमचे ध्येय आहे.`
+    : `An agro-based biotechnology company of the Lokmangal Group, established in ${ESTABLISHED}. We work to improve the productivity of agriculture through research-based products and balanced nutrition.`;
+---
+
+<footer class="footer">
+  <div class="container footer__top">
+    <div>
+      <a class="footer__brand" href={href(lang, '/')}>
+        <span class="footer__logo"><img src="/brand/logo-mark.svg" alt="" width="417" height="504" loading="lazy" /></span>
+        <span>
+          <span class="footer__name">{COMPANY.name[lang]}</span><br />
+          <span class="footer__motto">{COMPANY.motto[lang]}</span>
+        </span>
+      </a>
+      <p>{blurb}</p>
+      <div class="footer__social">
+        <a href={CONTACT.facebook} target="_blank" rel="noopener" aria-label="Facebook"><Icon name="facebook" size={18} /></a>
+        <a href={`https://wa.me/${CONTACT.phonePrimary.wa}`} target="_blank" rel="noopener" aria-label={d.whatsapp}><Icon name="whatsapp" size={18} /></a>
+        <a href={CONTACT.youtube} target="_blank" rel="noopener" aria-label="YouTube"><Icon name="youtube" size={18} /></a>
+      </div>
+    </div>
+    <div>
+      <h3>{d.quickLinks}</h3>
+      <ul class="footer__links">{links.map(([to, label]) => <li><a href={href(lang, to)}>{label}</a></li>)}</ul>
+    </div>
+    <div>
+      <h3>{d.range}</h3>
+      <ul class="footer__links">{CATEGORIES.map((c) => <li><a href={href(lang, categoryUrl(c.id))}>{c.short[lang]}</a></li>)}</ul>
+    </div>
+    <div>
+      <h3>{d.reachUs}</h3>
+      <ul class="footer__contact">
+        <li><Icon name="pin" size={17} /><span>{factory.lines[lang]}</span></li>
+        <li><Icon name="whatsapp" size={17} /><span><a href={`tel:${CONTACT.phonePrimary.tel}`}>{CONTACT.phonePrimary.label}</a><br /><a href={`tel:${CONTACT.phoneSecond.tel}`}>{CONTACT.phoneSecond.label}</a></span></li>
+        <li><Icon name="phone" size={17} /><a href={`tel:${CONTACT.landline.tel}`}>{CONTACT.landline.label}</a></li>
+        <li><Icon name="mail" size={17} /><a href={`mailto:${CONTACT.email}`}>{CONTACT.email}</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="container">
+    <div class="footer__ghost" aria-hidden="true">Lokmangal</div>
+    <div class="footer__bottom">
+      <span>© {year} {COMPANY.name[lang]} {d.rights}</span>
+      <span class="footer__bottom-links">
+        <a href={href(lang, '/credits/')}>{d.credits}</a>
+        <a href={href(lang, '/contact/')}>{d.contact}</a>
+      </span>
+    </div>
+  </div>
+</footer>

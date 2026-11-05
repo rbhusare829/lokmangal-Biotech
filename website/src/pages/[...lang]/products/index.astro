@@ -1,0 +1,109 @@
+---
+import Base from '../../../layouts/Base.astro';
+import PageHero from '../../../components/PageHero.astro';
+import ProductCard from '../../../components/ProductCard.astro';
+import Icon from '../../../components/Icon.astro';
+import Cta from '../../../components/Cta.astro';
+import { num, type Lang } from '../../../data/types';
+import { t } from '../../../data/i18n';
+import { langPaths } from '../../../data/routes';
+import { CATEGORIES, NAME_ONLY, PRODUCTS, USES, TOTAL_PRODUCTS, categoryOf, type Use } from '../../../data/products';
+import { NUTRIENTS } from '../../../data/nutrients';
+import { CROPS } from '../../../data/crops';
+
+export const getStaticPaths = () => langPaths();
+
+const { lang } = Astro.props as { lang: Lang };
+const d = t(lang);
+const m = lang === 'mr';
+const useKeys = Object.keys(USES) as Use[];
+---
+
+<Base
+  lang={lang}
+  path="/products/"
+  title={m ? 'उत्पादने' : 'Products'}
+  description={m ? 'लोकमंगल बायोटेकची सर्व उत्पादने: एन.पी.के., मॅग्नेट, फास्टर+, सूक्ष्म अन्नद्रव्ये, सेंद्रिय, जैविक खते व वाढ प्रवर्तके. गट, पीक किंवा अन्नद्रव्यानुसार शोधा.' : 'All Lokmangal Biotech products: NPK, Magnet, FASTER+, micronutrients, organic and bio-fertilizers, growth promoters. Filter by family, crop or nutrient.'}
+>
+  <PageHero
+    lang={lang}
+    eyebrow={m ? 'उत्पादन कॅटलॉग' : 'Product catalogue'}
+    title={m ? 'योग्य उत्पादन <em>सहज शोधा</em>' : 'Find the right product, <em>easily</em>'}
+    lead={m ? `१२ उत्पादन गटांतील ${num(lang, TOTAL_PRODUCTS)} उत्पादने. नाव लिहा, किंवा गट, वापराची पद्धत, अन्नद्रव्य व पिकानुसार निवडा.` : `${TOTAL_PRODUCTS} products in 12 families. Type a name, or filter by family, method of use, nutrient or crop.`}
+    image="lineup-bags"
+    imageAlt={m ? 'लोकमंगल बायोटेकच्या खतांच्या बॅगा' : 'Lokmangal Biotech fertilizer bags'}
+    focus="50% 60%"
+    crumbs={[{ label: d.products }]}
+  />
+
+  <section class="section section--tight">
+    <div class="container catalog" data-catalog>
+      <aside class="filters" aria-label={lang === 'mr' ? 'फिल्टर' : 'Filters'}>
+        <div class="cat-search">
+          <Icon name="search" size={18} />
+          <input type="search" data-q placeholder={d.searchProducts} aria-label={d.searchProducts} autocomplete="off" />
+        </div>
+        <details class="filters__more" open data-filters-more>
+          <summary class="filters__toggle">{m ? 'फिल्टर' : 'Filters'} <Icon name="chev" size={18} /></summary>
+          <div class="filters__body">
+        <div>
+          <h2>{d.filterCategory}</h2>
+          <div class="filter-opts" data-group="family">
+            <button class="fchip" type="button" data-v="" aria-pressed="true">{d.filterAll}</button>
+            {CATEGORIES.map((c) => <button class="fchip" type="button" data-v={c.id} aria-pressed="false">{c.short[lang]}</button>)}
+          </div>
+        </div>
+        <div>
+          <h2>{d.filterUse}</h2>
+          <div class="filter-opts" data-group="use">
+            <button class="fchip" type="button" data-v="" aria-pressed="true">{d.filterAll}</button>
+            {useKeys.map((u) => <button class="fchip" type="button" data-v={u} aria-pressed="false">{USES[u][lang]}</button>)}
+          </div>
+        </div>
+        <div>
+          <h2>{d.filterNutrient}</h2>
+          <div class="filter-opts" data-group="nutrient">
+            <button class="fchip" type="button" data-v="" aria-pressed="true">{d.filterAll}</button>
+            {NUTRIENTS.map((n) => <button class="fchip sym-chip" type="button" data-v={n.id} aria-pressed="false" title={n.name[lang]}>{n.id}</button>)}
+          </div>
+        </div>
+        <div>
+          <h2>{d.filterCrop}</h2>
+          <div class="filter-opts" data-group="crop">
+            <button class="fchip" type="button" data-v="" aria-pressed="true">{d.filterAll}</button>
+            {CROPS.map((c) => <button class="fchip" type="button" data-v={c.id} aria-pressed="false">{c.name[lang]}</button>)}
+          </div>
+        </div>
+          </div>
+        </details>
+      </aside>
+      <div>
+        <div class="cat-head">
+          <p class="cat-count" role="status"><b data-count-now>{num(lang, PRODUCTS.length)}</b> {d.ofWord} {num(lang, PRODUCTS.length)}</p>
+          <button class="cat-clear" type="button" data-clear hidden>{d.clearFilters}</button>
+        </div>
+        <div class="p-grid" data-list>
+          {PRODUCTS.map((p) => <ProductCard product={p} lang={lang} morph />)}
+        </div>
+        <p class="cat-empty" data-empty hidden>{d.noResults}</p>
+        <div class="card" style="margin-top:24px" data-reveal>
+          <h2 class="h4">{d.alsoRange}</h2>
+          <p class="muted small" style="margin-block:4px 12px">{d.alsoRangeHint}</p>
+          <ul class="chips">
+            {NAME_ONLY.map((n) => <li class="chip chip--line">{n.name[lang]} <span class="muted" style="font-weight:500">· {n.note?.[lang] ?? categoryOf(n.category).short[lang]}</span></li>)}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <Cta
+    lang={lang}
+    title={m ? 'उत्पादन निवडण्यात <em>मदत हवी आहे?</em>' : 'Need help <em>choosing a product?</em>'}
+    text={m ? 'आपले पीक आणि जमिनीची स्थिती सांगा. आमची टीम आपल्याला मार्गदर्शन करेल.' : 'Tell us your crop and the condition of your soil. Our team will guide you.'}
+    primaryLabel={d.enquire}
+    primaryTo="/contact/"
+  />
+</Base>
+
+<script src="../../../scripts/catalog.ts"></script>

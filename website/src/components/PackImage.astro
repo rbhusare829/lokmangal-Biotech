@@ -1,0 +1,32 @@
+---
+import { Image } from 'astro:assets';
+import { pack } from '../data/media';
+
+interface Props {
+  name: string;
+  alt: string;
+  class?: string;
+  widths?: number[];
+  sizes?: string;
+  eager?: boolean;
+  style?: string;
+}
+
+const { name, alt, class: cls, widths = [160, 260, 400], sizes = '220px', eager = false, style } = Astro.props;
+const src = pack(name);
+const usable = widths.filter((w) => w <= src.width);
+const finalWidths = usable.length ? usable : [src.width];
+const single = finalWidths.length === 1;
+---
+
+<Image
+  src={src}
+  alt={alt}
+  format="webp"
+  {...(single ? { width: finalWidths[0] } : { widths: finalWidths, sizes })}
+  quality={82}
+  loading={eager ? 'eager' : 'lazy'}
+  decoding="async"
+  class={cls}
+  style={style}
+/>

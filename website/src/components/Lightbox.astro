@@ -1,0 +1,21 @@
+---
+import type { Lang } from '../data/types';
+import { t } from '../data/i18n';
+import Icon from './Icon.astro';
+
+interface Props {
+  lang: Lang;
+}
+
+const d = t(Astro.props.lang);
+---
+
+<dialog class="lb" data-lightbox aria-label={d.gallery}>
+  <div class="lb__stage"><img class="lb__img" data-lightbox-img alt="" /></div>
+  <p class="lb__cap" data-lightbox-cap></p>
+  <button class="lb__btn lb__close" type="button" data-lightbox-close aria-label={d.closeWord}><Icon name="close" size={20} /></button>
+  <button class="lb__btn lb__prev" type="button" data-lightbox-prev aria-label={d.prev}><Icon name="prev" size={20} /></button>
+  <button class="lb__btn lb__next" type="button" data-lightbox-next aria-label={d.next}><Icon name="next" size={20} /></button>
+</dialog>
+
+<script src="../scripts/lightbox.ts"></script>

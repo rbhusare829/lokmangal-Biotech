@@ -1,0 +1,398 @@
+---
+import Base from '../../layouts/Base.astro';
+import Hero from '../../components/Hero.astro';
+import Icon from '../../components/Icon.astro';
+import Photo from '../../components/Photo.astro';
+import PackImage from '../../components/PackImage.astro';
+import PackArt from '../../components/PackArt.astro';
+import CropCard from '../../components/CropCard.astro';
+import Rail from '../../components/Rail.astro';
+import NutrientTable from '../../components/NutrientTable.astro';
+import DoseCalculator from '../../components/DoseCalculator.astro';
+import SectionHead from '../../components/SectionHead.astro';
+import Cta from '../../components/Cta.astro';
+import { href, num, type Lang } from '../../data/types';
+import { t } from '../../data/i18n';
+import { langPaths } from '../../data/routes';
+import { COMPANY, ESTABLISHED, GROUP_UNITS, JOURNEY, PLANTS, STATS, YEARS_OF_SERVICE } from '../../data/site';
+import { CATEGORIES, TOTAL_PRODUCTS, bySlug, categoryOf, categoryUrl, inCategory, productUrl, productTitle } from '../../data/products';
+import { CROPS } from '../../data/crops';
+
+export const getStaticPaths = () => langPaths();
+
+const { lang } = Astro.props as { lang: Lang };
+const d = t(lang);
+const m = lang === 'mr';
+const fmt = (n: number) => new Intl.NumberFormat(m ? 'mr-IN' : 'en-IN').format(n);
+
+const stats = [
+  { count: ESTABLISHED, plain: true, text: num(lang, ESTABLISHED), label: m ? 'स्थापना' : 'Established', sub: m ? 'लोकमंगल समूहाचा अभिमान' : 'A pride of the Lokmangal Group' },
+  { count: STATS.capacityTotal, suffix: m ? ' मे. टन' : ' MT', text: `${fmt(STATS.capacityTotal)}${m ? ' मे. टन' : ' MT'}`, label: m ? 'वार्षिक उत्पादन क्षमता' : 'Capacity per year', sub: m ? 'सोलापूर व वडोदरा येथील दोन केंद्रे' : 'Two units, Solapur and Vadodara' },
+  { count: STATS.dealers, suffix: '+', text: `${fmt(STATS.dealers)}+`, label: m ? 'डीलर्सचे जाळे' : 'Dealers', sub: m ? `${num(lang, STATS.dealerStates)} राज्यांत` : `Across ${STATS.dealerStates} states` },
+  { count: TOTAL_PRODUCTS, text: num(lang, TOTAL_PRODUCTS), label: m ? 'उत्पादने' : 'Products', sub: m ? '१२ उत्पादन गटांत' : 'In 12 product families' },
+];
+
+const trust = [
+  { icon: 'flask', a: m ? 'संशोधनावर आधारित उत्पादने' : 'Research-based products', b: m ? 'तज्ज्ञ व शास्त्रज्ञांच्या संशोधनातून' : 'Developed by our experts and scientists' },
+  { icon: 'shield', a: m ? 'स्वतःची प्रयोगशाळा' : 'In-house laboratory', b: m ? 'कच्चा माल, तयार उत्पादन, माती व पाणी' : 'Raw material, finished product, soil, water' },
+  { icon: 'factory', a: m ? 'दोन उत्पादन केंद्रे' : 'Two production units', b: m ? 'प्रत्येकी २५,००० मे. टन प्रति वर्ष' : '25,000 MT per year each' },
+  { icon: 'users', a: m ? 'लोकमंगल समूहाचा भाग' : 'Part of Lokmangal Group', b: m ? 'शेती, साखर, दूध, शिक्षण आणि बरेच काही' : 'Farming, sugar, dairy, education and more' },
+] as const;
+
+const quick = [
+  { img: 'lineup-bags', tag: m ? '१२ उत्पादन गट' : '12 product families', title: m ? 'उत्पादन शोधा' : 'Find a product', text: m ? 'गट, वापराची पद्धत, अन्नद्रव्य किंवा पिकानुसार निवडा.' : 'Filter by family, method of use, nutrient or crop.', more: m ? 'कॅटलॉग पाहा' : 'Open the catalogue', to: '/products/', tone: '#126139', focus: '30% 50%' },
+  { img: 'crop-sugarcane', tag: m ? `${num(lang, CROPS.length)} पिके` : `${CROPS.length} crops`, title: m ? 'पिकानुसार निवडा' : 'Choose by crop', text: m ? 'तुमच्या पिकासाठी नमूद उत्पादने आणि मात्रा.' : 'The products named for your crop, with doses.', more: m ? 'पिके पाहा' : 'See crops', to: '/crops/', tone: '#b6470b' },
+  { img: 'hero-lab', tag: m ? 'मोफत सुविधा' : 'Free facility', title: m ? 'माती व पाणी परीक्षण' : 'Test soil and water', text: m ? 'नमुना कसा घ्यायचा आणि कुठे द्यायचा ते जाणून घ्या.' : 'How to take a sample, and where to send it.', more: m ? 'प्रक्रिया पाहा' : 'See the steps', to: '/research-lab/#sample', tone: '#7a5a06', focus: '60% 50%' },
+  { img: 'factory-front', tag: m ? '१०००+ डीलर्स' : '1000+ dealers', title: m ? 'डीलर व्हा' : 'Become a dealer', text: m ? 'आपल्या भागात लोकमंगलची उत्पादने पोहोचवा.' : 'Bring Lokmangal products to your area.', more: m ? 'चौकशी करा' : 'Enquire now', to: '/dealers/', tone: '#0d4a2d' },
+];
+
+const spotlightSlugs = ['krishi-vardan-18-18-10', 'faster-plus', 'lancer', 'champion', 'zicom', 'speed'];
+const magnet = bySlug('magnet');
+const barData = [
+  { k: m ? 'कॅल्शियम (Ca)' : 'Calcium (Ca)', v: 10 },
+  { k: m ? 'मॅग्नेशियम (Mg)' : 'Magnesium (Mg)', v: 5 },
+  { k: m ? 'गंधक (S)' : 'Sulphur (S)', v: 10 },
+];
+const stickUp = bySlug('stick-up');
+const gallery = [
+  { img: 'factory-front', alt: m ? 'लोकमंगल बायोटेकची इमारत' : 'Lokmangal Bio-Tech building' },
+  { img: 'lineup-bottles', alt: m ? 'द्रव व बकेट उत्पादनांची श्रेणी' : 'The liquid and bucket product range' },
+  { img: 'team', alt: m ? 'लोकमंगल बायोटेकची टीम' : 'The Lokmangal Bio-Tech team' },
+];
+---
+
+<Base
+  lang={lang}
+  path="/"
+  title={m ? 'लोकमंगल बायोटेक प्रा. लि. | संतुलित पोषण, भरघोस उत्पादन' : 'Lokmangal Bio-Tech Pvt. Ltd. | Balanced nutrition, richer harvests'}
+  description={m
+    ? 'लोकमंगल बायोटेक, सोलापूर: एन.पी.के. मिश्र खते, मॅग्नेट, फास्टर+ विद्राव्य खते, सूक्ष्म अन्नद्रव्ये, सेंद्रिय व जैविक उत्पादने. २००६ पासून १०००+ डीलर्सचे जाळे.'
+    : 'Lokmangal Bio-Tech, Solapur: NPK mixtures, Magnet, FASTER+ water soluble fertilizers, micronutrients, organic and bio-products. Since 2006, with 1000+ dealers.'}
+>
+  <Hero lang={lang} />
+
+  <section class="stats-wrap">
+    <div class="container">
+      <div class="stats" data-reveal>
+        {
+          stats.map((s) => (
+            <div class="stat">
+              <div class="stat__num" data-count={s.count} data-suffix={s.suffix ?? ''} data-plain={s.plain ? 'true' : undefined}>{s.text}</div>
+              <div class="stat__label">{s.label}</div>
+              <div class="stat__sub">{s.sub}</div>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="trust-wrap">
+    <div class="container">
+      <ul class="trust" data-stagger>
+        {
+          trust.map((x) => (
+            <li class="trust__item">
+              <span class="trust__icon"><Icon name={x.icon} size={20} /></span>
+              <span>
+                <strong>{x.a}</strong>
+                <small>{x.b}</small>
+              </span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section--dark quick-sec">
+    <Photo name="valley" alt="" class="quick-sec__bg" widths={[800, 1280]} sizes="100vw" quality={38} />
+    <div class="container">
+      <SectionHead center eyebrow={m ? 'आज आम्ही कशी मदत करू?' : 'How can we help you today?'} title={m ? 'उत्पादन, पीक, परीक्षण <em>किंवा डीलरशिप</em>' : 'Pick a product, a crop, a test <em>or a dealership</em>'} />
+      <div class="quick-grid" data-stagger>
+        {
+          quick.map((q) => (
+            <a class="qcard" href={href(lang, q.to)} style={`--tone:${q.tone}`}>
+              <Photo name={q.img} alt="" class="qcard__img" widths={[420, 720]} sizes="(width < 960px) 50vw, 300px" style={q.focus ? `object-position:${q.focus}` : undefined} />
+              <span class="qcard__tag">{q.tag}</span>
+              <h3>{q.title}</h3>
+              <p>{q.text}</p>
+              <span class="qcard__more">{q.more} <Icon name="arrow" size={15} /></span>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container split split--wide-right">
+      <div class="media-frame" data-reveal="left">
+        <div class="media-duo">
+          <Photo name="factory-front" alt={m ? 'चिंचोळी एम.आय.डी.सी., सोलापूर येथील लोकमंगल बायोटेकची इमारत' : 'Lokmangal Bio-Tech building at Chincholi MIDC, Solapur'} class="media-duo__a" widths={[480, 800]} sizes="(width < 960px) 56vw, 300px" />
+          <Photo name="factory-gate" alt={m ? 'कारखान्याचे प्रवेशद्वार' : 'Factory entrance gate'} class="media-duo__b" widths={[360, 620]} sizes="(width < 960px) 38vw, 210px" />
+        </div>
+        <div class="media-frame__badge"><b>{num(lang, YEARS_OF_SERVICE)}</b><span>{m ? 'वर्षांची शेतकरी सेवा' : 'years of serving farmers'}</span></div>
+      </div>
+      <div class="stack" data-reveal="right">
+        <span class="eyebrow">{m ? 'लोकमंगल बायोटेकविषयी' : 'About Lokmangal Biotech'}</span>
+        <h2 class="h2" set:html={m ? 'उत्पादन वाढीचा कणा, <em>संतुलित पोषण</em>' : 'Balanced nutrition is the <em>backbone of higher yields</em>'} />
+        <p class="lead">
+          {m
+            ? 'लोकमंगल बायोटेक प्रा. लि. ही २००६ मध्ये स्थापन झालेली कृषी-आधारित जैवतंत्रज्ञान कंपनी आहे. “संतुलित पोषण” ही संकल्पना आणि शेतात तिचा प्रत्यक्ष वापर यातून उत्पादनात मोठी वाढ सिद्ध झाली आहे.'
+            : 'Lokmangal Bio-Tech Pvt. Ltd. is an agro-based biotechnological production company, established in 2006. The concept of balanced nutrition, and its actual application on the farm, has proved a tremendous increase in production.'}
+        </p>
+        <ul class="check-list check-list--2">
+          <li>{m ? 'पीकनिहाय गरजेचा विचार' : 'Crop-wise needs in mind'}</li>
+          <li>{m ? 'पर्यावरणपूरक जैविक उत्पादने' : 'Eco-friendly bio-products'}</li>
+          <li>{m ? 'स्वतःच्या प्रयोगशाळेत विश्लेषण' : 'Laboratory analysis in-house'}</li>
+          <li>{m ? 'शेतकरी जागृती कार्यक्रम' : 'Community awareness work'}</li>
+        </ul>
+        <div class="btn-row">
+          <a class="btn btn--green" href={href(lang, '/about/')}>{m ? 'आमच्याविषयी अधिक' : 'More about us'} <Icon name="arrow" size={17} class="icon--arrow" /></a>
+          <a class="btn btn--ghost" href={href(lang, '/about/founder-message/')}>{d.founder}</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--cream">
+    <div class="container">
+      <div class="section-head section-head--row" data-reveal>
+        <div class="section-head__text">
+          <span class="eyebrow">{m ? 'उत्पादन गट' : 'Product families'}</span>
+          <h2 class="h2" set:html={m ? 'प्रत्येक गरजेसाठी <em>एक गट</em>' : 'A family for <em>every need</em>'} />
+          <p class="lead">{m ? 'मुख्य, दुय्यम आणि सूक्ष्म अन्नद्रव्यांपासून जैविक उत्पादनांपर्यंत संपूर्ण श्रेणी.' : 'The full range, from major, secondary and micronutrients to organic and biological products.'}</p>
+        </div>
+        <a class="btn btn--ghost" href={href(lang, '/products/')}>{d.allProducts} <Icon name="arrow" size={17} class="icon--arrow" /></a>
+      </div>
+      <div class="fam-grid" data-stagger>
+        {
+          CATEGORIES.map((c) => (
+            <a class={`fam tone-${c.tone}`} href={href(lang, categoryUrl(c.id))}>
+              <span>
+                <h3>{c.short[lang]}</h3>
+                <span class="fam__count">
+                  {d.productCount(inCategory(c.id).length)} <Icon name="arrow" size={14} />
+                </span>
+              </span>
+              {c.hero[0] ? <PackImage name={c.hero[0]} alt="" class="fam__img" widths={[160, 240]} sizes="96px" /> : <span class="fam__img" style="display:grid;place-items:center"><PackArt product={stickUp} lang={lang} /></span>}
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section lattice">
+    <div class="container">
+      <div class="section-head section-head--row" data-reveal>
+        <div class="section-head__text">
+          <span class="eyebrow">{m ? 'प्रमुख उत्पादने' : 'Flagship products'}</span>
+          <h2 class="h2" set:html={m ? 'शेतकऱ्यांची <em>पहिली पसंती</em>' : 'The <em>first choice</em> of farmers'} />
+          <p class="lead">{m ? 'ऊस, केळी, सोयाबीन, कांदा, कापूस व भाजीपाला पिकांसाठी लोकमंगलची प्रमुख उत्पादने.' : 'Our leading products for sugarcane, banana, soybean, onion, cotton and vegetable crops.'}</p>
+        </div>
+        <a class="btn btn--ghost" href={href(lang, '/products/')}>{m ? 'संपूर्ण कॅटलॉग' : 'Full catalogue'} <Icon name="arrow" size={17} class="icon--arrow" /></a>
+      </div>
+      <div class="spot-board">
+        <article class="spot-hero" data-reveal="left">
+          <div class="spot-hero__top">
+            <span class="chip chip--dark">{categoryOf('secondary').short[lang]}</span>
+          </div>
+          <div class="spot-hero__grade">10:05:10</div>
+          <h3>{magnet.name[lang]}</h3>
+          <p style="max-width:62%">{m ? 'कॅल्शियम, मॅग्नेशियम व गंधकाचे मिश्रण. एन.पी.के.सोबत वापरल्याने जमिनीची सुपीकता व उत्पादकता टिकते.' : 'A mix of calcium, magnesium and sulphur. Used with NPK, it maintains the fertility and productivity of soil.'}</p>
+          <PackImage name="magnet" alt={magnet.name[lang]} class="spot-hero__pack" widths={[220, 340]} sizes="190px" />
+          <div class="spot-bars">
+            {
+              barData.map((b) => (
+                <div class="spot-bar">
+                  <span>{b.k}</span>
+                  <span class="spot-bar__track"><span class="spot-bar__fill" style={`--v:${b.v * 8}%`} /></span>
+                  <span class="grade">{String(b.v).padStart(2, '0')}</span>
+                </div>
+              ))
+            }
+          </div>
+          <div class="btn-row" style="margin-top:auto">
+            <a class="btn btn--primary" href={href(lang, productUrl(magnet))}>{d.viewDetails} <Icon name="arrow" size={17} class="icon--arrow" /></a>
+          </div>
+        </article>
+        <div class="spot-grid" data-stagger>
+          {
+            spotlightSlugs.map((slug) => {
+              const p = bySlug(slug);
+              return (
+                <article class="spot-card">
+                  <PackImage name={p.img!} alt={p.name[lang]} class="spot-card__img" widths={[160, 240]} sizes="96px" />
+                  <div>
+                    <span class="spot-card__tag">{categoryOf(p.category).short[lang]}</span>
+                    <h3><a href={href(lang, productUrl(p))}>{productTitle(p, lang)}</a></h3>
+                    <p>{p.subtitle[lang]}</p>
+                  </div>
+                </article>
+              );
+            })
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--white" style="padding-bottom:clamp(44px,5vw,70px)">
+    <div class="container">
+      <div class="section-head section-head--row" data-reveal>
+        <div class="section-head__text">
+          <span class="eyebrow">{m ? 'पिकानुसार' : 'By crop'}</span>
+          <h2 class="h2" set:html={m ? 'तुमच्या पिकासाठी <em>योग्य उत्पादन</em>' : 'The right products for <em>your crop</em>'} />
+          <p class="lead">{m ? 'ऊस, केळी, द्राक्ष, डाळिंब, कांदा आणि इतर पिकांसाठी नमूद उत्पादने व मात्रा.' : 'The products and doses named for sugarcane, banana, grapes, pomegranate, onion and other crops.'}</p>
+        </div>
+        <div class="rail-controls">
+          <button class="iconbtn" type="button" data-rail-prev aria-label={d.prev}><Icon name="prev" size={18} /></button>
+          <button class="iconbtn" type="button" data-rail-next aria-label={d.next}><Icon name="next" size={18} /></button>
+        </div>
+      </div>
+    </div>
+    <Rail>{CROPS.map((c) => <CropCard crop={c} lang={lang} />)}</Rail>
+  </section>
+
+  <section class="section section--dark ptable-sec">
+    <div class="container">
+      <SectionHead
+        eyebrow={m ? 'अन्नद्रव्य तक्ता' : 'The nutrient table'}
+        title={m ? 'पिकाला काय लागते, <em>ते पाहा</em>' : 'See what your crop <em>needs</em>'}
+        lead={m ? 'कोणत्याही अन्नद्रव्यावर क्लिक करा. त्याचे कार्य आणि ते देणारी लोकमंगल उत्पादने येथे दिसतील.' : 'Tap any nutrient to see what it does, and which Lokmangal products supply it.'}
+      />
+      <NutrientTable lang={lang} />
+    </div>
+  </section>
+
+  <section class="section section--mint">
+    <div class="container split">
+      <div class="stack" data-reveal="left">
+        <span class="eyebrow">{m ? 'प्रयोगशाळा' : 'Laboratory'}</span>
+        <h2 class="h2" set:html={m ? 'माती व पाणी परीक्षण, <em>मोफत सुविधा</em>' : 'Soil and water testing, <em>free of charge</em>'} />
+        <p class="lead">{m ? 'लोकमंगल समूहाच्या महाराष्ट्र संशोधन व विकास केंद्रात सुसज्ज प्रयोगशाळा असून पात्र व कुशल कर्मचारी कार्यरत आहेत. ही प्रयोगशाळा माती व पाणी परीक्षणाची मोफत सुविधा देते.' : 'The Maharashtra Research and Development Centre of the Lokmangal Group has a well-equipped laboratory with qualified, skilled staff, and provides free soil and water testing to its users.'}</p>
+        <ul class="check-list check-list--2">
+          <li>{m ? 'माती परीक्षण' : 'Soil testing'}</li>
+          <li>{m ? 'पाणी परीक्षण' : 'Water testing'}</li>
+          <li>{m ? 'कच्च्या मालाचे विश्लेषण' : 'Raw material analysis'}</li>
+          <li>{m ? 'तयार उत्पादनांचे विश्लेषण' : 'Finished product analysis'}</li>
+        </ul>
+        <div class="btn-row">
+          <a class="btn btn--green" href={href(lang, '/research-lab/#sample')}>{m ? 'नमुना कसा पाठवायचा' : 'How to send a sample'} <Icon name="arrow" size={17} class="icon--arrow" /></a>
+          <a class="btn btn--ghost" href={href(lang, '/research-lab/')}>{d.lab}</a>
+        </div>
+      </div>
+      <div class="offset-frame" data-reveal="right">
+        <Photo name="hero-lab" alt={m ? 'प्रयोगशाळेत माती नमुन्यांचे परीक्षण (प्रातिनिधिक छायाचित्र)' : 'Soil samples being tested in a laboratory (representative image)'} widths={[480, 800, 1200]} sizes="(width < 960px) 90vw, 560px" style="aspect-ratio:5/4" />
+        <span class="photo-note">{m ? 'प्रातिनिधिक छायाचित्र' : 'Representative image'}</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHead
+        center
+        eyebrow={m ? 'मात्रा मोजा' : 'Dose calculator'}
+        title={m ? 'तुम्हाला <em>किती लागेल</em> ते काढा' : 'Work out <em>how much you need</em>'}
+        lead={m ? 'उत्पादन निवडा, क्षेत्र किंवा टाकीतील पाणी ठरवा. आमच्या उत्पादन माहितीतील मात्रेनुसार प्रमाण लगेच दिसेल.' : 'Choose a product, then set your area or tank size. The quantity follows the dose in our product data.'}
+      />
+      <div data-reveal="zoom"><DoseCalculator lang={lang} /></div>
+    </div>
+  </section>
+
+  <section class="section section--dark">
+    <div class="container split split--wide-right split--top">
+      <div class="stack on-dark" data-reveal="left">
+        <span class="eyebrow">{m ? 'आमची वाटचाल' : 'Our story'}</span>
+        <h2 class="h2" set:html={m ? 'शेतकऱ्यासाठी उभा राहिलेला <em>लोकमंगल समूह</em>' : 'A group built <em>around the farmer</em>'} />
+        <p class="lead">{m ? 'बँक, साखर कारखाना, दूध डेअरी, कृषी शिक्षण आणि संशोधन केंद्र. प्रत्येक पावलाचा उद्देश एकच: शेतकऱ्याची प्रगती.' : 'A bank, a sugar factory, a milk dairy, agricultural education and a research centre. Every step had one aim: the progress of the farmer.'}</p>
+        <div class="journey-links">
+          <a href={href(lang, '/about/')}><Icon name="building" size={18} /> {d.company} <Icon name="arrow-ur" size={15} /></a>
+          <a href={href(lang, '/about/founder-message/')}><Icon name="users" size={18} /> {d.founder} <Icon name="arrow-ur" size={15} /></a>
+        </div>
+      </div>
+      <ol class="timeline" data-stagger>
+        {
+          JOURNEY.map((j) => (
+            <li class="timeline__item">
+              <span class="timeline__dot" aria-hidden="true" />
+              <div>
+                <span class="timeline__year">{num(lang, j.year)}</span>
+                <h3>{j.title[lang]}</h3>
+                <p>{j.text[lang]}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="section section--white">
+    <div class="container">
+      <div class="section-head section-head--row" data-reveal>
+        <div class="section-head__text">
+          <span class="eyebrow">{d.manufacturing}</span>
+          <h2 class="h2" set:html={m ? 'दोन उत्पादन केंद्रे, <em>५०,००० मे. टन क्षमता</em>' : 'Two units, <em>50,000 MT of capacity</em>'} />
+        </div>
+        <a class="btn btn--ghost" href={href(lang, '/manufacturing/')}>{m ? 'उत्पादन केंद्रे पाहा' : 'See our units'} <Icon name="arrow" size={17} class="icon--arrow" /></a>
+      </div>
+      <div class="grid grid-2" data-stagger>
+        {
+          PLANTS.map((plant) => (
+            <article class="plant">
+              <Photo name={plant.id === 'solapur' ? 'company-building' : 'lineup'} alt={plant.id === 'solapur' ? (m ? 'सोलापूर येथील लोकमंगल बायोटेकचा कारखाना' : 'The Lokmangal Biotech factory at Solapur') : (m ? 'लोकमंगल बायोटेकची उत्पादन श्रेणी' : 'The Lokmangal Biotech product range')} class="plant__img" widths={[640, 1000]} sizes="(width < 900px) 92vw, 600px" style={plant.id === 'solapur' ? undefined : 'object-position:20% 50%'} />
+              <div class="plant__body">
+                <h3 class="h3">{plant.name[lang]}, {plant.state[lang]}</h3>
+                <div class="plant__cap">{fmt(plant.capacity)} <small>{m ? 'मे. टन प्रति वर्ष' : 'MT per year'}</small></div>
+                <ul class="chips">{plant.coverage.map((c) => <li class="chip chip--line">{c[lang]}</li>)}</ul>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section terra">
+    <div class="container stack" style="--stack:1.2rem">
+      <div data-reveal>
+        <span class="eyebrow">{COMPANY.group[lang]}</span>
+      </div>
+      <h2 class="h2" data-reveal set:html={m ? 'एका शेतकरी-केंद्रित <em>समूहाचा भाग</em>' : 'Part of a <em>farmer-first group</em>'} />
+      <p class="lead" data-reveal>{m ? 'संस्थापक अध्यक्ष श्री. सुभाष (बापू) देशमुख यांचा लोकमंगल समूह हा राज्यातील एक सुप्रसिद्ध उद्योग समूह आहे.' : 'Founded by Chairman Shri Subhash (Bapu) Deshmukh, the Lokmangal Group is one of the well-known industrial groups in our state.'}</p>
+    </div>
+    <div class="marquee" style="margin-top:28px" aria-label={m ? 'समूहातील संस्था' : 'Group activities'}>
+      <div class="marquee__track">
+        {GROUP_UNITS.map((u) => <span class="marquee__item">{u[lang]}</span>)}
+        {GROUP_UNITS.map((u) => <span class="marquee__item" aria-hidden="true">{u[lang]}</span>)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head section-head--row" data-reveal>
+        <div class="section-head__text">
+          <span class="eyebrow">{d.gallery}</span>
+          <h2 class="h2" set:html={m ? 'लोकमंगल बायोटेक <em>प्रत्यक्ष</em>' : 'Lokmangal Biotech, <em>up close</em>'} />
+        </div>
+        <a class="btn btn--ghost" href={href(lang, '/gallery/')}>{d.viewAll} <Icon name="arrow" size={17} class="icon--arrow" /></a>
+      </div>
+      <div class="grid grid-3" data-stagger>
+        {
+          gallery.map((g) => (
+            <a class="media-frame" href={href(lang, '/gallery/')} style="display:block;overflow:hidden">
+              <Photo name={g.img} alt={g.alt} class="media-frame__img" widths={[480, 800]} sizes="(width < 960px) 92vw, 400px" style="aspect-ratio:4/3" />
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <Cta lang={lang} />
+</Base>
